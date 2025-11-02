@@ -162,6 +162,51 @@ body {
 .nav-icon-profile-link:hover {
     transform: scale(1.1);
 }
+.nav-user-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-user-menu {
+    position: absolute;
+    top: 48px; /* abaixo da foto */
+    right: 0;
+    background-color: var(--cor-surface);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-user-menu a {
+    padding: 10px 16px;
+    color: var(--cor-texto);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.nav-user-menu a:hover {
+    background-color: var(--cor-primaria);
+    color: white;
+}
+
+.nav-user-dropdown:hover .nav-user-menu {
+    display: flex;
+}
+
+.notif-count {
+    background-color: var(--cor-primaria);
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 2px 6px;
+    margin-left: 6px;
+}
+
 
 /* =====================================
    PARTE 3 - PRODUTOS JC PE (DOS COLEGAS)

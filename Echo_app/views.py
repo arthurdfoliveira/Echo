@@ -10,6 +10,8 @@ from django.views.generic import DetailView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.db import IntegrityError 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render     
 
 # Importe os modelos da sua aplicação
 # ASSUMINDO que você tem um modelo Categoria em .models
@@ -346,3 +348,9 @@ def dashboard(request):
     }
     
     return render(request, "Echo_app/dashboard.html", context)
+
+@login_required
+def perfil(request):
+    # Aqui você pode passar informações do usuário para o template
+    usuario = request.user
+    return render(request, "perfil.html", {"usuario": usuario})
