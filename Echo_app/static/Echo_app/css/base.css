@@ -33,7 +33,7 @@ body {
     min-height: 100vh;
 }
 
-.app-content {
+app-content {
     flex-grow: 1;
     width: 100%;
     padding: 20px;
@@ -206,7 +206,55 @@ body {
     padding: 2px 6px;
     margin-left: 6px;
 }
+/* =====================================
+   NOVO: CAMPO DE BUSCA NO HEADER (LUPA)
+   ===================================== */
+.search-input-container {
+    position: relative; /* Para posicionar a lupa dentro */
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Permite que o campo de busca ocupe o espaço disponível */
+    max-width: 300px; /* Limita a largura máxima do campo de busca */
+    margin-left: 10px; /* Espaço entre o ícone de hambúrguer e o campo */
+}
 
+.search-input-header {
+    width: 100%;
+    height: 40px; /* Altura ideal */
+    padding: 8px 15px 8px 45px; /* Mais padding à esquerda para o ícone */
+    border: 1px solid var(--cor-borda); /* Borda sutil */
+    border-radius: 20px; /* Cantos bem arredondados para um visual atraente */
+    background-color: var(--cor-fundo); /* Fundo cinza claro */
+    font-size: 1em;
+    color: var(--cor-texto);
+    outline: none; /* Remove a borda de foco padrão */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input-header::placeholder {
+    color: var(--cor-texto-secundario);
+}
+
+.search-input-header:focus {
+    border-color: var(--cor-primaria); /* Borda vermelha no foco */
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2); /* Sombra suave vermelha, padrão do seu tema */
+}
+
+.search-icon-header {
+    position: absolute;
+    left: 15px; /* Posição do ícone dentro do campo */
+    color: var(--cor-texto-secundario);
+    width: 22px; /* Tamanho do ícone */
+    height: 22px;
+    pointer-events: none; /* Garante que o clique passe para o input */
+}
+
+/* Ajustes para quando a tela for menor */
+@media (max-width: 768px) {
+    .search-input-container {
+        max-width: 200px; /* Menor em telas pequenas */
+    }
+}
 
 /* =====================================
    PARTE 3 - PRODUTOS JC PE (DOS COLEGAS)
