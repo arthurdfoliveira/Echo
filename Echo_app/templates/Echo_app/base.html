@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Echo{% endblock %}</title>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/base.css' %}?v={% now 'U' %}">
 
     {% block extra_css %}{% endblock %}
 

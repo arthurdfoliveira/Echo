@@ -1,150 +1,163 @@
-/* --- Paleta de Cores e Configurações Globais (Fiel à PRIMEIRA Imagem) --- */
+/* --- Paleta de Cores (Fiel à Imagem do Menu Vertical) --- */
 
 :root {
-    /* Cores de Fundo (Baseadas na imagem 13.43.29.pn) */
-    --cor-fundo-body: #f0f2f5;       /* Fundo cinza claro que aparece nas bordas */
-    --cor-fundo-card-menu: #ffffff;  /* Fundo branco do card principal */
-
-    /* Cores de Texto */
-    --cor-texto-principal: #333333; /* Texto escuro para "Seja bem-vindo" e itens do menu */
-    --cor-texto-link-hover: #007bff; /* Azul padrão para hover de links (se aplicável) */
-
-    /* Cores de Bordas/Divisores */
-    --cor-borda-item: #e0e0e0;       /* Borda sutil entre itens ou divisores */
-    --cor-borda-sutil: #cccccc;      /* Borda para campos ou divisores mais fortes */
-
-    /* Cores de Ações Específicas */
-    --cor-botao-sair: #f0f0f0;       /* Fundo cinza claro para Sair da conta */
-    --cor-texto-sair: #333333;       /* Texto escuro para Sair da conta */
-    --cor-botao-excluir: #dc3545;    /* Vermelho para Excluir conta */
-    --cor-texto-excluir: #ffffff;    /* Texto branco para Excluir conta */
+    --cor-fundo-body: #f0f2f5;       /* Fundo cinza claro */
+    --cor-fundo-card-menu: #ffffff;  /* Fundo branco do card */
+    --cor-texto-principal: #333333; /* Texto escuro */
+    --cor-borda-item: #e0e0e0;       /* Borda sutil dos botões */
+    --cor-borda-sutil: #cccccc;      /* Borda para divisores */
+    --cor-vermelho-uol: #cc0000;     /* Vermelho do UOL */
 }
 
-/* --- Reseta margens e aplica fundo ao corpo --- */
+/* --- Configurações Globais (Fundo da página e fontes) --- */
 body {
-    background-color: var(--cor-fundo-body);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center;     /* Centraliza verticalmente */
-    min-height: 100vh;       /* Garante que o corpo ocupe a altura total da viewport */
-    color: var(--cor-texto-principal);
+    background-color: var(--cor-fundo-body) !important;
+    font-family: Arial, sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important; /* Permite que o header e o content fiquem em coluna */
+    min-height: 100vh !important;       
+    color: var(--cor-texto-principal) !important;
 }
 
-/* --- Container Principal (Centraliza o Card do Menu) --- */
+/* --- ESTILOS PARA AS BARRAS SUPERIORES (Se elas estiverem no base.html) --- */
+/* Se suas barras superiores tiverem outras classes, você precisará ajustá-las aqui. */
+/* Geralmente, elementos de cabeçalho devem ter 100% de largura */
+header, .header-top, .header-main { /* Ajuste estas classes se as suas forem diferentes */
+    width: 100% !important;
+    box-sizing: border-box !important; /* Garante que padding e borda não aumentem a largura */
+    flex-shrink: 0 !important; /* Impede que o header encolha */
+}
+
+/* Exemplo de estilo para a barra preta superior (UOL) */
+.header-top { 
+    background-color: #000000 !important; /* Fundo preto */
+    color: white !important;
+    padding: 10px 0 !important;
+    text-align: center !important;
+}
+
+/* Exemplo de estilo para a barra branca (Echo) */
+.header-main {
+    background-color: #ffffff !important; /* Fundo branco */
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding: 15px 0 !important;
+    text-align: center !important; /* Ajuste conforme seu conteúdo */
+}
+
+
+/* --- Container Principal (Centraliza o Card do Menu na tela) --- */
 .container-principal-menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 500px; /* Largura máxima do card, como na imagem */
-    padding: 20px;
-    box-sizing: border-box; /* Inclui padding na largura */
+    flex-grow: 1 !important; /* Faz o container crescer e ocupar o espaço restante */
+    display: flex !important;
+    justify-content: center !important; /* Centraliza horizontalmente */
+    align-items: center !important;     /* Centraliza verticalmente */
+    width: 100% !important;
+    max-width: none !important; /* Remove largura máxima do container para que o card se ajuste */
+    padding: 20px !important;
+    box-sizing: border-box !important;
 }
 
-/* --- Card Principal do Menu de Perfil --- */
+/* --- Card Principal (Fundo Branco com Sombra, com largura definida) --- */
 .menu-perfil-card {
-    background-color: var(--cor-fundo-card-menu);
-    width: 100%; /* Ocupa a largura do container-principal-menu */
-    border-radius: 8px; /* Cantos arredondados */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    padding: 30px;
+    background-color: var(--cor-fundo-card-menu) !important;
+    width: 100% !important; /* Ocupa a largura do container-principal-menu */
+    max-width: 450px !important; /* AQUI definimos a largura MÁXIMA do card, para não ficar gigante */
+    border-radius: 8px !important; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 30px !important;
 }
 
-/* --- Saudação de Boas-Vindas --- */
+/* --- Saudação de Boas-Vindas (Topo) --- */
 .saudacao {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: var(--cor-texto-principal);
-    margin-top: 0;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--cor-borda-sutil); /* Linha divisória */
-    text-align: left; /* Alinha o texto à esquerda */
+    font-size: 1.3em !important;
+    font-weight: bold !important;
+    color: var(--cor-vermelho-uol) !important; /* Cor vermelha da saudação, como na imagem */
+    margin-top: 0 !important;
+    margin-bottom: 25px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px solid var(--cor-borda-sutil) !important;
+    text-align: left !important;
 }
 
-/* --- Menu de Opções Verticais --- */
+/* --- Menu de Opções (Itens Verticalmente Enfileirados) --- */
 .menu-opcoes {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espaçamento entre os itens do menu */
-    margin-bottom: 30px; /* Espaço antes das ações finais */
+    display: flex !important;
+    flex-direction: column !important; 
+    gap: 15px !important; 
+    margin-bottom: 30px !important; 
 }
 
 .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 15px 15px; /* Padding interno do botão */
-    text-decoration: none;
-    color: var(--cor-texto-principal);
-    background-color: transparent;
-    border: 1px solid var(--cor-borda-item); /* Borda sutil como na imagem */
-    border-radius: 8px; /* Cantos arredondados do botão */
-    transition: background-color 0.2s, border-color 0.2s;
-    font-size: 1.05em;
-    font-weight: 500;
+    display: flex !important;
+    align-items: center !important;
+    padding: 15px !important;
+    text-decoration: none !important;
+    color: var(--cor-texto-principal) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--cor-borda-item) !important;
+    border-radius: 8px !important; 
+    transition: background-color 0.2s, border-color 0.2s !important;
+    font-size: 1.05em !important;
+    font-weight: 500 !important;
 }
 
 .menu-item .icon {
-    margin-right: 15px;
-    font-size: 1.2em; /* Tamanho maior para os ícones */
-    width: 25px; /* Garante alinhamento dos ícones */
-    text-align: center;
+    margin-right: 15px !important;
+    font-size: 1.2em !important;
+    width: 25px !important; 
+    text-align: center !important;
 }
 
 .menu-item:hover {
-    background-color: #f5f5f5; /* Fundo mais claro ao passar o mouse */
-    border-color: #c0c0c0; /* Borda um pouco mais escura no hover */
+    background-color: #f5f5f5 !important;
+    border-color: #c0c0c0 !important;
 }
 
-/* --- Ações Finais (Sair e Excluir) --- */
-
-/* --- Ações Finais (Sair e Excluir) --- */
+/* --- Ações Finais (Botões Lado a Lado) --- */
 .acoes-finais {
-    display: flex;
-    flex-direction: column; /* Agora um em cima do outro */
-    gap: 12px;
-    padding-top: 25px;
-    border-top: 1px solid var(--cor-borda-sutil);
+    display: flex !important;
+    flex-direction: row !important; 
+    justify-content: space-between !important;
+    gap: 15px !important;
+    padding-top: 25px !important;
+    border-top: 1px solid var(--cor-borda-sutil) !important;
 }
 
 .acao-logout, .acao-deletar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 0;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-    font-weight: bold;
-    font-size: 1em;
-    cursor: pointer;
-    border: none;
-    margin: 0;
+    flex: 1 !important; 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 50px !important; 
+    padding: 0 10px !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    background-color: #f0f0f0 !important; /* Fundo cinza para "Sair da conta" */
+    color: var(--cor-texto-principal) !important;
+    border: 1px solid #e0e0e0 !important;
 }
 
-.acao-logout {
-    background-color: var(--cor-botao-sair);
-    color: var(--cor-texto-sair);
-    border: 1px solid var(--cor-borda-item);
-}
 .acao-logout:hover {
-    background-color: #e0e0e0;
+    background-color: #e6e6e6 !important;
 }
 
 .acao-deletar {
-    background-color: var(--cor-botao-excluir);
-    color: var(--cor-texto-excluir);
-    border: 1px solid #c82333;
-}
-.acao-deletar:hover {
-    background-color: #c82333;
+    background-color: #dc3545 !important; /* Fundo vermelho para "Excluir conta" */
+    color: #ffffff !important; /* Texto branco */
+    border: none !important; /* Sem borda, como na imagem */
 }
 
+.acao-deletar:hover {
+    background-color: #c82333 !important;
+}
+
+/* Ícones nas ações finais */
 .acao-logout .icon, .acao-deletar .icon {
-    margin-right: 8px;
-    font-size: 1.1em;
+    margin-right: 10px !important;
+    font-size: 1.15em !important;
 }

@@ -4,13 +4,15 @@
 {% block title %}Perfil do Usuário{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container-principal-menu"> {# Novo container para o layout do menu #}
-    <div class="menu-perfil-card"> {# Card centralizado #}
+<div class="container-principal-menu">
+    <div class="menu-perfil-card">
+        
         <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
+        
         <nav class="menu-opcoes">
             <a class="menu-item" href="#">
                 <span class="icon">⭐</span> Salvados
@@ -25,6 +27,7 @@
                 <span class="icon">💬</span> Gestão de comunicados
             </a>
         </nav>
+        
         <div class="acoes-finais">
             <a class="acao-logout" href="#">
                 <span class="icon">➡️</span> Sair da conta
@@ -33,6 +36,7 @@
                 <span class="icon">🗑️</span> Excluir conta
             </a>
         </div>
+        
     </div>
 </div>
 {% endblock %}
