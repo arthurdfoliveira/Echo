@@ -10,85 +10,76 @@ from django.views.generic import DetailView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.db import IntegrityError 
-from django.contrib.auth.decorators import login_required
+from django.db.models import Q  # Para consultas complexas
 from django.shortcuts import render     
 
-# Importe os modelos da sua aplicação
-# ASSUMINDO que você tem um modelo Categoria em .models
+# Importa os modelos da aplicação
 from .models import (Noticia, InteracaoNoticia, Notificacao, PerfilUsuario, Categoria)
-from django.db.models import Q # Importe o Q para consultas complexas
 
+# Obtém o modelo de usuário configurado no Django
 User = get_user_model()
 
 
 # ===============================================
-# Parte de Autenticação e Perfil (Raul)
+# Parte de Autenticação e Registro (Raul)
 # ===============================================
-
-# Em Echo/Echo_app/views.py
 
 def registrar(request):
     """
     Renderiza a página de registro e processa a criação de um novo usuário
-    usando o NOME DE USUÁRIO fornecido no formulário.
+    usando os campos fornecidos no formulário.
     """
     contexto = {'erros': [], 'dados_preenchidos': {}} 
     
+    # Busca todas as categorias para exibir no formulário
     try:
         contexto['todas_categorias'] = Categoria.objects.all()
     except:
         contexto['todas_categorias'] = []
     
     if request.method == "POST":
-        # 2. Obter dados crus do POST
-        username = request.POST.get('username') # <-- MUDANÇA: Lendo o username
+        # Captura dados enviados pelo formulário
+        username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
         categorias_selecionadas_ids = request.POST.getlist('categoria') 
 
         contexto['dados_preenchidos'] = {
-            'username': username, # <-- MUDANÇA: Repassando o username
+            'username': username,
             'email': email,
             'categorias_selecionadas_ids': categorias_selecionadas_ids, 
         }
 
-        # 3. Geração de Username REMOVIDA
-
-        # 4. Validação manual
-        if not username or not email or not password or not password_confirm: # <-- MUDANÇA
+        # Validações básicas
+        if not username or not email or not password or not password_confirm:
             contexto['erros'].append('Todos os campos obrigatórios devem ser preenchidos: Nome de Usuário, Email e Senha.')
         
         if password != password_confirm:
             contexto['erros'].append('As senhas não coincidem.')
         
-        # A geração automática de username foi removida.
-        # Agora, se o username já existe, apenas informamos o erro.
-        if username and User.objects.filter(username__iexact=username).exists(): # <-- MUDANÇA
+        if username and User.objects.filter(username__iexact=username).exists():
             contexto['erros'].append('Este nome de usuário já está em uso. Por favor, escolha outro.')
         
         if email and User.objects.filter(email__iexact=email).exists():
             contexto['erros'].append('Este e-mail já está cadastrado.')
 
-        # 5. Se não houver erros, criar o usuário
+        # Se não houver erros, cria o usuário
         if not contexto['erros']:
             try:
                 user = User.objects.create_user(
-                    username=username, # <-- MUDANÇA: Usando o username do formulário
+                    username=username,
                     email=email,
                     password=password
-                    # NOTA: O campo 'first_name' não está mais sendo salvo aqui.
-                    # Se você quiser salvar o "Nome completo" também,
-                    # precisará adicionar um novo campo no registrar.html
                 )
                 
-                # 6. Salvar as categorias no PerfilUsuario
+                # Salva as categorias selecionadas no perfil do usuário
                 if categorias_selecionadas_ids:
                     categorias = Categoria.objects.filter(pk__in=categorias_selecionadas_ids)
                     perfil, created = PerfilUsuario.objects.get_or_create(usuario=user)
                     perfil.categorias_de_interesse.set(categorias)
                 
-                # 7. Logar o usuário automaticamente
+                # Loga o usuário automaticamente
                 login(request, user)
                 return redirect("Echo_app:dashboard")
                 
@@ -97,12 +88,9 @@ def registrar(request):
             except Exception as e:
                 contexto['erros'].append(f'Ocorreu um erro: {e}')
 
+    # Renderiza a página de registro com os erros/contexto
     return render(request, "Echo_app/registrar.html", contexto)
 
-
-# === FUNÇÕES ADICIONADAS ===
-
-# Em Echo/Echo_app/views.py
 
 def entrar(request):
     """
@@ -111,47 +99,41 @@ def entrar(request):
     contexto = {}
     
     if request.method == "POST":
-        # 1. Obter dados crus do POST
+        # Captura dados enviados pelo formulário
         username = request.POST.get('username')
         password = request.POST.get('password')
-        next_url = request.POST.get('next') # 🚨 NOVO: Obtém o parâmetro 'next' 🚨
+        next_url = request.POST.get('next')  # Para redirecionamento após login
 
         if not username or not password:
             contexto['erro_login'] = 'Por favor, preencha o usuário e a senha.'
             contexto['username_preenchido'] = username
             return render(request, "Echo_app/entrar.html", contexto)
 
-        # 2. Autenticar o usuário
+        # Autentica o usuário
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # 3. Sucesso!
+            # Login bem-sucedido
             login(request, user)
-            
-            # 🚨 CORREÇÃO DO REDIRECIONAMENTO 🚨
             if next_url:
-                # Se o parâmetro 'next' existe, redireciona para a página original
                 return redirect(next_url)
             else:
-                # Caso contrário, redireciona para o dashboard padrão
                 return redirect("Echo_app:dashboard")
         else:
-            # 4. Falha na autenticação
+            # Falha na autenticação
             contexto['erro_login'] = 'Usuário ou senha inválidos. Tente novamente.'
             
         contexto['username_preenchido'] = username
             
-    # Se for GET ou se a autenticação falhar, renderiza a página
     return render(request, "Echo_app/entrar.html", contexto)
+
 
 def sair(request):
     """
-    Desloga o usuário e o redireciona para a página de login.
+    Desloga o usuário e redireciona para a página de login.
     """
     logout(request)
     return redirect("Echo_app:entrar")
-
-# === FIM DAS FUNÇÕES ADICIONADAS ===
 
 
 # ===============================================
@@ -161,27 +143,31 @@ def sair(request):
 @login_required
 def dashboard(request):
     """
-    Exibe a página principal para o usuário logado, incluindo
-    notícias recomendadas e suas categorias de interesse.
+    Exibe a página principal do usuário logado,
+    com notícias recomendadas, urgentes e categorias de interesse.
     """
     user = request.user
     categorias_interesse = []
 
-    # Tenta buscar o perfil do usuário e suas categorias de interesse
+    # Obtém o perfil e categorias de interesse
     try:
-        # Usamos 'user.perfil' por causa do related_name="perfil" no OneToOneField
         perfil = user.perfil 
         categorias_interesse = perfil.categorias_de_interesse.all()
     except PerfilUsuario.DoesNotExist:
-        # Se o perfil não existir por algum motivo, cria um
         perfil, created = PerfilUsuario.objects.get_or_create(usuario=user)
     
-    # Monta o contexto para enviar ao template
+    # Notícias recomendadas
+    noticias_recomendadas = Noticia.recomendar_para(user)
+    
+    # Notícias urgentes: 2 mais recentes excluindo recomendadas
+    noticias_urgentes = Noticia.objects.exclude(pk__in=noticias_recomendadas.values_list('pk', flat=True)).order_by('-data_publicacao')[:2]
+
     context = {
         "nome": user.first_name or user.username,
-        "email": user.email, # Mantido conforme sua solicitação
-        "noticias_recomendadas": Noticia.recomendar_para(user), # Corrigido o erro de digitação
-        "categorias_interesse": categorias_interesse # <-- NOVO DADO ENVIADO
+        "email": user.email,
+        "noticias_recomendadas": noticias_recomendadas,
+        "categorias_interesse": categorias_interesse,
+        "noticias_urgentes": noticias_urgentes
     }
     
     return render(request, "Echo_app/dashboard.html", context)
@@ -203,6 +189,7 @@ class NoticiaDetalheView(DetailView):
         context = super().get_context_data(**kwargs)
         noticia = context['noticia']
         
+        # Flags para mostrar se o usuário curtiu ou salvou
         context['usuario_curtiu'] = False
         context['usuario_salvou'] = False
 
@@ -223,7 +210,7 @@ class NoticiaDetalheView(DetailView):
 @require_POST
 def toggle_interacao(request, noticia_id, tipo_interacao):
     """
-    Função genérica para adicionar ou remover uma interação (Curtida ou Salvamento).
+    Adiciona ou remove uma interação (curtida ou salvamento) de uma notícia.
     """
     if tipo_interacao not in ['CURTIDA', 'SALVAMENTO']:
         return HttpResponseBadRequest("Tipo de interação inválido.")
@@ -238,6 +225,7 @@ def toggle_interacao(request, noticia_id, tipo_interacao):
     )
 
     if not created:
+        # Se já existia, remove
         interacao.delete()
         acao_realizada = 'removida'
         status_interacao = False
@@ -245,12 +233,14 @@ def toggle_interacao(request, noticia_id, tipo_interacao):
         acao_realizada = 'adicionada'
         status_interacao = True
     
+    # Atualiza contadores
     if tipo_interacao == 'CURTIDA':
         noticia.curtidas_count = noticia.interacoes.filter(tipo='CURTIDA').count()
     elif tipo_interacao == 'SALVAMENTO':
         noticia.salvamentos_count = noticia.interacoes.filter(tipo='SALVAMENTO').count()
     noticia.save()
 
+    # Resposta AJAX
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
             'success': True,
@@ -266,14 +256,14 @@ def toggle_interacao(request, noticia_id, tipo_interacao):
 @login_required
 @require_POST
 def curtir_noticia(request, noticia_id):
-    """View de atalho para curtir uma notícia."""
+    """Atalho para curtir uma notícia"""
     return toggle_interacao(request, noticia_id, 'CURTIDA')
 
 
 @login_required
 @require_POST
 def salvar_noticia(request, noticia_id):
-    """View de atalho para salvar uma notícia."""
+    """Atalho para salvar uma notícia"""
     return toggle_interacao(request, noticia_id, 'SALVAMENTO')
 
 
@@ -284,48 +274,36 @@ def salvar_noticia(request, noticia_id):
 @login_required
 def lista_notificacoes(request):
     """
-    Exibe a lista de notificações do usuário, separadas por
-    "Recomendadas" (baseadas nas preferências) e "Outras".
+    Exibe notificações do usuário, separando recomendadas e outras.
     """
     
-    # 1. Busca todas as notificações do usuário
     todas_notificacoes = Notificacao.objects.filter(usuario=request.user)
     
-    # 2. Busca as categorias preferidas do usuário
-    #    (Usando a mesma lógica da sua view 'perfil')
-    categorias_preferidas = Categoria.objects.none() # Começa com uma lista vazia
+    categorias_preferidas = Categoria.objects.none()
     try:
         perfil = request.user.perfil 
         categorias_preferidas = perfil.categorias_de_interesse.all()
     except PerfilUsuario.DoesNotExist:
-        # Se o usuário não tiver perfil/preferências, não faz nada
         pass
 
-    # 3. Separa as notificações
-    
-    # Notificações recomendadas são aquelas ligadas a uma notícia
-    # cuja categoria ESTÁ na lista de preferidas.
     recomendadas = todas_notificacoes.filter(
         noticia__categoria__in=categorias_preferidas
     ).order_by('lida', '-data_criacao')
     
-    # Outras notificações são todas as que NÃO estão na lista de recomendadas
-    # (Isso inclui notificações manuais ou de outras categorias)
     outras = todas_notificacoes.exclude(
         id__in=recomendadas.values_list('id', flat=True)
     ).order_by('lida', '-data_criacao')
     
-    # Contagem de não lidas
     nao_lidas_count = todas_notificacoes.filter(lida=False).count()
 
     context = {
-        'notificacoes_recomendadas': recomendadas, # <-- Lista 1
-        'notificacoes_outras': outras,         # <-- Lista 2
+        'notificacoes_recomendadas': recomendadas,
+        'notificacoes_outras': outras,
         'nao_lidas_count': nao_lidas_count
     }
-    # ATENÇÃO: Verifique o nome do seu template!
-    # Na sua captura de tela, o nome era 'notificacao.html'
+
     return render(request, 'Echo_app/notificacao.html', context)
+
 
 @login_required
 @require_POST 
@@ -335,61 +313,28 @@ def marcar_notificacao_lida(request, notificacao_id):
     """
     notificacao = get_object_or_404(Notificacao, id=notificacao_id, usuario=request.user)
     notificacao.marcar_como_lida()
-    return redirect('lista_notificações')
+    return redirect('lista_notificacoes')
+
 
 @login_required
 @require_POST
 def marcar_todas_lidas(request):
     """
-    Marca todas as notificações não lidas do usuário como lidas.
+    Marca todas notificações não lidas como lidas.
     """
     Notificacao.objects.filter(usuario=request.user, lida=False).update(lida=True)
     return redirect('lista_notificacoes')
-@login_required
-def dashboard(request):
-    """
-    Exibe a página principal para o usuário logado, incluindo
-    notícias recomendadas e suas categorias de interesse.
-    """
-    user = request.user
-    categorias_interesse = []
 
-    # Tenta buscar o perfil do usuário e suas categorias de interesse
-    try:
-        perfil = user.perfil 
-        categorias_interesse = perfil.categorias_de_interesse.all()
-    except PerfilUsuario.DoesNotExist:
-        perfil, created = PerfilUsuario.objects.get_or_create(usuario=user)
-    
-    # Adicionando Notícias Urgentes (Exemplo: as 2 mais recentes, exceto as recomendadas)
-    noticias_recomendadas = Noticia.recomendar_para(user)
-    
-    # 🚨 NOVO: BUSCA NOTÍCIAS URGENTES 🚨
-    # Buscamos as 2 notícias mais recentes que não estão na lista de recomendadas
-    noticias_urgentes = Noticia.objects.exclude(pk__in=noticias_recomendadas.values_list('pk', flat=True)).order_by('-data_publicacao')[:2]
-    # ----------------------------------
 
-    # Monta o contexto para enviar ao template
-    context = {
-        "nome": user.first_name or user.username,
-        "email": user.email,
-        "noticias_recomendadas": noticias_recomendadas,
-        "categorias_interesse": categorias_interesse,
-        # 🚨 NOVO: ADICIONA NOTÍCIAS URGENTES AO CONTEXTO 🚨
-        "noticias_urgentes": noticias_urgentes 
-        # ------------------------------------------------
-    }
-    
-    return render(request, "Echo_app/dashboard.html", context)
-
-# Corrige: define `perfil` no nível do módulo (não aninhado) e garante que `dashboard` seja único.
-
+# ===============================================
+# Parte do Perfil (Raul) com upload de foto
+# ===============================================
 
 @login_required
 def perfil(request):
     """
     Exibe e permite a atualização do perfil do usuário.
-    Atualiza first_name, email e categorias de interesse.
+    Atualiza first_name, email, categorias de interesse e foto de perfil.
     """
     usuario = request.user
     perfil, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
@@ -404,6 +349,7 @@ def perfil(request):
         first_name = request.POST.get("first_name", "").strip()
         email = request.POST.get("email", "").strip()
         categorias_ids = request.POST.getlist("categoria")
+        foto_perfil = request.FILES.get("foto_perfil")  # captura a foto enviada
 
         # Validações básicas
         if not email:
@@ -425,7 +371,7 @@ def perfil(request):
             }
             return render(request, "Echo_app/perfil.html", context)
 
-        # Salva alterações
+        # Salva alterações do perfil
         usuario.first_name = first_name
         usuario.email = email
         usuario.save()
@@ -436,7 +382,12 @@ def perfil(request):
         else:
             perfil.categorias_de_interesse.clear()
 
-            return redirect("Echo_app:perfil")
+        # Salva a foto de perfil se enviada
+        if foto_perfil:
+            perfil.foto_perfil = foto_perfil
+            perfil.save()
+
+        return redirect("Echo_app:perfil")
 
     # GET
     context = {
@@ -445,3 +396,57 @@ def perfil(request):
         "todas_categorias": todas_categorias,
     }
     return render(request, "Echo_app/perfil.html", context)
+
+
+# ===============================================
+# Função para criar notícia com imagem (novo)
+# ===============================================
+
+@login_required
+def criar_noticia(request):
+    """
+    Permite ao usuário criar uma notícia, incluindo upload de imagem.
+    """
+    if request.method == "POST":
+        titulo = request.POST.get("titulo", "").strip()
+        conteudo = request.POST.get("conteudo", "").strip()
+        categoria_id = request.POST.get("categoria")
+        imagem = request.FILES.get("imagem")  # captura imagem enviada
+
+        erros = []
+        if not titulo:
+            erros.append("O título é obrigatório.")
+        if not conteudo:
+            erros.append("O conteúdo é obrigatório.")
+
+        categoria = None
+        if categoria_id:
+            try:
+                categoria = Categoria.objects.get(pk=categoria_id)
+            except Categoria.DoesNotExist:
+                erros.append("Categoria inválida.")
+
+        if erros:
+            context = {
+                "erros": erros,
+                "titulo": titulo,
+                "conteudo": conteudo,
+                "categorias": Categoria.objects.all(),
+                "categoria_selecionada": categoria_id,
+            }
+            return render(request, "Echo_app/criar_noticia.html", context)
+
+        noticia = Noticia.objects.create(
+            titulo=titulo,
+            conteudo=conteudo,
+            categoria=categoria,
+            autor=request.user,
+            imagem=imagem
+        )
+
+        return redirect("Echo_app:dashboard")
+
+    context = {
+        "categorias": Categoria.objects.all()
+    }
+    return render(request, "Echo_app/criar_noticia.html", context)
