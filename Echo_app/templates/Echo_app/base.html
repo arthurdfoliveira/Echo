@@ -6,10 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Echo{% endblock %}</title>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/base.css' %}?v={% now 'U' %}">
 
     {% block extra_css %}{% endblock %}
 
+    <style>
+        /* Ajuste local para logos dos parceiros */
+        .partner-circle img.partner-logo {
+            object-fit: contain; /* Garante que a logo caiba no círculo */
+            border-radius: 50%;  /* Mantém a forma circular */
+        }
+    </style>
 </head>
 <body>
 
@@ -20,7 +27,7 @@
     <!-- ===================================== -->
     <header class="header-uol">
         <a href="https://www.uol.com.br" target="_blank" class="uol-logo-link">
-             <img src="{% static 'Echo_app/images/uol_logo.png' %}" alt="Logo UOL" class="uol-logo-img">
+             <img src="{% static 'Echo_app/images/uol_logo.png' %}" alt="Logo UOL" class="uol-logo-img" style="height:60px;">
         </a>
     </header>
 
@@ -247,7 +254,6 @@
 
         // --- PESQUISA NA SIDEBAR ---
         const searchInput = document.getElementById('sidebar-search-input');
-        // MODIFICADO: Seleciona todos os 'a' dentro da sidebar-nav E dropdown-content
         const allLinks = document.querySelectorAll('.sidebar-nav > a, .sidebar-dropdown-content > a');
 
         if (searchInput && allLinks.length > 0) {
@@ -257,19 +263,14 @@
                 allLinks.forEach(link => {
                     const text = link.textContent.toLowerCase();
                     if (text.includes(filter)) {
-                        link.style.display = 'block'; // Garante que é 'block'
+                        link.style.display = 'block';
                     } else {
-                        link.style.display = 'none'; // Esconde o link se não bater
+                        link.style.display = 'none';
                     }
                 });
-
-                // Também filtra os cabeçalhos (subheaders) e dropdowns
-                // Esta é uma lógica mais complexa: se todos os filhos de um grupo estiverem escondidos,
-                // escondemos o grupo. Por agora, vamos manter simples e filtrar apenas os links.
             });
         }
         
-
         // --- CÓDIGO DOS PRODUTOS (DOS COLEGAS) ---
         const partnerLogos = document.querySelectorAll('.partner-logo');
         partnerLogos.forEach(logo => {
@@ -288,8 +289,6 @@
         });
     });
 
-    </script>
-    {% endblock %}
-
 </body>
 </html>
+

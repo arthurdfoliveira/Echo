@@ -4,136 +4,39 @@
 {% block title %}Perfil do Usuário{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<div class="profile">
-    <aside class="profile__card">
-        <div class="profile__avatar">
-            {% if perfil and perfil.avatar %}
-                <img src="{{ perfil.avatar.url }}" alt="Avatar do usuário">
-            {% else %}
-                {{ usuario.first_name|default:usuario.username|slice:":1" }}
-            {% endif %}
+<div class="container-principal-menu">
+    <div class="menu-perfil-card">
+        
+        <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
+        
+        <nav class="menu-opcoes">
+            <a class="menu-item" href="#">
+                <span class="icon"></span> Salvados
+            </a>
+            <a class="menu-item" href="#">
+                <span class="icon"></span> Configurações da conta
+            </a>
+            <a class="menu-item" href="#">
+                <span class="icon"></span> Dispositivos conectados
+            </a>
+            <a class="menu-item" href="#">
+                <span class="icon"></span> Gestão de comunicados
+            </a>
+        </nav>
+        
+        <div class="acoes-finais">
+            <a class="acao-logout" href="#">
+                <span class="icon"></span> Sair da conta
+            </a>
+            <a class="acao-deletar" href="#">
+                <span class="icon"></span> Excluir conta
+            </a>
         </div>
-        <div class="profile__info">
-            <div class="profile__name">{{ usuario.first_name|default:usuario.username }}</div>
-            <div class="profile__meta">{{ usuario.email }}</div>
-            <div class="profile__actions">
-                <a class="btn btn--ghost" href="{% url 'Echo_app:perfil' %}">Editar perfil</a>
-            </div>
-        </div>
-    </aside>
-
-    <main class="profile__main">
-            <section class="profile__about">
-            <h3>Editar perfil</h3>
-
-            {% if erros %}
-                <div class="form-error">
-                    <ul>
-                        {% for erro in erros %}
-                            <li>{{ erro }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-
-            <form method="post" action="{% url 'Echo_app:perfil' %}">
-                {% csrf_token %}
-
-                <label for="id_first_name">Nome</label>
-                <input id="id_first_name" name="first_name" class="input" value="{{ dados_preenchidos.first_name|default:usuario.first_name }}">
-
-                <label for="id_email">Email</label>
-                <input id="id_email" name="email" class="input" value="{{ dados_preenchidos.email|default:usuario.email }}">
-
-                <fieldset style="margin-top:12px">
-                    <legend>Categorias de interesse</legend>
-                    <div class="list">
-                        {% for categoria in todas_categorias %}
-                            <label class="list__item">
-                                <input type="checkbox" name="categoria" value="{{ categoria.id }}"
-                                    {% if dados_preenchidos.categorias_selecionadas_ids %}
-                                        {% if categoria.id|stringformat:"s" in dados_preenchidos.categorias_selecionadas_ids %}checked{% endif %}
-                                    {% else %}
-                                        {% if categoria in perfil.categorias_de_interesse.all %}checked{% endif %}
-                                    {% endif %}
-                                >
-                                <div>
-                                    <strong>{{ categoria.nome }}</strong>
-                                </div>
-                            </label>
-                        {% empty %}
-                            <p>Nenhuma categoria disponível.</p>
-                        {% endfor %}
-                    </div>
-                </fieldset>
-
-                <div style="margin-top:14px">
-                    <button class="btn" type="submit">Salvar</button>
-                </div>
-            </form>
-        </section>
-
-                <!-- ================= Settings / Profile Actions Component ================= -->
-                <aside class="settings-panel">
-                    <header class="settings-header">
-                        <h2>Seja bem-vindo, {{ usuario.first_name|default:usuario.username }}!</h2>
-                        <p class="muted">Gerencie suas preferências e segurança</p>
-                    </header>
-
-                    <nav class="settings-menu" aria-label="Menu de configurações do usuário">
-                        <a class="settings-item" href="#saved">
-                            <!-- ícone favorito -->
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="currentColor"/></svg>
-                            <span>Salvados</span>
-                        </a>
-
-                        <a class="settings-item" href="#account">
-                            <!-- ícone engrenagem -->
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.43-3.5a5.6 5.6 0 0 0-.11-1.08l2.03-1.57-2-3.46-2.4.96a5.2 5.2 0 0 0-1.86-1.08L14.5 1h-5l-.48 2.27a5.2 5.2 0 0 0-1.86 1.08l-2.4-.96-2 3.46L4.7 10.9c-.05.36-.08.73-.08 1.1s.03.74.08 1.1l-2.03 1.57 2 3.46 2.4-.96c.57.46 1.2.83 1.86 1.08L9.5 23h5l.48-2.27c.66-.25 1.29-.62 1.86-1.08l2.4.96 2-3.46-2.03-1.57c.06-.36.09-.73.09-1.1z" fill="currentColor"/></svg>
-                            <span>Configurações da conta</span>
-                        </a>
-
-                        <a class="settings-item" href="#devices">
-                            <!-- ícone dispositivos -->
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h14v10H4zM2 20h18v2H2zM20 2h2v14h-2z" fill="currentColor"/></svg>
-                            <span>Dispositivos conectados</span>
-                        </a>
-
-                        <a class="settings-item" href="#notifications">
-                            <!-- ícone chat -->
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" fill="currentColor"/></svg>
-                            <span>Gestão de comunicados</span>
-                        </a>
-                    </nav>
-
-                    <div class="settings-actions">
-                        <a href="{% url 'Echo_app:sair' %}" class="btn btn--ghost settings-logout">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 13v-2H7V8l-5 4 5 4v-3zM20 3h-8v2h8v14h-8v2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" fill="currentColor"/></svg>
-                            <span>Sair da conta</span>
-                        </a>
-
-                        <a href="#delete" class="btn btn--danger settings-delete">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 7h12v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7zm3-4h6l1 1H8l1-1z" fill="currentColor"/></svg>
-                            <span>Excluir conta</span>
-                        </a>
-                    </div>
-                </aside>
-
-                <section class="profile__stats">
-            <div class="stat">
-                <div class="stat__value">{{ perfil.categorias_de_interesse.count }}</div>
-                <div class="stat__label">Categorias</div>
-            </div>
-            <div class="stat">
-                <div class="stat__value">0</div>
-                <div class="stat__label">Notícias Salvas</div>
-            </div>
-        </section>
-    </main>
+        
+    </div>
 </div>
-
 {% endblock %}

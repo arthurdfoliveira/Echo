@@ -1,291 +1,163 @@
-/* perfil.css
-    Estilos responsivos e acessíveis para a página de perfil
-    Uso: classes base: .profile, .profile__card, .profile__avatar, .profile__info, .profile__stats, .btn
-*/
+/* --- Paleta de Cores (Fiel à Imagem do Menu Vertical) --- */
 
-/* Variáveis de tema (fácil customização) */
-:root{
-  --bg: #f6f8fa;
-  --card: #ffffff;
-  --muted: #6b7280;
-  --text: #0f1724;
-  --accent: #2563eb;
-  --accent-600: #1e40af;
-  --danger: #ef4444;
-  --glass: rgba(255,255,255,0.6);
-  --radius: 12px;
-  --shadow: 0 6px 18px rgba(15,23,36,0.08);
-  --transition: 180ms cubic-bezier(.2,.9,.3,1);
+:root {
+    --cor-fundo-body: #f0f2f5;       /* Fundo cinza claro */
+    --cor-fundo-card-menu: #ffffff;  /* Fundo branco do card */
+    --cor-texto-principal: #333333; /* Texto escuro */
+    --cor-borda-item: #e0e0e0;       /* Borda sutil dos botões */
+    --cor-borda-sutil: #cccccc;      /* Borda para divisores */
+    --cor-vermelho-uol: #cc0000;     /* Vermelho do UOL */
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark){
-  :root{
-     --bg: #0b1220;
-     --card: rgba(255,255,255,0.04);
-     --muted: #9aa4b2;
-     --text: #e6eef8;
-     --accent: #60a5fa;
-     --accent-600: #3b82f6;
-     --glass: rgba(255,255,255,0.03);
-     --shadow: 0 10px 30px rgba(2,6,23,0.6);
-  }
+/* --- Configurações Globais (Fundo da página e fontes) --- */
+body {
+    background-color: var(--cor-fundo-body) !important;
+    font-family: Arial, sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important; /* Permite que o header e o content fiquem em coluna */
+    min-height: 100vh !important;       
+    color: var(--cor-texto-principal) !important;
 }
 
-/* Reset leve */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg,var(--bg), color-mix(in srgb, var(--bg) 92%, #000 8%));
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.4;
-  padding:28px;
+/* --- ESTILOS PARA AS BARRAS SUPERIORES (Se elas estiverem no base.html) --- */
+/* Se suas barras superiores tiverem outras classes, você precisará ajustá-las aqui. */
+/* Geralmente, elementos de cabeçalho devem ter 100% de largura */
+header, .header-top, .header-main { /* Ajuste estas classes se as suas forem diferentes */
+    width: 100% !important;
+    box-sizing: border-box !important; /* Garante que padding e borda não aumentem a largura */
+    flex-shrink: 0 !important; /* Impede que o header encolha */
 }
 
-/* Container principal do perfil */
-.profile{
-  max-width:1100px;
-  margin:0 auto;
-  display:grid;
-  gap:20px;
-  grid-template-columns: 320px 1fr;
-  align-items:start;
+/* Exemplo de estilo para a barra preta superior (UOL) */
+.header-top { 
+    background-color: #000000 !important; /* Fundo preto */
+    color: white !important;
+    padding: 10px 0 !important;
+    text-align: center !important;
 }
 
-/* Card lateral (avatar + contato) */
-.profile__card{
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:22px;
-  display:flex;
-  gap:18px;
-  align-items:center;
-  transition:transform var(--transition), box-shadow var(--transition);
-  border: 1px solid rgba(15,23,36,0.04);
-}
-.profile__card:hover{ transform:translateY(-4px) }
-
-/* Avatar */
-.profile__avatar{
-  width:96px;
-  height:96px;
-  border-radius:18px;
-  overflow:hidden;
-  flex:0 0 96px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--accent),var(--accent-600));
-  color:white;
-  font-weight:700;
-  font-size:28px;
-  box-shadow: 0 6px 16px rgba(37,99,235,0.16), inset 0 -4px 12px rgba(255,255,255,0.06);
+/* Exemplo de estilo para a barra branca (Echo) */
+.header-main {
+    background-color: #ffffff !important; /* Fundo branco */
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding: 15px 0 !important;
+    text-align: center !important; /* Ajuste conforme seu conteúdo */
 }
 
-/* Fallback para <img> dentro do avatar */
-.profile__avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+
+/* --- Container Principal (Centraliza o Card do Menu na tela) --- */
+.container-principal-menu {
+    flex-grow: 1 !important; /* Faz o container crescer e ocupar o espaço restante */
+    display: flex !important;
+    justify-content: center !important; /* Centraliza horizontalmente */
+    align-items: center !important;     /* Centraliza verticalmente */
+    width: 100% !important;
+    max-width: none !important; /* Remove largura máxima do container para que o card se ajuste */
+    padding: 20px !important;
+    box-sizing: border-box !important;
 }
 
-/* Info básica */
-.profile__info{
-  flex:1;
-  min-width:0;
-}
-.profile__name{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:18px;
-  font-weight:600;
-  color:var(--text);
-}
-.profile__meta{
-  margin-top:6px;
-  font-size:13px;
-  color:var(--muted);
+/* --- Card Principal (Fundo Branco com Sombra, com largura definida) --- */
+.menu-perfil-card {
+    background-color: var(--cor-fundo-card-menu) !important;
+    width: 100% !important; /* Ocupa a largura do container-principal-menu */
+    max-width: 450px !important; /* AQUI definimos a largura MÁXIMA do card, para não ficar gigante */
+    border-radius: 8px !important; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    padding: 30px !important;
 }
 
-/* Ações rápidas (editar, seguir) */
-.profile__actions{
-  margin-top:12px;
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.btn{
-  background:var(--accent);
-  color:white;
-  border:0;
-  padding:8px 12px;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition);
-  box-shadow: 0 8px 18px rgba(37,99,235,0.12);
-}
-.btn:active{ transform: translateY(1px) }
-.btn--ghost{
-  background:transparent;
-  color:var(--text);
-  border:1px solid rgba(15,23,36,0.06);
-  box-shadow:none;
-}
-.btn--danger{ background:var(--danger); box-shadow: 0 8px 18px rgba(239,68,68,0.12) }
-
-/* Conteúdo principal (biografia, posts, estatísticas) */
-.profile__main{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+/* --- Saudação de Boas-Vindas (Topo) --- */
+.saudacao {
+    font-size: 1.3em !important;
+    font-weight: bold !important;
+    color: var(--cor-vermelho-uol) !important; /* Cor vermelha da saudação, como na imagem */
+    margin-top: 0 !important;
+    margin-bottom: 25px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px solid var(--cor-borda-sutil) !important;
+    text-align: left !important;
 }
 
-/* Biografia / Sobre */
-.profile__about{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:18px;
-  box-shadow:var(--shadow);
-  border: 1px solid rgba(15,23,36,0.04);
-  color:var(--muted);
-  font-size:14px;
-  white-space:pre-wrap;
+/* --- Menu de Opções (Itens Verticalmente Enfileirados) --- */
+.menu-opcoes {
+    display: flex !important;
+    flex-direction: column !important; 
+    gap: 15px !important; 
+    margin-bottom: 30px !important; 
 }
 
-/* Estatísticas rápidas */
-.profile__stats{
-  display:flex;
-  gap:12px;
-  align-items:stretch;
-}
-.stat{
-  background:linear-gradient(180deg, color-mix(in srgb, var(--card) 90%, transparent), var(--card));
-  border-radius:12px;
-  padding:12px 14px;
-  min-width:110px;
-  text-align:center;
-  box-shadow:var(--shadow);
-  border:1px solid rgba(15,23,36,0.04);
-}
-.stat__value{ font-size:18px; font-weight:700; color:var(--text) }
-.stat__label{ font-size:12px; color:var(--muted); margin-top:6px }
-
-/* Lista de itens (posts, atividades) */
-.list{
-  display:grid;
-  gap:12px;
-}
-.list__item{
-  background:var(--card);
-  border-radius:12px;
-  padding:14px;
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  box-shadow:var(--shadow);
-  border:1px solid rgba(15,23,36,0.04);
-}
-.list__item .meta{ font-size:13px; color:var(--muted) }
-.list__item h4{ margin:0 0 6px 0; font-size:15px; color:var(--text) }
-
-/* Formulário de edição simples */
-.form-row{ display:flex; gap:10px; flex-wrap:wrap }
-.input, textarea{
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid rgba(15,23,36,0.06);
-  background:transparent;
-  color:var(--text);
-  font-size:14px;
-  transition:box-shadow var(--transition), border-color var(--transition);
-}
-.input:focus, textarea:focus{
-  outline:none;
-  box-shadow: 0 6px 18px rgba(37,99,235,0.08);
-  border-color:var(--accent-600);
-}
-textarea{ min-height:96px; resize:vertical }
-
-/* Acessibilidade: foco visível */
-:focus{ outline: 3px solid color-mix(in srgb, var(--accent) 20%, transparent); outline-offset:2px }
-
-/* Responsividade */
-@media (max-width:980px){
-  .profile{ grid-template-columns: 1fr; padding-bottom:28px }
-  .profile__card{ align-items:center }
-  .profile__avatar{ width:88px; height:88px; border-radius:14px; flex:0 0 88px }
-}
-@media (max-width:520px){
-  body{ padding:16px }
-  .profile__avatar{ width:72px; height:72px; border-radius:12px; flex:0 0 72px }
-  .btn{ padding:8px 10px; font-size:13px }
-  .stat{ min-width:80px; padding:10px }
+.menu-item {
+    display: flex !important;
+    align-items: center !important;
+    padding: 15px !important;
+    text-decoration: none !important;
+    color: var(--cor-texto-principal) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--cor-borda-item) !important;
+    border-radius: 8px !important; 
+    transition: background-color 0.2s, border-color 0.2s !important;
+    font-size: 1.05em !important;
+    font-weight: 500 !important;
 }
 
-/* Pequenos utilitários */
-.kv{ display:flex; gap:8px; align-items:center; color:var(--muted); font-size:13px }
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:var(--glass);
-  color:var(--text);
-  font-weight:600;
-  font-size:13px;
-  border:1px solid rgba(15,23,36,0.03);
+.menu-item .icon {
+    margin-right: 15px !important;
+    font-size: 1.2em !important;
+    width: 25px !important; 
+    text-align: center !important;
 }
 
-/* Estilo para imagens dentro do conteúdo (responsivo) */
-.profile__main img{ max-width:100%; height:auto; border-radius:10px; display:block }
-
-/* Pequenas animações para carregamento (skeleton) */
-.skeleton{
-  background:linear-gradient(90deg, rgba(0,0,0,0.04) 8%, rgba(0,0,0,0.02) 18%, rgba(0,0,0,0.04) 33%);
-  background-size:200% 100%;
-  animation: shimmer 1.4s linear infinite;
-  border-radius:8px;
+.menu-item:hover {
+    background-color: #f5f5f5 !important;
+    border-color: #c0c0c0 !important;
 }
-@keyframes shimmer{ 100%{ background-position:-200% 0 } }
 
-/* ================= Settings panel styles ================= */
-.settings-panel{
-  background:var(--card);
-  border-radius:12px;
-  padding:18px;
-  box-shadow:var(--shadow);
-  border:1px solid rgba(15,23,36,0.04);
-  max-width:360px;
+/* --- Ações Finais (Botões Lado a Lado) --- */
+.acoes-finais {
+    display: flex !important;
+    flex-direction: row !important; 
+    justify-content: space-between !important;
+    gap: 15px !important;
+    padding-top: 25px !important;
+    border-top: 1px solid var(--cor-borda-sutil) !important;
 }
-.settings-header h2{ margin:0; font-size:18px; font-weight:700 }
-.settings-header .muted{ color:var(--muted); font-size:13px; margin-top:6px }
-.settings-menu{ display:flex; flex-direction:column; gap:10px; margin-top:14px }
-.settings-item{
-  display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text);
-  background:transparent; border-radius:10px; padding:10px 12px; width:100%;
-  transition: background-color var(--transition), transform var(--transition);
-  border:1px solid transparent;
+
+.acao-logout, .acao-deletar {
+    flex: 1 !important; 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 50px !important; 
+    padding: 0 10px !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 1em !important;
+    cursor: pointer !important;
+    background-color: #f0f0f0 !important; /* Fundo cinza para "Sair da conta" */
+    color: var(--cor-texto-principal) !important;
+    border: 1px solid #e0e0e0 !important;
 }
-.settings-item svg{ color:var(--accent); flex:0 0 20px }
-.settings-item span{ font-weight:600 }
-.settings-item:hover{ background:color-mix(in srgb, var(--accent) 6%, transparent); transform:translateY(-2px) }
 
-.settings-actions{ display:flex; gap:10px; margin-top:18px }
-.settings-actions .settings-logout{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px }
-.settings-actions .settings-delete{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px }
-.settings-delete{ background:var(--danger); color:white; border-radius:10px }
-.settings-logout{ background:transparent; border:1px solid rgba(15,23,36,0.06); border-radius:10px }
+.acao-logout:hover {
+    background-color: #e6e6e6 !important;
+}
 
-@media (max-width:980px){
-  .settings-panel{ max-width:100%; }
+.acao-deletar {
+    background-color: #dc3545 !important; /* Fundo vermelho para "Excluir conta" */
+    color: #ffffff !important; /* Texto branco */
+    border: none !important; /* Sem borda, como na imagem */
+}
+
+.acao-deletar:hover {
+    background-color: #c82333 !important;
+}
+
+/* Ícones nas ações finais */
+.acao-logout .icon, .acao-deletar .icon {
+    margin-right: 10px !important;
+    font-size: 1.15em !important;
 }
