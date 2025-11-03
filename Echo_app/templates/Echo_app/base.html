@@ -34,6 +34,14 @@
     <!-- ===================================== -->
     <!-- PARTE 2 - BARRA DE NAVEGAÇÃO "ECHO" (NOSSA) -->
     <!-- ===================================== -->
+    <!-- 
+        Estrutura da barra de navegação principal do Echo:
+        - Ícone para abrir o menu lateral (sidebar)
+        - Campo de pesquisa no cabeçalho
+        - Logo do Echo centralizada
+        - Link para o perfil do usuário à direita
+        Esta barra serve como navegação principal do aplicativo.
+    -->
     <header class="top-nav">
         <div class="top-nav-left">
             <a href="#" class="nav-icon" id="sidebar-toggle">
@@ -41,11 +49,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
             </a>
-            <a href="#" class="nav-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            
+            <div class="search-input-container">
+                <input type="text" id="header-search-input" placeholder="Pesquisar..." class="search-input-header">
+                <svg class="search-icon-header" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
-            </a>
+            </div>
+            </div>
         </div>
         
     <a href="{% url 'Echo_app:dashboard' %}" class="logo-container top-nav-center">
@@ -288,6 +299,23 @@
             }
         });
     });
+    // --- NOVO CÓDIGO: FUNCIONALIDADE DA LUPA DE PESQUISA ---
+        const searchToggleButton = document.getElementById('search-toggle-btn');
+        const mainSearchInput = document.getElementById('main-search-input');
+        const topNavRight = document.querySelector('.top-nav-right');
+
+        if (searchToggleButton && mainSearchInput) {
+            searchToggleButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                // ... código para expandir/recolher ...
+            });
+            mainSearchInput.addEventListener('blur', function() {
+                // ... código para recolher no blur ...
+            });
+        }
+
+    </script>
+    {% endblock %}
 
 </body>
 </html>
