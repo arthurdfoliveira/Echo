@@ -22,6 +22,10 @@
 }
 html { 
     font-size: 16px; 
+    /* ================== ALTERAÇÃO AQUI ================== */
+    /* Aplica um zoom de 75% a toda a página */
+    zoom: 0.75; 
+    /* ================== FIM DA ALTERAÇÃO ================== */
 }
 
 body {
@@ -162,6 +166,8 @@ app-content {
 .nav-icon-profile-link:hover {
     transform: scale(1.1);
 }
+
+/* Dropdown do Utilizador (Novo dos colegas) */
 .nav-user-dropdown {
     position: relative;
     display: flex;
@@ -286,7 +292,7 @@ app-content {
 .partner-circle {
     width: 60px;
     height: 60px;
-    border-radius: 50%;
+    border-radius: 100%;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     display: flex;
     align-items: center;
@@ -308,7 +314,7 @@ app-content {
 }
 
 .partner-circle img.partner-logo {
-    width: 120%;
+    width: 200%;
     height: 120%;
     object-fit: cover; /* Preenche todo o círculo */
     display: block;    /* Remove espaços extras */
@@ -668,4 +674,3 @@ app-content {
         font-size: 0.8rem;
     }
 }
-
