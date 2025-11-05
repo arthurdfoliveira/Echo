@@ -1,6 +1,6 @@
 /* =====================================
    ARQUIVO: noticia_detalhe.css
-   VERSÃO COM IMAGEM REDUZIDA E BOTÕES ABAIXO
+   VERSÃO COM ANÚNCIOS CENTRALIZADOS (NÃO COLADOS NAS BORDAS)
    ===================================== */
 
 /* Container principal do artigo */
@@ -29,9 +29,9 @@
 /* Categoria (ex: "TURISMO") */
 .noticia-categoria-tag {
     display: block; 
-    font-size: 2.2rem; /* <<< ALTERADO: Aumentado de 0.8rem */
+    font-size: 1.0rem;
     font-weight: 700;
-    margin-bottom: 12px; /* <<< ALTERADO: Mais espaço abaixo */
+    margin-bottom: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 0 15px; 
@@ -66,18 +66,17 @@
     white-space: nowrap;
 }
 
-/* Wrapper da Imagem Principal */
+/* Wrapper da Imagem Principal (Reduzida/Centralizada) */
 .noticia-imagem-principal-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 32px; 
+    margin-bottom: 32px;
     
-    /* <<< ALTERADO: Reduz e centraliza a imagem */
-    max-width: 800px;
+    max-width: 660px; /* Largura do Artigo */
     margin-left: auto;
     margin-right: auto;
-    border-radius: 8px; /* Arredonda as bordas da imagem */
-    overflow: hidden;     /* Garante que a imagem interna respeite o radius */
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .noticia-imagem-principal {
@@ -99,23 +98,20 @@
     font-style: italic;
 }
 
-/* Botões de Interação (AGORA ABAIXO DA IMAGEM) */
+/* Botões de Interação (ABAIXO DA IMAGEM) */
 .imagem-interacoes {
-    /* <<< REMOVIDO: position: absolute e related (bottom, right, left, z-index) */
-    
     display: flex;
-    flex-direction: row;  /* Lado a lado */
+    flex-direction: row;
     gap: 8px;
     align-items: center; 
 
-    /* <<< ALTERADO: Novas regras de layout */
-    max-width: 800px;          /* Alinha com a imagem e conteúdo */
-    margin-left: auto;         /* Centraliza o container */
-    margin-right: auto;        /* Centraliza o container */
-    margin-top: -24px;         /* Puxa para mais perto da imagem */
-    margin-bottom: 32px;       /* Espaço antes do .conteudo */
-    padding: 0 15px;           /* Padding lateral para segurança */
-    justify-content: flex-end; /* Alinha os botões à DIREITA */
+    max-width: 660px; /* Largura do Artigo */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -24px;
+    margin-bottom: 32px;
+    padding: 0 15px;
+    justify-content: flex-end;
 }
 
 /* Estilo dos botões "pílula" */
@@ -125,7 +121,7 @@
     justify-content: center;
     padding: 8px 12px;
     border-radius: 20px;
-    background-color: #FFFFFF; /* <<< ALTERADO: Fundo branco sólido */
+    background-color: #FFFFFF;
     border: 1px solid var(--cor-borda);
     color: var(--cor-texto-secundario);
     cursor: pointer;
@@ -145,8 +141,13 @@
     height: 20px;
     stroke-width: 1.5;
     fill: none;
-    margin-right: 6px;
 }
+
+/* Adiciona margem SÓ se houver um span de contagem (.btn-count) */
+.imagem-interacoes .btn-interacao svg + .btn-count {
+    margin-left: 6px;
+}
+
 
 /* Estilos ATIVOS */
 .imagem-interacoes .btn-interacao.curtida-ativa,
@@ -168,7 +169,7 @@
 .imagem-interacoes .login-prompt {
     font-size: 0.8rem;
     color: var(--cor-texto-secundario);
-    background-color: #FFFFFF; /* <<< ALTERADO: Fundo branco sólido */
+    background-color: #FFFFFF;
     padding: 8px 12px;
     border-radius: 20px;
     border: 1px solid var(--cor-borda);
@@ -186,8 +187,8 @@
     line-height: 1.8;
     color: var(--cor-texto);
     padding: 0 15px;
-    max-width: 800px; 
-    margin: 0 auto; 
+    max-width: 660px; /* Largura do Artigo */
+    margin: 0 auto;
 }
 .conteudo p {
     margin-bottom: 1.5em;
@@ -197,6 +198,75 @@
     height: auto;
     margin: 1.5em auto;
     display: block;
+}
+
+/* =====================================
+   ESTILOS PARA PUBLICIDADE
+   ===================================== */
+
+/* O novo container que usa Flexbox */
+.noticia-container-with-ads {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+    
+    /* === ALTERAÇÕES PRINCIPAIS AQUI === */
+    /* Força o container a ter no máximo 1200px e a ficar no centro */
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* A coluna do artigo (central) */
+.noticia-container-with-ads .noticia-article {
+    width: 100%;
+    max-width: 660px; /* Largura do Artigo */
+    flex-shrink: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* As colunas de anúncio (Sidebars) */
+.ad-sidebar {
+    width: 250px; /* Largura do Anúncio */
+    flex-shrink: 0;
+}
+
+/* O placeholder do anúncio (para o vídeo) */
+.ad-placeholder {
+    width: 250px;
+    height: 600px;
+    background-color: transparent;
+    border: none;
+    display: block;
+    
+    position: sticky;
+    top: 20px; 
+}
+
+/* O vídeo do anúncio */
+.ad-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Esconde anúncios em telas menores */
+@media (max-width: 1199px) {
+    .ad-sidebar {
+        display: none;
+    }
+    
+    .noticia-container-with-ads {
+        justify-content: center;
+    }
+
+    .noticia-container-with-ads .noticia-article {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 /* Esconde o texto dentro dos botões (acessibilidade) */
@@ -212,7 +282,7 @@
   border-width: 0;
 }
 
-/* Media Query (Ajustes) */
+/* Media Query (Ajustes de fonte em telas menores) */
 @media (max-width: 768px) {
     .noticia-article h1 {
         font-size: 1.8rem;
@@ -220,83 +290,5 @@
     .conteudo {
         font-size: 1rem;
         line-height: 1.7;
-    }
-    /* As regras dos botões agora não precisam de @media */
-}
-/* =====================================
-   NOVOS ESTILOS PARA PUBLICIDADE
-   ===================================== */
-
-/* 1. O novo container que usa Flexbox */
-/* (Este container está dentro do .app-content de 1200px do base.css) */
-.noticia-container-with-ads {
-    display: flex;
-    justify-content: space-between; /* Cria espaço entre os 3 itens */
-    width: 100%;
-}
-
-/* 2. A coluna do artigo (central) */
-.noticia-container-with-ads .noticia-article {
-    /* O .noticia-article agora se torna a coluna central */
-    width: 100%;
-    
-    /* Limitamos o artigo para que as colunas de anúncio tenham espaço */
-    /* Os 800px que já definimos para o conteúdo/imagem vão 
-       funcionar perfeitamente aqui */
-    max-width: 800px; 
-    
-    flex-shrink: 0; /* Não deixa o artigo encolher */
-    /* Remove a margem automática para o flexbox funcionar */
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/* 3. As colunas de anúncio (Sidebars) */
-.ad-sidebar {
-    width: 160px; /* Largura padrão de "skyscraper" */
-    flex-shrink: 0; /* Não deixa as colunas de anúncio encolherem */
-}
-
-/* 4. O placeholder do anúncio (o bloco cinza) */
-.ad-placeholder {
-    width: 160px;
-    height: 600px; /* Altura padrão de "skyscraper" */
-    background-color: #f0f0f0;
-    border: 1px dashed #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #999;
-    font-size: 0.9rem;
-    
-    /* Efeito "Sticky" (gruda no topo ao rolar) */
-    position: sticky;
-    /* Distância do topo. 
-      Seu base.css tem .top-nav (60px) e .partners-section (~100px).
-      Deixar 20px abaixo do header fixo (se ele for fixo) é seguro.
-      Ajuste 'top: 20px;' se necessário.
-    */
-    top: 20px; 
-}
-
-/* 5. Esconder anúncios em telas menores */
-/* O seu .app-content (base) tem 1200px.
-   Nosso conteúdo é: 160 (ad) + 800 (artigo) + 160 (ad) = 1120px.
-   Quando a tela for menor que 1160px, os anúncios quebram.
-*/
-@media (max-width: 1160px) { 
-    .ad-sidebar {
-        display: none; /* Esconde os anúncios */
-    }
-    
-    .noticia-container-with-ads {
-        justify-content: center; /* Centraliza o artigo quando os anúncios somem */
-    }
-
-    /* Devolve a margem automática para o .noticia-article */
-    .noticia-container-with-ads .noticia-article {
-        margin-left: auto;
-        margin-right: auto;
     }
 }

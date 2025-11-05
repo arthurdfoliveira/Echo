@@ -1,0 +1,30 @@
+[
+{
+    "model": "Echo_app.noticia",
+    "pk": 1,
+    "fields": {
+        "titulo": "teste1",
+        "imagem": "",
+        "conteudo": "noticia so pra teste\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n1",
+        "data_publicacao": "2025-10-24T18:43:41Z",
+        "autor": 1,
+        "curtidas_count": 0,
+        "salvamentos_count": 0,
+        "categoria": null
+    }
+},
+{
+    "model": "Echo_app.noticia",
+    "pk": 3,
+    "fields": {
+        "titulo": "noticia teste",
+        "imagem": "noticias/IMG-20251027-WA00031.jpg",
+        "conteudo": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et fringilla libero, et faucibus arcu. Nam risus mauris, scelerisque sit amet mi vitae, pretium hendrerit augue. Praesent lobortis volutpat elit, quis accumsan ante molestie eu. Duis id dui eget lacus varius porta non id dui. Nam ut vulputate sapien, vitae convallis dui. Etiam enim libero, euismod sit amet est vitae, rhoncus aliquet eros. Curabitur a erat ac justo consequat dapibus. Phasellus sed est eu mi eleifend tempor interdum non quam. Maecenas elementum ipsum ut tristique ornare. Quisque neque nisl, accumsan elementum vulputate ut, imperdiet et elit. Proin porttitor cursus eros nec pulvinar. Nulla quis libero hendrerit, eleifend libero ac, semper lacus. Donec mauris lectus, gravida ac iaculis at, ullamcorper at nisl. Nam efficitur purus ipsum, et scelerisque arcu gravida ut. Vivamus sodales condimentum molestie. Donec vel urna vel risus egestas fringilla in et tellus.\r\n\r\nVestibulum tincidunt mauris enim, gravida eleifend felis blandit a. Proin et lorem in arcu porta tincidunt. Nam suscipit, quam vitae feugiat ultrices, diam massa congue purus, in malesuada elit dui ac ante. Suspendisse nec neque libero. Mauris et dapibus sapien. Maecenas euismod dignissim nunc, ac rutrum magna scelerisque ac. Pellentesque iaculis suscipit massa et consequat. Praesent sit amet sem consequat, tincidunt justo vel, tristique urna. Duis ac finibus mauris, eget tempus libero. Curabitur ac venenatis tortor. Morbi posuere blandit tempus. Ut a tincidunt enim, eu vulputate augue. Nullam condimentum elementum nulla vitae aliquet. Quisque vestibulum feugiat urna vel bibendum. Donec gravida lectus ut sapien placerat commodo.\r\n\r\nEtiam eu massa magna. Sed ullamcorper pharetra purus quis fermentum. Curabitur est ex, auctor et cursus quis, dignissim et massa. Aliquam blandit mi posuere ante viverra ultricies. Cras viverra laoreet elementum. Integer finibus, nisi non bibendum viverra, tortor nibh viverra ante, ut viverra eros lorem lobortis mi. Integer commodo nisl turpis. Fusce rhoncus tempor gravida.\r\n\r\nMauris sit amet sem et lectus vulputate tincidunt. Quisque tincidunt quis sem sed lacinia. Mauris dapibus magna leo, id dapibus nisi semper convallis. Aenean sollicitudin porta iaculis. Nunc iaculis nisl non ipsum eleifend, ac sodales massa rhoncus. Quisque convallis eget dolor bibendum facilisis. Ut lectus massa, ullamcorper at nunc commodo, mollis consequat nulla. Mauris eu fermentum sapien.\r\n\r\nDonec vel justo tincidunt, lacinia diam in, tristique libero. Maecenas luctus mollis metus sed aliquam. Aliquam non dapibus lacus. Quisque a condimentum dui. Morbi a convallis ligula. Donec dictum, nisl sit amet tristique fermentum, nunc lorem cursus sem, in cursus libero elit vitae tortor. Proin vel sollicitudin lorem. Donec et quam hendrerit, venenatis ex sit amet, tristique justo.",
+        "data_publicacao": "2025-11-01T17:45:36Z",
+        "autor": 1,
+        "curtidas_count": 0,
+        "salvamentos_count": 0,
+        "categoria": 13
+    }
+}
+]
