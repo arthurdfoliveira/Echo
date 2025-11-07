@@ -1,20 +1,10 @@
 /* ================================================================
    AJUSTE DE COMPATIBILIDADE
-   
-   O 'base.html' tem uma classe '.app-content' com padding.
-   Este design do dashboard precisa de largura total ("full bleed").
-   Esta regra ANULA o padding e max-width do 'base.css'
-   APENAS quando esta folha de estilo (dashboard.css) é carregada.
    ================================================================ */
 .app-content {
     padding: 0 !important;
     max-width: none !important;
 }
-
-/* SECÇÃO DE BOLHAS DE CATEGORIA REMOVIDA
-   .categories-section, .category-bubbles-container, .bubble, etc.
-   foram removidos deste ficheiro.
-*/
 
 /* SEÇÕES DE TELA INTEIRA */
 .recommended-section,
@@ -27,7 +17,6 @@
 
 .recommended-section {
     border-bottom: 3px solid var(--cor-primaria);
-    /* Adiciona padding no topo para compensar a remoção das categorias */
     padding-top: 30px; 
 }
 
@@ -96,7 +85,7 @@
     color: inherit;
     display: block;
     width: 100%;
-    max-width: 1400px; /* Era 1400px, mantido */
+    max-width: 1400px;
 }
 
 .news-card.large-card {
@@ -121,16 +110,14 @@
     position: relative;
 }
 
-.large-card .card-image-placeholder img,
-.urgent-image img {
+.large-card .card-image-placeholder img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
 }
 
-.news-card.large-card:hover .card-image-placeholder img,
-.urgent-news:hover .urgent-image img {
+.news-card.large-card:hover .card-image-placeholder img {
     transform: scale(1.05);
 }
 
@@ -145,11 +132,9 @@
     color: white;
 }
 
-/* Placeholder azul específico para a seção "Recomendado" (e agora "Urgente") */
 .recommended-placeholder {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Gradiente azul */
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
 }
-
 
 .card-content {
     padding: 50px;
@@ -164,8 +149,7 @@
     letter-spacing: -0.5px;
 }
 
-.news-description,
-.urgent-description {
+.news-description {
     color: var(--cor-texto-secundario);
     font-size: 20px;
     line-height: 1.7;
@@ -173,7 +157,6 @@
     font-weight: 400;
     opacity: 1;
     max-width: 800px;
-    /* Adiciona o estilo de destaque que estava no CSS dos colegas */
     background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
     padding: 20px;
     border-radius: 15px;
@@ -202,141 +185,186 @@
     font-size: 14px;
 }
 
-/* SEÇÃO NOTÍCIAS URGENTES - TELA INTEIRA */
+/* =====================================
+   SEÇÃO NOTÍCIAS URGENTES - CORRIGIDA EXATAMENTE COMO WIREFRAME
+   ===================================== */
 .urgent-section .urgent-news-container {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 20px 80px;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
 }
 
-.urgent-news-slider {
-    position: relative;
+.urgent-news-container {
     width: 100%;
-    height: 650px;
     overflow: hidden;
-    border-radius: 25px;
-    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.15);
+    position: relative;
 }
 
-.urgent-news {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    background: var(--cor-surface);
-    border-radius: 25px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+.urgent-news-wrapper {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-.urgent-news.active {
+.urgent-news-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.urgent-news-card {
+    flex: 0 0 auto;
+    width: 800px;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    scroll-snap-align: start;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.urgent-news-card.active {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.2);
+    border: 2px solid var(--cor-primaria);
+}
+
+/* NOTÍCIA COMPLETA */
+.urgent-news-card.full-view {
+    width: 800px;
+    opacity: 0.7;
+}
+
+.urgent-news-card.full-view.active {
     opacity: 1;
 }
 
-.urgent-news-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
+/* NOTÍCIA PELA METADE */
+.urgent-news-card.partial-view {
+    width: 400px;
+    margin-right: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.urgent-news-card.partial-view::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    background: linear-gradient(to right, transparent, white);
+    pointer-events: none;
+}
+
+.urgent-image-container {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
 }
 
 .urgent-image {
     width: 100%;
-    height: 400px;
-    overflow: hidden;
-    border-radius: 25px 25px 0 0;
-    background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.urgent-news-card:hover .urgent-image {
+    transform: scale(1.05);
 }
 
 .urgent-image-placeholder {
     width: 100%;
     height: 100%;
-    /* A LINHA ABAIXO FOI REMOVIDA para permitir que .recommended-placeholder (azul) funcione */
-    /* background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%); */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 56px;
+    font-size: 3rem;
+}
+
+.urgent-content {
+    padding: 2rem;
+}
+
+.urgent-category {
+    background: #dc2626;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    margin-bottom: 1rem;
 }
 
 .urgent-title {
-    padding: 45px 45px 20px;
-    font-size: 32px;
-    color: var(--cor-texto);
+    font-size: 1.5rem;
     font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 1rem 0;
     line-height: 1.3;
-    letter-spacing: -0.5px;
+}
+
+.urgent-time {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
 }
 
 .urgent-description {
-    padding: 0 45px 45px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
 }
 
-/* BOTÕES DE NAVEGAÇÃO */
-.nav-button {
-    background: var(--cor-surface);
-    border: 3px solid var(--cor-primaria);
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    font-size: 32px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 25px rgba(220, 38, 38, 0.25);
-    transition: all 0.3s ease;
-    z-index: 10;
-    color: var(--cor-primaria);
-    margin: 0 25px;
-}
-
-.nav-button:hover {
-    background: var(--cor-primaria);
-    color: white;
-    box-shadow: 0 10px 35px rgba(220, 38, 38, 0.4);
-    transform: scale(1.1);
-}
-
-.nav-button:active {
-    transform: scale(0.95);
-}
-
-/* INDICADORES */
-.indicators {
+/* NAVEGAÇÃO */
+.urgent-navigation {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin: 35px 0;
-    padding: 25px;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.indicator {
-    width: 18px;
-    height: 18px;
+.nav-dot {
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #e5e5e5;
+    background: #ddd;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
 }
 
-.indicator.active {
-    background: var(--cor-primaria);
+.nav-dot.active {
+    background: #dc2626;
     transform: scale(1.3);
-    border-color: var(--cor-primaria);
+    border-color: #fff;
+    box-shadow: 0 0 0 2px #dc2626;
 }
 
-.indicator:hover {
-    background: var(--cor-primaria);
+.nav-dot:hover {
+    background: #b91c1c;
     transform: scale(1.2);
 }
 
@@ -363,21 +391,13 @@
     font-size: 20px;
 }
 
-.urgent-empty {
-    background: #fef2f2;
-    border: 3px solid #fecaca;
-}
-
 /* ESPAÇO PARA NAVEGAÇÃO INFERIOR */
 .bottom-spacer {
     height: 50px;
 }
 
-/* RESPONSIVIDADE (AJUSTADA) */
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
-    /* ANULA o padding do 'app-content' (do base.css) 
-      para permitir que as secções ocupem a tela toda 
-    */
     .app-content {
         padding: 0 !important;
     }
@@ -407,48 +427,34 @@
         font-size: 28px;
     }
     
-    .news-description,
-    .urgent-description {
+    .news-description {
         font-size: 16px;
-        padding: 15px; /* Menos padding em telas pequenas */
+        padding: 15px;
     }
     
-    .urgent-news-slider {
-        height: 550px;
+    /* RESPONSIVIDADE NOTÍCIAS URGENTES */
+    .urgent-news-card.full-view {
+        width: 85vw;
     }
     
-    .urgent-image {
-        height: 280px;
+    .urgent-news-card.partial-view {
+        width: 42.5vw;
+    }
+    
+    .urgent-image-container {
+        height: 200px;
+    }
+    
+    .urgent-content {
+        padding: 1.5rem;
     }
     
     .urgent-title {
-        padding: 35px 25px 15px;
-        font-size: 24px;
+        font-size: 1.3rem;
     }
-    
-    .urgent-description {
-        padding: 0 25px 35px;
-    }
-    
-    .nav-button {
-        width: 55px;
-        height: 55px;
-        font-size: 26px;
-        margin: 0 15px;
-    }
-    
-    /* Estilos de .bubble e .category-bubbles removidos da media query */
 }
 
 @media (max-width: 480px) {
-    .urgent-news-slider {
-        height: 500px;
-    }
-    
-    .urgent-image {
-        height: 220px;
-    }
-    
     .section-header h2 {
         font-size: 22px;
     }
@@ -466,29 +472,48 @@
         font-size: 24px;
     }
     
-    .news-description,
-    .urgent-description {
+    .news-description {
         font-size: 15px;
     }
     
-    /* Estilos de .bubble e .category-bubbles removidos da media query */
-}
-
-/* ANIMAÇÕES */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+    /* RESPONSIVIDADE NOTÍCIAS URGENTES MOBILE */
+    .urgent-news-container {
+        padding: 0 12px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0 12px 20px;
+    }
+    
+    .urgent-news-card.full-view {
+        width: 90vw;
+    }
+    
+    .urgent-news-card.partial-view {
+        width: 45vw;
+    }
+    
+    .urgent-image-container {
+        height: 180px;
+    }
+    
+    .urgent-content {
+        padding: 1.25rem;
+    }
+    
+    .urgent-title {
+        font-size: 1.2rem;
+    }
+    
+    .urgent-description {
+        font-size: 0.9rem;
+    }
+    
+    .urgent-category {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
     }
 }
-
-.news-card,
-.urgent-news {
-    animation: fadeIn 0.7s ease-out;
-}
-
-/* SCROLLBAR PERSONALIZADO (REMOVIDO - Era das categorias) */

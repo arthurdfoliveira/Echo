@@ -3,11 +3,9 @@
 
 {% block title %}Dashboard - Echo {% endblock %}
 
-<!-- 1. LINK DO CSS MOVIDO PARA O BLOCO CORRETO -->
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/dashboard.css' %}?v={% now 'U' %}">
 {% endblock %}
-
 
 {% block content %}
 
@@ -27,15 +25,13 @@
                             {% if noticia.imagem %}
                                 <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}">
                             {% else %}
-                                <!-- ================== CLASSE ADICIONADA AQUI ================== -->
                                 <div class="image-placeholder recommended-placeholder">📰</div>
-                                <!-- ========================================================== -->
                             {% endif %}
                         </div>
                         <div class="card-content">
                             <h3>{{ noticia.titulo }}</h3>
                             <p class="news-description">A CESAR School conquistou o seu primeiro título da Copa Estudantil Metropolitana de Futebol ao derrotar o Colégio Santa Helena por 4 a 1 na final.
-                                O destaque da partida foi Matheus Freire (que abriu o placar), sendo Arthur Moury eleito o melhor jogador de todo o torneio.
+                                O destaque da partida foi Matheus Freire (que abiu o placar), sendo Arthur Moury eleito o melhor jogador de todo o torneio.
                                 Com esta vitória histórica, a CESAR School garantiu a vaga para o Campeonato Estadual, afirmando-se como uma nova força no desporto escolar.</p>
                             <div class="card-meta">
                                 <span class="category">{{ noticia.categoria.nome|default:"Geral" }}</span>
@@ -54,7 +50,7 @@
     </div>
 </section>
 
-<!-- SEÇÃO NOTÍCIAS URGENTES - COM 5 BLOCOS E NAVEGAÇÃO CÍCLICA -->
+<!-- SEÇÃO NOTÍCIAS URGENTES - CORRIGIDA CONFORME WIREFRAME -->
 <section class="urgent-section">
     <div class="section-header">
         <h2>Notícias urgentes</h2>
@@ -62,222 +58,240 @@
     </div>
 
     <div class="urgent-news-container">
-        <button class="nav-button prev-button" id="prevBtn">‹</button>
-        
-        <div class="urgent-news-slider">
-            <!-- Bloco 1 -->
-            <div class="urgent-news active" data-index="0">
-                {% if noticias_urgentes.0 %}
-                    <a href="{% url 'Echo_app:noticia_detalhe' noticias_urgentes.0.id %}" class="urgent-news-link">
-                        <div class="urgent-image">
-                            {% if noticias_urgentes.0.imagem %}
-                                <img src="{{ noticias_urgentes.0.imagem.url }}" alt="{{ noticias_urgentes.0.titulo }}">
-                            {% else %}
-                                <!-- Este aqui continuará vermelho (padrão) -->
-                                <div class="urgent-image-placeholder"></div>
-                            {% endif %}
-                        </div>
-                        <h3 class="urgent-title">{{ noticias_urgentes.0.titulo }}</h3>
-                        <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </a>
-                {% else %}
-                    <div class="urgent-image">
-                        <div class="urgent-image-placeholder"></div>
-                    </div>
-                    <h3 class="urgent-title">Notícia Urgente 1</h3>
-                    <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                {% endif %}
+        <div class="urgent-news-wrapper">
+            <!-- Notícia 1 - COMPLETA -->
+            <div class="urgent-news-card full-view active" data-index="0">
+                <div class="urgent-image-container">
+                    {% if noticias_urgentes.0 and noticias_urgentes.0.imagem %}
+                        <img src="{{ noticias_urgentes.0.imagem.url }}" alt="{{ noticias_urgentes.0.titulo }}" class="urgent-image">
+                    {% else %}
+                        <div class="urgent-image-placeholder">🌊</div>
+                    {% endif %}
+                </div>
+                <div class="urgent-content">
+                    <span class="urgent-category">PERNAMBUCO</span>
+                    <h3 class="urgent-title">
+                        {% if noticias_urgentes.0 %}
+                            {{ noticias_urgentes.0.titulo }}
+                        {% else %}
+                            Jaboatão entrega projeto para conter avanço do mar ao Governo de Pernambuco
+                        {% endif %}
+                    </h3>
+                    <p class="urgent-time">5min atrás</p>
+                    <p class="urgent-description">
+                        {% if noticias_urgentes.0 %}
+                            {{ noticias_urgentes.0.resumo|default:"Em maio de 2018, a nova empresa de JABOATÃO É uma vez que o governo é um bom e mais grande." }}
+                        {% else %}
+                            Em maio de 2018, a nova empresa de JABOATÃO É uma vez que o governo é um bom e mais grande.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
-            
-            <!-- Bloco 2 -->
-            <div class="urgent-news" data-index="1">
-                {% if noticias_urgentes.1 %}
-                    <a href="{% url 'Echo_app:noticia_detalhe' noticias_urgentes.1.id %}" class="urgent-news-link">
-                        <div class="urgent-image">
-                            {% if noticias_urgentes.1.imagem %}
-                                <img src="{{ noticias_urgentes.1.imagem.url }}" alt="{{ noticias_urgentes.1.titulo }}">
-                            {% else %}
-                                <div class="urgent-image-placeholder"></div>
-                            {% endif %}
-                        </div>
-                        <h3 class="urgent-title">{{ noticias_urgentes.1.titulo }}</h3>
-                        <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-                    </a>
-                {% else %}
-                    <div class="urgent-image">
-                        <div class="urgent-image-placeholder"></div>
-                    </div>
-                    <h3 class="urgent-title">Notícia Urgente 2</h3>
-                    <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-                {% endif %}
+
+            <!-- Notícia 2 - PELA METADE -->
+            <div class="urgent-news-card partial-view" data-index="1">
+                <div class="urgent-image-container">
+                    {% if noticias_urgentes.1 and noticias_urgentes.1.imagem %}
+                        <img src="{{ noticias_urgentes.1.imagem.url }}" alt="{{ noticias_urgentes.1.titulo }}" class="urgent-image">
+                    {% else %}
+                        <div class="urgent-image-placeholder">📚</div>
+                    {% endif %}
+                </div>
+                <div class="urgent-content">
+                    <span class="urgent-category">EDUCAÇÃO</span>
+                    <h3 class="urgent-title">
+                        {% if noticias_urgentes.1 %}
+                            {{ noticias_urgentes.1.titulo }}
+                        {% else %}
+                            Após críticas, Governo de Pernambuco suspende sorteio para ingresso em Escolas Técnicas
+                        {% endif %}
+                    </h3>
+                    <p class="urgent-description">
+                        {% if noticias_urgentes.1 %}
+                            {{ noticias_urgentes.1.resumo|default:"Após críticas, Governo de Pernambuco suspende sorte para ingresso em Escolas Técnicas." }}
+                        {% else %}
+                            Após críticas, Governo de Pernambuco suspende sorte para ingresso em Escolas Técnicas.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
-            
-            <!-- Bloco 3 -->
-            <div class="urgent-news" data-index="2">
-                {% if noticias_urgentes.2 %}
-                    <a href="{% url 'Echo_app:noticia_detalhe' noticias_urgentes.2.id %}" class="urgent-news-link">
-                        <div class="urgent-image">
-                            {% if noticias_urgentes.2.imagem %}
-                                <img src="{{ noticias_urgentes.2.imagem.url }}" alt="{{ noticias_urgentes.2.titulo }}">
-                            {% else %}
-                                <div class="urgent-image-placeholder"></div>
-                            {% endif %}
-                        </div>
-                        <h3 class="urgent-title">{{ noticias_urgentes.2.titulo }}</h3>
-                        <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
-                    </a>
-                {% else %}
-                    <div class="urgent-image">
-                        <div class="urgent-image-placeholder"></div>
-                    </div>
-                    <h3 class="urgent-title">Notícia Urgente 3</h3>
-                    <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
-                {% endif %}
+
+            <!-- Notícia 3 - COMPLETA (fora da tela) -->
+            <div class="urgent-news-card full-view" data-index="2">
+                <div class="urgent-image-container">
+                    {% if noticias_urgentes.2 and noticias_urgentes.2.imagem %}
+                        <img src="{{ noticias_urgentes.2.imagem.url }}" alt="{{ noticias_urgentes.2.titulo }}" class="urgent-image">
+                    {% else %}
+                        <div class="urgent-image-placeholder">🚔</div>
+                    {% endif %}
+                </div>
+                <div class="urgent-content">
+                    <span class="urgent-category">SEGURANÇA</span>
+                    <h3 class="urgent-title">
+                        {% if noticias_urgentes.2 %}
+                            {{ noticias_urgentes.2.titulo }}
+                        {% else %}
+                            Operação prende 15 suspeitos de tráfico de drogas
+                        {% endif %}
+                    </h3>
+                    <p class="urgent-description">
+                        {% if noticias_urgentes.2 %}
+                            {{ noticias_urgentes.2.resumo|default:"Operação da Polícia Civil prende 15 suspeitos de envolvimento com tráfico de drogas." }}
+                        {% else %}
+                            Operação da Polícia Civil prende 15 suspeitos de envolvimento com tráfico de drogas.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
-            
-            <!-- Bloco 4 -->
-            <div class="urgent-news" data-index="3">
-                {% if noticias_urgentes.3 %}
-                    <a href="{% url 'Echo_app:noticia_detalhe' noticias_urgentes.3.id %}" class="urgent-news-link">
-                        <div class="urgent-image">
-                            {% if noticias_urgentes.3.imagem %}
-                                <img src="{{ noticias_urgentes.3.imagem.url }}" alt="{{ noticias_urgentes.3.titulo }}">
-                            {% else %}
-                                <div class="urgent-image-placeholder"></div>
-                            {% endif %}
-                        </div>
-                        <h3 class="urgent-title">{{ noticias_urgentes.3.titulo }}</h3>
-                        <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.</p>
-                    </a>
-                {% else %}
-                    <div class="urgent-image">
-                        <div class="urgent-image-placeholder"></div>
-                    </div>
-                    <h3 class="urgent-title">Notícia Urgente 4</h3>
-                    <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.</p>
-                {% endif %}
+
+            <!-- Notícia 4 - COMPLETA (fora da tela) -->
+            <div class="urgent-news-card full-view" data-index="3">
+                <div class="urgent-image-container">
+                    {% if noticias_urgentes.3 and noticias_urgentes.3.imagem %}
+                        <img src="{{ noticias_urgentes.3.imagem.url }}" alt="{{ noticias_urgentes.3.titulo }}" class="urgent-image">
+                    {% else %}
+                        <div class="urgent-image-placeholder">🏥</div>
+                    {% endif %}
+                </div>
+                <div class="urgent-content">
+                    <span class="urgent-category">SAÚDE</span>
+                    <h3 class="urgent-title">
+                        {% if noticias_urgentes.3 %}
+                            {{ noticias_urgentes.3.titulo }}
+                        {% else %}
+                            Novo hospital será inaugurado na Zona Norte
+                        {% endif %}
+                    </h3>
+                    <p class="urgent-description">
+                        {% if noticias_urgentes.3 %}
+                            {{ noticias_urgentes.3.resumo|default:"Novo hospital público será inaugurado na Zona Norte do Recife." }}
+                        {% else %}
+                            Novo hospital público será inaugurado na Zona Norte do Recife.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
-            
-            <!-- Bloco 5 -->
-            <div class="urgent-news" data-index="4">
-                {% if noticias_urgentes.4 %}
-                    <a href="{% url 'Echo_app:noticia_detalhe' noticias_urgentes.4.id %}" class="urgent-news-link">
-                        <div class="urgent-image">
-                            {% if noticias_urgentes.4.imagem %}
-                                <img src="{{ noticias_urgentes.4.imagem.url }}" alt="{{ noticias_urgentes.4.titulo }}">
-                            {% else %}
-                                <div class="urgent-image-placeholder"></div>
-                            {% endif %}
-                        </div>
-                        <h3 class="urgent-title">{{ noticias_urgentes.4.titulo }}</h3>
-                        <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
-                    </a>
-                {% else %}
-                    <div class="urgent-image">
-                        <div class="urgent-image-placeholder"></div>
-                    </div>
-                    <h3 class="urgent-title">Notícia Urgente 5</h3>
-                    <p class="urgent-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
-                {% endif %}
+
+            <!-- Notícia 5 - COMPLETA (fora da tela) -->
+            <div class="urgent-news-card full-view" data-index="4">
+                <div class="urgent-image-container">
+                    {% if noticias_urgentes.4 and noticias_urgentes.4.imagem %}
+                        <img src="{{ noticias_urgentes.4.imagem.url }}" alt="{{ noticias_urgentes.4.titulo }}" class="urgent-image">
+                    {% else %}
+                        <div class="urgent-image-placeholder">🚌</div>
+                    {% endif %}
+                </div>
+                <div class="urgent-content">
+                    <span class="urgent-category">MOBILIDADE</span>
+                    <h3 class="urgent-title">
+                        {% if noticias_urgentes.4 %}
+                            {{ noticias_urgentes.4.titulo }}
+                        {% else %}
+                            Novas faixas exclusivas para ônibus no centro
+                        {% endif %}
+                    </h3>
+                    <p class="urgent-description">
+                        {% if noticias_urgentes.4 %}
+                            {{ noticias_urgentes.4.resumo|default:"Prefeitura anuncia novas faixas exclusivas para ônibus no centro da cidade." }}
+                        {% else %}
+                            Prefeitura anuncia novas faixas exclusivas para ônibus no centro da cidade.
+                        {% endif %}
+                    </p>
+                </div>
             </div>
         </div>
-        
-        <button class="nav-button next-button" id="nextBtn">›</button>
     </div>
-    
-    <!-- Corrigido erro de digitação: classs -> class -->
-    <div class="indicators">
-        <span class="indicator active" data-index="0"></span>
-        <span class="indicator" data-index="1"></span>
-        <span class="indicator" data-index="2"></span>
-        <span class="indicator" data-index="3"></span>
-        <span class="indicator" data-index="4"></span>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="urgent-navigation">
+        <span class="nav-dot active" data-index="0"></span>
+        <span class="nav-dot" data-index="1"></span>
+        <span class="nav-dot" data-index="2"></span>
+        <span class="nav-dot" data-index="3"></span>
+        <span class="nav-dot" data-index="4"></span>
     </div>
 </section>
 
-<!-- ESPAÇO PARA A NAVEGAÇÃO INFERIOR -->
 <div class="bottom-spacer"></div>
 
 {% endblock content %}
 
-
-<!-- 3. SCRIPT MOVIDO PARA O BLOCO CORRETO -->
 {% block extra_js %}
-{{ block.super }} <!-- ESSENCIAL: Mantém o JS da sidebar do base.html -->
+{{ block.super }}
 
-<!-- JAVASCRIPT DO SLIDER -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Apenas seleciona elementos se estivermos no dashboard
-    const sliderContainer = document.querySelector('.urgent-news-slider');
-    if (!sliderContainer) return; // Se não for o dashboard, pára o script
-
-    // Elementos do slider de notícias urgentes
-    const urgentNews = document.querySelectorAll('.urgent-news');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const indicators = document.querySelectorAll('.indicator');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const newsCards = document.querySelectorAll('.urgent-news-card');
+    const newsWrapper = document.querySelector('.urgent-news-wrapper');
     
-    // Se não houver elementos (ex: notícias vazias), não faz nada
-    if (urgentNews.length === 0 || !prevBtn || !nextBtn || indicators.length === 0) {
-        return;
-    }
+    if (!navDots.length || !newsCards.length || !newsWrapper) return;
 
     let currentIndex = 0;
-    const totalNews = urgentNews.length;
-    
-    // Função para atualizar o slider
-    function updateSlider(index) {
-        urgentNews.forEach(news => {
-            news.classList.remove('active');
+    const cardWidth = newsCards[0].offsetWidth + 20; // Largura do card + gap
+    const totalNews = newsCards.length;
+
+    function updateNewsView(index) {
+        // Atualizar navegação
+        navDots.forEach(dot => dot.classList.remove('active'));
+        navDots[index].classList.add('active');
+
+        // Calcular posição do scroll
+        const scrollPosition = index * cardWidth;
+        newsWrapper.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
         });
-        urgentNews[index].classList.add('active');
-        
-        indicators.forEach(indicator => {
-            indicator.classList.remove('active');
+
+        // Atualizar classes de visualização
+        newsCards.forEach((card, i) => {
+            card.classList.remove('active', 'partial-view', 'full-view');
+            
+            if (i === index) {
+                card.classList.add('active', 'full-view');
+            } else if (i === index + 1) {
+                card.classList.add('partial-view');
+            } else {
+                card.classList.add('full-view');
+            }
         });
-        if (indicators[index]) {
-            indicators[index].classList.add('active');
-        }
-        
+
         currentIndex = index;
     }
-    
-    // Evento para o botão anterior
-    prevBtn.addEventListener('click', function() {
-        let newIndex = currentIndex - 1;
-        if (newIndex < 0) {
-            newIndex = totalNews - 1; 
-        }
-        updateSlider(newIndex);
-    });
-    
-    // Evento para o botão próximo
-    nextBtn.addEventListener('click', function() {
-        let newIndex = currentIndex + 1;
-        if (newIndex >= totalNews) {
-            newIndex = 0; 
-        }
-        updateSlider(newIndex);
-    });
-    
-    // Evento para os indicadores
-    indicators.forEach(indicator => {
-        indicator.addEventListener('click', function() {
+
+    // Eventos de navegação
+    navDots.forEach(dot => {
+        dot.addEventListener('click', function() {
             const index = parseInt(this.getAttribute('data-index'));
-            updateSlider(index);
+            updateNewsView(index);
         });
     });
-    
-    updateSlider(currentIndex);
-    
+
+    // Navegação por teclado
     document.addEventListener('keydown', function(e) {
         if (e.key === 'ArrowLeft') {
-            prevBtn.click();
+            let newIndex = currentIndex - 1;
+            if (newIndex < 0) newIndex = totalNews - 1;
+            updateNewsView(newIndex);
         } else if (e.key === 'ArrowRight') {
-            nextBtn.click();
+            let newIndex = currentIndex + 1;
+            if (newIndex >= totalNews) newIndex = 0;
+            updateNewsView(newIndex);
         }
     });
+
+    // Scroll para detectar mudanças
+    newsWrapper.addEventListener('scroll', function() {
+        const scrollPos = newsWrapper.scrollLeft;
+        const newIndex = Math.round(scrollPos / cardWidth);
+        
+        if (newIndex !== currentIndex && newIndex >= 0 && newIndex < totalNews) {
+            updateNewsView(newIndex);
+        }
+    });
+
+    // Inicializar
+    updateNewsView(0);
 });
 </script>
 
