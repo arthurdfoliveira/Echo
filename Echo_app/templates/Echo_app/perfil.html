@@ -16,7 +16,8 @@
     <div class="perfil-header">
         
         <div class="perfil-avatar-container">
-            <img src="{% static 'Echo_app/images/default_avatar.png' %}" alt="Foto de Perfil" class="perfil-avatar">
+            {# Adicionando um ID para a imagem para facilitar o estilo ou um placeholder #}
+            <img id="perfil-avatar-img" src="{% static 'Echo_app/images/default_avatar.png' %}" alt="Foto de Perfil" class="perfil-avatar">
             <a href="#" class="edit-avatar-icon" title="Editar foto">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M21.731 2.269a2.64 2.64 0 0 0-3.737 0l-12.72 12.72A1.97 1.97 0 0 0 5.25 15.75v3.626h3.626a1.97 1.97 0 0 0 1.404-.579l12.72-12.72a2.64 2.64 0 0 0 0-3.737ZM7.125 18v1.875H5.25a.375.375 0 0 1-.375-.375v-1.5h1.875ZM18.75 8.25l-7.5-7.5-1.5 1.5 7.5 7.5 1.5-1.5Z" />
@@ -26,7 +27,7 @@
         
         <div class="perfil-info">
             <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
-            <p class="user-email">{{ request.user.email|default:"usuario@exemplo.com" }}</p>
+            <p class="user-email">{{ request.user.email|default:"email@exemplo.com" }}</p> {# Ajustado o default email #}
             <a href="#" class="edit-profile-btn">Editar perfil</a>
         </div>
     </div>
@@ -47,8 +48,6 @@
             </span> Salvos
         </a>
         
-        <hr class="menu-divider">
-
         <a class="menu-item" href="#">
             <span class="menu-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h3m-3 6h3m-3 6h3M19.5 7.5a.75.75 0 0 0-1.5 0v9a.75.75 0 0 0 1.5 0v-9ZM4.5 7.5a.75.75 0 0 1 1.5 0v9a.75.75 0 0 1-1.5 0v-9Z" /></svg>
@@ -64,7 +63,7 @@
         <a class="menu-item" href="#">
             <span class="menu-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.766L12 3.016l9.75 9.75M8.25 21v-4.5h7.5V21M7.5 12V3h9v9" /></svg>
-            </span> Inscrições
+            </span> Inscrições {# Alterado de "Gestão de comunicados" para "Inscrições" #}
         </a>
 
         <hr class="menu-divider">

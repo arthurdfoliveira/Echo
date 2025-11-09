@@ -6,7 +6,7 @@
 /* Reset e Fonte */
 body {
     background-color: #f7f7f7; /* Fundo levemente cinza */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: #333;
 }
 
@@ -17,6 +17,8 @@ body {
     color: #333;
     padding: 20px 15px 0; /* Padding superior e lateral */
     margin: 0;
+    /* Adiciona padding no topo para afastar do cabeçalho fixo */
+    padding-top: calc(20px + var(--header-height, 0px)); /* Ajuste dinâmico se houver variável CSS para altura do header */
 }
 
 /* Container Principal e Card */
@@ -29,7 +31,7 @@ body {
 }
 
 /* ====================================
-   1. HEADER E AVATAR
+   1. HEADER E AVATAR - AJUSTADO
    ==================================== */
 .perfil-header {
     display: flex;
@@ -40,8 +42,8 @@ body {
 
 .perfil-avatar-container {
     position: relative;
-    width: 90px;
-    height: 90px;
+    width: 100px; /* Aumentado de 90px para 100px */
+    height: 100px; /* Aumentado de 90px para 100px para círculo perfeito */
     margin-right: 15px;
     flex-shrink: 0;
 }
@@ -60,8 +62,8 @@ body {
     right: 0;
     background-color: #fff;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
+    width: 30px; /* Aumentado para melhor toque */
+    height: 30px; /* Aumentado para melhor toque */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -70,8 +72,8 @@ body {
 }
 
 .edit-avatar-icon svg {
-    width: 14px;
-    height: 14px;
+    width: 16px; /* Aumentado */
+    height: 16px; /* Aumentado */
     color: #cc0000; /* Cor vermelha JC */
 }
 
@@ -107,6 +109,7 @@ body {
     text-decoration: none;
     transition: background-color 0.2s;
     max-width: fit-content;
+    white-space: nowrap; /* Garante que o texto não quebre */
 }
 
 .edit-profile-btn:hover {
@@ -122,7 +125,7 @@ body {
 
 
 /* ====================================
-   2. ITENS DO MENU
+   2. ITENS DO MENU - AJUSTADO PARA ÍCONES E ESPAÇAMENTO
    ==================================== */
 .menu-opcoes {
     display: flex;
@@ -141,6 +144,7 @@ body {
     border-bottom: 1px solid #eee; /* Linha divisória fina */
     position: relative;
     transition: background-color 0.1s;
+    line-height: 1.2; /* Garante altura de linha consistente */
 }
 
 .menu-item:last-child {
@@ -151,30 +155,36 @@ body {
     background-color: #fafafa;
 }
 
-/* Ícone dentro do item de menu */
+/* Ícone SVG dentro do item de menu - CORREÇÃO DE TAMANHO E COR */
 .menu-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 20px; /* Aumentado para melhor visualização */
+    height: 20px; /* Aumentado para melhor visualização */
     margin-right: 15px;
     color: #555; /* Cor cinza sutil para os ícones */
+    flex-shrink: 0; /* Impede que o ícone encolha */
 }
 
 .menu-icon svg {
     width: 100%;
     height: 100%;
+    /* Removido fill: currentColor; se houver, para que o stroke funcione como cor primária */
+    /* Para SVGs que usam stroke para cor */
+    stroke: currentColor;
+    fill: none; /* Garante que o interior não seja preenchido, se o SVG for um outline */
 }
+
 
 /* Seta de navegação (>) */
 .menu-item::after {
-    content: '›';
+    content: '>'; /* Usando o caractere > diretamente, é mais leve */
     position: absolute;
     right: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem; /* Tamanho ajustado para ser mais discreto */
     font-weight: 400;
-    color: #ccc;
+    color: #aaa; /* Cor mais suave */
 }
 
 /* Divisor dentro da lista de itens */
@@ -185,9 +195,10 @@ body {
 }
 
 /* Estilos específicos para ações de saída/exclusão */
-.menu-item.acao-logout, 
-.menu-item.acao-deletar {
-    /* Cor padrão do texto permanece cinza, mas os ícones mudam */
+.menu-item.acao-logout .menu-icon svg,
+.menu-item.acao-deletar .menu-icon svg {
+    /* Garante que o stroke também mude de cor */
+    stroke: currentColor;
 }
 
 .menu-item.acao-deletar .menu-icon {
@@ -195,4 +206,72 @@ body {
 }
 .menu-item.acao-logout .menu-icon {
     color: #555; /* Sair da conta é padrão cinza */
+}
+
+/* Mídias queries para telas maiores (desktop) */
+@media (min-width: 768px) {
+    .main-title {
+        padding-left: 30px; /* Mais espaço nas laterais em desktop */
+        padding-right: 30px;
+    }
+
+    .perfil-card {
+        max-width: 600px; /* Limita a largura do card em telas maiores */
+        border-radius: 8px; /* Cantos arredondados */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+        padding-bottom: 20px;
+    }
+
+    .perfil-header {
+        padding: 20px 30px 30px; /* Mais padding no header */
+    }
+
+    .edit-avatar-icon {
+        width: 32px;
+        height: 32px;
+    }
+    .edit-avatar-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .perfil-info {
+        padding-top: 15px;
+    }
+
+    .saudacao {
+        font-size: 1.2rem;
+    }
+
+    .user-email {
+        font-size: 0.95rem;
+    }
+
+    .edit-profile-btn {
+        font-size: 0.9rem;
+        padding: 8px 18px;
+    }
+
+    .menu-opcoes {
+        padding: 0 30px;
+    }
+
+    .menu-item {
+        padding: 18px 0;
+        font-size: 1.05rem;
+    }
+
+    .menu-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 20px;
+    }
+    
+    .menu-item::after {
+        font-size: 1.3rem;
+    }
+
+    .menu-divider {
+        margin: 0 -30px; /* Ajusta a margem para o padding maior */
+    }
 }
