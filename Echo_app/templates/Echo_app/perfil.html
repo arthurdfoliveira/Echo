@@ -1,42 +1,87 @@
 {% extends "Echo_app/base.html" %}
 {% load static %}
 
-{% block title %}Perfil do Usuário{% endblock %}
+{% block title %}Meu perfil{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container-principal-menu">
-    <div class="menu-perfil-card">
+
+<h1 class="main-title">Meu perfil</h1>
+
+<div class="perfil-card">
+
+    <div class="perfil-header">
         
-        <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
-        
-        <nav class="menu-opcoes">
-            <a class="menu-item" href="#">
-                <span class="icon"></span> Salvados
-            </a>
-            <a class="menu-item" href="#">
-                <span class="icon"></span> Configurações da conta
-            </a>
-            <a class="menu-item" href="#">
-                <span class="icon"></span> Dispositivos conectados
-            </a>
-            <a class="menu-item" href="#">
-                <span class="icon"></span> Gestão de comunicados
-            </a>
-        </nav>
-        
-        <div class="acoes-finais">
-            <a class="acao-logout" href="#">
-                <span class="icon"></span> Sair da conta
-            </a>
-            <a class="acao-deletar" href="#">
-                <span class="icon"></span> Excluir conta
+        <div class="perfil-avatar-container">
+            <img src="{% static 'Echo_app/images/default_avatar.png' %}" alt="Foto de Perfil" class="perfil-avatar">
+            <a href="#" class="edit-avatar-icon" title="Editar foto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.731 2.269a2.64 2.64 0 0 0-3.737 0l-12.72 12.72A1.97 1.97 0 0 0 5.25 15.75v3.626h3.626a1.97 1.97 0 0 0 1.404-.579l12.72-12.72a2.64 2.64 0 0 0 0-3.737ZM7.125 18v1.875H5.25a.375.375 0 0 1-.375-.375v-1.5h1.875ZM18.75 8.25l-7.5-7.5-1.5 1.5 7.5 7.5 1.5-1.5Z" />
+                </svg>
             </a>
         </div>
         
+        <div class="perfil-info">
+            <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
+            <p class="user-email">{{ request.user.email|default:"usuario@exemplo.com" }}</p>
+            <a href="#" class="edit-profile-btn">Editar perfil</a>
+        </div>
     </div>
+    
+    <hr class="perfil-divider">
+
+    <nav class="menu-opcoes">
+        
+        <a class="menu-item" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.055-4.398 2.522-.8-.888-2.46-1.55-4.398-2.522C4.599 3.75 2.5 5.765 2.5 8.25c0 1.996 1.01 3.714 2.51 4.77l7.5 5.564 7.5-5.564c1.5-1.056 2.5-2.774 2.5-4.77Z" /></svg>
+            </span> Curtidas
+        </a>
+
+        <a class="menu-item" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L3 3.5V7.5M10.75 12.25l-.75.75m0 0-.75-.75m.75.75L12 11.5V16h-1.25V11.5L8 14m9.75-2.25V16H6.5V11.5L8.75 9.25M17.75 7.25h-6.5V5.5h6.5V7.25Z" /></svg>
+            </span> Salvos
+        </a>
+        
+        <hr class="menu-divider">
+
+        <a class="menu-item" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h3m-3 6h3m-3 6h3M19.5 7.5a.75.75 0 0 0-1.5 0v9a.75.75 0 0 0 1.5 0v-9ZM4.5 7.5a.75.75 0 0 1 1.5 0v9a.75.75 0 0 1-1.5 0v-9Z" /></svg>
+            </span> Configurações da conta
+        </a>
+        
+        <a class="menu-item" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9V15M9 12H15M21 12A9 9 0 1 1 3 12a9 9 0 0 1 18 0Z" /></svg>
+            </span> Dispositivos conectados
+        </a>
+        
+        <a class="menu-item" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.766L12 3.016l9.75 9.75M8.25 21v-4.5h7.5V21M7.5 12V3h9v9" /></svg>
+            </span> Inscrições
+        </a>
+
+        <hr class="menu-divider">
+
+        <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25V18.75A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m1.5-3-4.5-4.5m4.5 4.5 4.5-4.5m-4.5 4.5h-10"/></svg>
+            </span> Sair da conta
+        </a>
+        
+        <a class="menu-item acao-deletar" href="#">
+            <span class="menu-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.262 9m1.748-8a2 2 0 0 1 2 2v2H9V3a2 2 0 0 1 2-2Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 6H3l.75 14a2 2 0 0 0 2 2h14.5a2 2 0 0 0 2-2L21 6Z" /></svg>
+            </span> Excluir conta
+        </a>
+        
+    </nav>
+    
 </div>
 {% endblock %}

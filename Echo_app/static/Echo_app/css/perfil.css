@@ -1,163 +1,198 @@
-/* --- Paleta de Cores (Fiel à Imagem do Menu Vertical) --- */
+/*
+* Estilos para o template perfil.html
+* Baseado no layout do Jornal do Commercio - 9/Nov/2025
+*/
 
-:root {
-    --cor-fundo-body: #f0f2f5;       /* Fundo cinza claro */
-    --cor-fundo-card-menu: #ffffff;  /* Fundo branco do card */
-    --cor-texto-principal: #333333; /* Texto escuro */
-    --cor-borda-item: #e0e0e0;       /* Borda sutil dos botões */
-    --cor-borda-sutil: #cccccc;      /* Borda para divisores */
-    --cor-vermelho-uol: #cc0000;     /* Vermelho do UOL */
-}
-
-/* --- Configurações Globais (Fundo da página e fontes) --- */
+/* Reset e Fonte */
 body {
-    background-color: var(--cor-fundo-body) !important;
-    font-family: Arial, sans-serif !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important; /* Permite que o header e o content fiquem em coluna */
-    min-height: 100vh !important;       
-    color: var(--cor-texto-principal) !important;
+    background-color: #f7f7f7; /* Fundo levemente cinza */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: #333;
 }
 
-/* --- ESTILOS PARA AS BARRAS SUPERIORES (Se elas estiverem no base.html) --- */
-/* Se suas barras superiores tiverem outras classes, você precisará ajustá-las aqui. */
-/* Geralmente, elementos de cabeçalho devem ter 100% de largura */
-header, .header-top, .header-main { /* Ajuste estas classes se as suas forem diferentes */
-    width: 100% !important;
-    box-sizing: border-box !important; /* Garante que padding e borda não aumentem a largura */
-    flex-shrink: 0 !important; /* Impede que o header encolha */
+/* Título principal "Meu perfil" */
+.main-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    padding: 20px 15px 0; /* Padding superior e lateral */
+    margin: 0;
 }
 
-/* Exemplo de estilo para a barra preta superior (UOL) */
-.header-top { 
-    background-color: #000000 !important; /* Fundo preto */
-    color: white !important;
-    padding: 10px 0 !important;
-    text-align: center !important;
+/* Container Principal e Card */
+.perfil-card {
+    background-color: #fff;
+    max-width: 100%;
+    margin: 15px auto 30px;
+    padding: 0 0 10px 0;
+    box-shadow: none; /* Em mobile, sem sombra para visual limpo */
 }
 
-/* Exemplo de estilo para a barra branca (Echo) */
-.header-main {
-    background-color: #ffffff !important; /* Fundo branco */
-    border-bottom: 1px solid #e0e0e0 !important;
-    padding: 15px 0 !important;
-    text-align: center !important; /* Ajuste conforme seu conteúdo */
+/* ====================================
+   1. HEADER E AVATAR
+   ==================================== */
+.perfil-header {
+    display: flex;
+    align-items: flex-start; /* Alinhar a saudação com o topo da imagem */
+    padding: 15px;
+    padding-bottom: 25px; /* Mais espaço para o divisor */
 }
 
-
-/* --- Container Principal (Centraliza o Card do Menu na tela) --- */
-.container-principal-menu {
-    flex-grow: 1 !important; /* Faz o container crescer e ocupar o espaço restante */
-    display: flex !important;
-    justify-content: center !important; /* Centraliza horizontalmente */
-    align-items: center !important;     /* Centraliza verticalmente */
-    width: 100% !important;
-    max-width: none !important; /* Remove largura máxima do container para que o card se ajuste */
-    padding: 20px !important;
-    box-sizing: border-box !important;
+.perfil-avatar-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin-right: 15px;
+    flex-shrink: 0;
 }
 
-/* --- Card Principal (Fundo Branco com Sombra, com largura definida) --- */
-.menu-perfil-card {
-    background-color: var(--cor-fundo-card-menu) !important;
-    width: 100% !important; /* Ocupa a largura do container-principal-menu */
-    max-width: 450px !important; /* AQUI definimos a largura MÁXIMA do card, para não ficar gigante */
-    border-radius: 8px !important; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-    padding: 30px !important;
+.perfil-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd;
 }
 
-/* --- Saudação de Boas-Vindas (Topo) --- */
+.edit-avatar-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 3px #fff, 0 1px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.edit-avatar-icon svg {
+    width: 14px;
+    height: 14px;
+    color: #cc0000; /* Cor vermelha JC */
+}
+
+.perfil-info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px; /* Ajuste fino para alinhar com a foto */
+}
+
 .saudacao {
-    font-size: 1.3em !important;
-    font-weight: bold !important;
-    color: var(--cor-vermelho-uol) !important; /* Cor vermelha da saudação, como na imagem */
-    margin-top: 0 !important;
-    margin-bottom: 25px !important;
-    padding-bottom: 15px !important;
-    border-bottom: 1px solid var(--cor-borda-sutil) !important;
-    text-align: left !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #cc0000; /* Vermelho vibrante JC */
+    margin: 0 0 2px 0;
+    line-height: 1.2;
 }
 
-/* --- Menu de Opções (Itens Verticalmente Enfileirados) --- */
+.user-email {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 10px 0;
+    font-weight: 400;
+}
+
+.edit-profile-btn {
+    background-color: #cc0000;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 15px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    max-width: fit-content;
+}
+
+.edit-profile-btn:hover {
+    background-color: #a30000;
+}
+
+/* Divisor abaixo do cabeçalho */
+.perfil-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 0;
+}
+
+
+/* ====================================
+   2. ITENS DO MENU
+   ==================================== */
 .menu-opcoes {
-    display: flex !important;
-    flex-direction: column !important; 
-    gap: 15px !important; 
-    margin-bottom: 30px !important; 
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
 }
 
 .menu-item {
-    display: flex !important;
-    align-items: center !important;
-    padding: 15px !important;
-    text-decoration: none !important;
-    color: var(--cor-texto-principal) !important;
-    background-color: transparent !important;
-    border: 1px solid var(--cor-borda-item) !important;
-    border-radius: 8px !important; 
-    transition: background-color 0.2s, border-color 0.2s !important;
-    font-size: 1.05em !important;
-    font-weight: 500 !important;
+    display: flex;
+    align-items: center;
+    padding: 15px 0; /* Espaçamento vertical grande */
+    color: #333;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 1px solid #eee; /* Linha divisória fina */
+    position: relative;
+    transition: background-color 0.1s;
 }
 
-.menu-item .icon {
-    margin-right: 15px !important;
-    font-size: 1.2em !important;
-    width: 25px !important; 
-    text-align: center !important;
+.menu-item:last-child {
+    border-bottom: none; /* O último item não tem borda */
 }
 
 .menu-item:hover {
-    background-color: #f5f5f5 !important;
-    border-color: #c0c0c0 !important;
+    background-color: #fafafa;
 }
 
-/* --- Ações Finais (Botões Lado a Lado) --- */
-.acoes-finais {
-    display: flex !important;
-    flex-direction: row !important; 
-    justify-content: space-between !important;
-    gap: 15px !important;
-    padding-top: 25px !important;
-    border-top: 1px solid var(--cor-borda-sutil) !important;
+/* Ícone dentro do item de menu */
+.menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+    color: #555; /* Cor cinza sutil para os ícones */
 }
 
-.acao-logout, .acao-deletar {
-    flex: 1 !important; 
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-height: 50px !important; 
-    padding: 0 10px !important;
-    text-decoration: none !important;
-    border-radius: 8px !important;
-    font-weight: 500 !important;
-    font-size: 1em !important;
-    cursor: pointer !important;
-    background-color: #f0f0f0 !important; /* Fundo cinza para "Sair da conta" */
-    color: var(--cor-texto-principal) !important;
-    border: 1px solid #e0e0e0 !important;
+.menu-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
-.acao-logout:hover {
-    background-color: #e6e6e6 !important;
+/* Seta de navegação (>) */
+.menu-item::after {
+    content: '›';
+    position: absolute;
+    right: 0;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #ccc;
 }
 
-.acao-deletar {
-    background-color: #dc3545 !important; /* Fundo vermelho para "Excluir conta" */
-    color: #ffffff !important; /* Texto branco */
-    border: none !important; /* Sem borda, como na imagem */
+/* Divisor dentro da lista de itens */
+.menu-divider {
+    border: none;
+    border-top: 5px solid #f7f7f7; /* Linha cinza grossa para separar blocos */
+    margin: 0 -15px; /* Estende a linha para a lateral do padding */
 }
 
-.acao-deletar:hover {
-    background-color: #c82333 !important;
+/* Estilos específicos para ações de saída/exclusão */
+.menu-item.acao-logout, 
+.menu-item.acao-deletar {
+    /* Cor padrão do texto permanece cinza, mas os ícones mudam */
 }
 
-/* Ícones nas ações finais */
-.acao-logout .icon, .acao-deletar .icon {
-    margin-right: 10px !important;
-    font-size: 1.15em !important;
+.menu-item.acao-deletar .menu-icon {
+    color: #cc0000; /* Lixeira vermelha */
+}
+.menu-item.acao-logout .menu-icon {
+    color: #555; /* Sair da conta é padrão cinza */
 }
