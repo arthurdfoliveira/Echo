@@ -62,7 +62,17 @@
             <span class="menu-icon">➡️</span> Sair da conta
         </a>
         
-        <a class="menu-item acao-deletar" href="#">
+        {# CORREÇÃO FINAL PARA IGNORAR JS E IR PARA A URL DO DJANGO #}
+        <a class="acao-deletar" 
+           href="{% url 'Echo_app:excluir_conta' %}"   
+           style="
+                display: block; 
+                padding: 10px 15px; 
+                color: #cc0000; 
+                text-decoration: none;
+                font-weight: 600;
+                margin-top: 5px;
+            ">
             <span class="menu-icon">🗑️</span> Excluir conta
         </a>
         
