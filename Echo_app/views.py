@@ -128,13 +128,20 @@ def entrar(request):
     return render(request, "Echo_app/entrar.html", contexto)
 
 
+
 def sair(request):
     """
-    Desloga o usuário e redireciona para o dashboard.
+    Exibe a confirmação de saída (GET) ou desloga o usuário (POST).
     """
-    logout(request)
-    return redirect("Echo_app:dashboard")
+    if request.method == 'POST':
+        # Se for POST, realiza o logout
+        logout(request)
+        return redirect("Echo_app:dashboard")
+    
+    # Se for GET, exibe a página de confirmação
+    return render(request, "Echo_app/confirmar_saida.html")
 
+# ... (Restante do seu código)
 
 # ===============================================
 # Parte do Dashboard (ATUALIZADA)
