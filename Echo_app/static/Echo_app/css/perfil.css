@@ -225,3 +225,32 @@ body {
         margin: 0 -30px; 
     }
 }
+
+/* --- CORREÇÕES VISUAIS PARA AS AÇÕES FINAIS (Sair/Excluir) --- */
+
+/* 1. Garante que o texto não quebre para que o ícone e o texto fiquem na mesma linha */
+.menu-item {
+    /* Garante que o item se comporte como uma única linha, evitando quebra no meio */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; /* Opcional: Adiciona '...' se o texto for muito longo */
+}
+
+/* 2. Remove a setinha de navegação (>) para os links de AÇÃO e DELETAR */
+/* Utilizamos as classes 'acao-logout' e 'acao-deletar' para seletividade */
+.menu-item.acao-logout::after,
+.menu-item.acao-deletar::after {
+    content: none !important; /* Remove a seta que estava definida em .menu-item::after */
+}
+
+/* 3. Estiliza a ação de Excluir: Mantém o vermelho e o negrito */
+.menu-item.acao-deletar {
+    color: #cc0000; /* Cor Vermelha forte, como você gostou */
+    font-weight: 600; 
+}
+
+/* 4. Estiliza a ação de Sair (se necessário) */
+.menu-item.acao-logout {
+    color: #333; /* Mantém a cor padrão, mas pode ser ajustado */
+    font-weight: 500;
+}
