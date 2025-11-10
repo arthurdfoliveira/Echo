@@ -1,61 +1,66 @@
-{% extends 'Echo_app/base.html' %} {% block content %}
-<div class="container mt-4" style="max-width: 900px">
-  <h2 class="mb-4">Minhas Notificações</h2>
-
-  <h4>Recomendadas para você</h4>
-  <div class="list-group mb-4">
-    {% for notificacao in notificacoes_recomendadas %}
-    <a
-      href="{% if notificacao.noticia %}{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}{% else %}#{% endif %}"
-      class="list-group-item list-group-item-action {% if not notificacao.lida %}list-group-item-primary font-weight-bold{% endif %}"
-    >
-      <div class="d-flex w-100 justify-content-between">
-        <p class="mb-1">{{ notificacao.manchete }}</p>
-        <small>{{ notificacao.data_criacao|timesince }} atrás</small>
-      </div>
-
-      {% if notificacao.noticia.categoria %}
-      <small class="text-muted"
-        >Categoria: {{ notificacao.noticia.categoria.nome }}</small
-      >
-      {% endif %}
-    </a>
-    {% empty %}
-    <div class="list-group-item">
-      <p class="mb-0 text-muted">
-        Você não tem notificações recomendadas no momento.
-      </p>
+{% extends 'Echo_app/base.html' %} 
+{% block content %}
+<div class="container mt-4" style="max-width: 900px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Minhas Notificações</h2>
+        <form action="{% url 'Echo_app:marcar_todas_lidas' %}" method="POST" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                Marcar todas como lidas
+            </button>
+        </form>
     </div>
-    {% endfor %}
-  </div>
 
-  <h4>Outras Notificações</h4>
-  <div class="list-group">
-    {% for notificacao in notificacoes_outras %}
-    <div
-      class="list-group-item {% if not notificacao.lida %}list-group-item-light font-weight-bold{% endif %}"
-    >
-      <div class="d-flex w-100 justify-content-between">
-        <p class="mb-1">{{ notificacao.manchete }}</p>
-        <small>{{ notificacao.data_criacao|timesince }} atrás</small>
-      </div>
-    </div>
-    {% empty %}
-    <div class="list-group-item">
-      <p class="mb-0 text-muted">Você não tem outras notificações.</p>
-    </div>
-    {% endfor %}
-  </div>
-
-  <form
-    action="{% url 'Echo_app:marcar_todas_lidas' %}"
-    method="POST"
-    class="mt-4"
-  >
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary">
-      Marcar todas como lidas
-    </button>
-  </form>
-</div>
+    <h4>Recomendadas para você</h4>
+    <p class="text-muted">Com base nas suas categorias de interesse.</p>
+    <div class="list-group mb-4">
+        
+        {% for notificacao in notificacoes_recomendadas %}
+            <a href="{% if notificacao.noticia %}{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}{% else %}#{% endif %}" 
+               class="list-group-item list-group-item-action {% if not notificacao.lida %}list-group-item-primary fw-bold{% endif %}">
+                
+                <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1">{{ notificacao.manchete }}</p>
+                    <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
+                </div>
+                
+                {% if notificacao.noticia.categoria %}
+                    <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
+                {% endif %}
+            </a>
+        
+        {% empty %}
+            <a href="#" class="list-group-item list-group-item-action list-group-item-primary fw-bold">
+                <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1">Exemplo: Nova reportagem sobre Tecnologia!</p>
+                    <small class="text-muted">10 minutos atrás</small>
+                </div>
+                <small class="text-muted">Tópico: Tecnologia</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1">Exemplo: Destaques da rodada de Esportes</p>
+                    <small class="text-muted">1 hora atrás</small>
+                </div>
+                <small class="text-muted">Tópico: Esportes</small>
+            </a>
+        
+        {% endfor %} </div> <h4>Outras Notificações</h4>
+    <div class="list-group">
+        
+        {% for notificacao in notificacoes_outras %}
+            <div class="list-group-item {% if not notificacao.lida %}fw-bold{% endif %}">
+                <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1">{{ notificacao.manchete }}</p>
+                    <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
+                </div>
+            </div>
+        
+        {% empty %}
+            <div class="list-group-item">
+                <p class="mb-0 text-muted">Você não tem outras notificações.</p>
+            </div>
+        
+        {% endfor %} </div> </div>
 {% endblock %}
