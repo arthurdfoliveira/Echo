@@ -143,6 +143,10 @@ body {
     position: relative;
     transition: background-color 0.1s;
     line-height: 1.2;
+    /* CORREÇÃO DO BUG DE QUEBRA DE LINHA */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .menu-item:last-child {
@@ -180,8 +184,6 @@ body {
     border-top: 5px solid #f7f7f7;
     margin: 0 -15px;
 }
-
-/* Removed specific color styles for logout/delete icons as emojis handle their own color */
 
 
 /* ====================================
@@ -228,20 +230,12 @@ body {
 
 /* --- CORREÇÕES VISUAIS PARA AS AÇÕES FINAIS (Sair/Excluir) --- */
 
-/* 1. Garante que o texto não quebre para que o ícone e o texto fiquem na mesma linha */
-.menu-item {
-    /* Garante que o item se comporte como uma única linha, evitando quebra no meio */
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; /* Opcional: Adiciona '...' se o texto for muito longo */
-}
+/* 1. O 'white-space: nowrap' já está na regra .menu-item acima. */
 
-/* 2. Remove a setinha de navegação (>) para os links de AÇÃO e DELETAR */
-/* Utilizamos as classes 'acao-logout' e 'acao-deletar' para seletividade */
-.menu-item.acao-logout::after,
-.menu-item.acao-deletar::after {
-    content: none !important; /* Remove a seta que estava definida em .menu-item::after */
-}
+/* 2. Deixamos de remover a setinha de navegação (>) para acao-logout e acao-deletar, 
+   permitindo que .menu-item::after funcione e a seta apareça em todos os itens. 
+   O código de remoção FOI APAGADO. 
+*/
 
 /* 3. Estiliza a ação de Excluir: Mantém o vermelho e o negrito */
 .menu-item.acao-deletar {
@@ -251,6 +245,6 @@ body {
 
 /* 4. Estiliza a ação de Sair (se necessário) */
 .menu-item.acao-logout {
-    color: #333; /* Mantém a cor padrão, mas pode ser ajustado */
+    color: #333; /* Mantém a cor padrão */
     font-weight: 500;
 }
