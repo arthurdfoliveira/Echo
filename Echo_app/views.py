@@ -132,14 +132,22 @@ def entrar(request):
 def sair(request):
     """
     Exibe a confirmação de saída (GET) ou desloga o usuário (POST).
+    Agora usa o template dinâmico 'confirmar_acao.html'.
     """
     if request.method == 'POST':
-        # Se for POST, realiza o logout
         logout(request)
+        messages.success(request, "Você saiu da sua conta com sucesso.")
         return redirect("Echo_app:dashboard")
     
-    # Se for GET, exibe a página de confirmação
-    return render(request, "Echo_app/confirmar_saida.html")
+    # Contexto para a tela de confirmação de SAÍDA (GET)
+    contexto = {
+        'titulo': 'Tem certeza que deseja sair?',
+        'mensagem': 'Sua sessão será encerrada em todos os dispositivos. Você precisará fazer login novamente.',
+        'texto_botao': 'Sim, Sair da Conta',
+        'url_acao': 'Echo_app:sair', # URL para onde o formulário POST deve ir
+        'perigo': False # Para mudar a cor se necessário
+    }
+    return render(request, "Echo_app/confirmar_acao.html", contexto)
 
 @login_required
 def excluir_conta(request):

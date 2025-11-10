@@ -1,23 +1,32 @@
 {% extends "Echo_app/base.html" %}
 {% load static %}
 
-{% block title %}Confirmar Saída{% endblock %}
+{% block title %}Confirmar Ação{% endblock %}
 
 {% block content %}
-<div class="perfil-card" style="max-width: 500px; margin: 50px auto; padding: 20px;">
+<div class="perfil-card" style="max-width: 500px; margin: 50px auto; padding: 30px; text-align: center;">
     
-    <h1 style="color: #333; font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; text-align: center;">
-        Tem certeza que deseja sair?
+    {# TÍTULO DINÂMICO #}
+    <h1 style="
+        font-size: 1.6rem; 
+        font-weight: 700; 
+        margin-bottom: 10px;
+        {# Cor do título: Vermelho se for perigoso, preto se for padrão #}
+        color: {% if perigo %}#cc0000{% else %}#333{% endif %};
+    ">
+        {{ titulo }}
     </h1>
     
-    <p style="font-size: 1rem; color: #666; margin-bottom: 25px; text-align: center;">
-        Sua sessão será encerrada. Você precisará fazer login novamente.
+    {# MENSAGEM DINÂMICA (Pode conter negrito do Django) #}
+    <p style="font-size: 1rem; color: #666; margin-bottom: 25px;">
+        {{ mensagem|safe }} 
     </p>
     
-    <form method="POST" action="{% url 'Echo_app:sair' %}" style="margin-top: 20px; text-align: center;">
+    {# FORMULÁRIO DINÂMICO APONTANDO PARA A URL DE AÇÃO CORRETA #}
+    <form method="POST" action="{% url url_acao %}" style="margin-top: 20px;">
         {% csrf_token %}
         
-        {# Botão de Confirmação (Estilo Vermelho) #}
+        {# BOTÃO DE AÇÃO DINÂMICO #}
         <button type="submit" class="edit-profile-btn" 
                 style="
                     background-color: #cc0000; 
@@ -30,13 +39,13 @@
                     font-size: 0.9rem;
                     margin-right: 15px;
                 ">
-            Sim, Sair da Conta
+            {{ texto_botao }}
         </button>
         
         {# Link de Cancelamento #}
         <a href="{% url 'Echo_app:perfil' %}" 
            style="color: #333; text-decoration: none; font-weight: 500; font-size: 0.9rem;">
-            Cancelar
+            Cancelar e Voltar
         </a>
     </form>
 </div>
