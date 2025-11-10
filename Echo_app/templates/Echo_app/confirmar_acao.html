@@ -4,29 +4,63 @@
 {% block title %}Confirmar Ação{% endblock %}
 
 {% block content %}
-<div class="perfil-card" style="max-width: 500px; margin: 50px auto; padding: 30px; text-align: center;">
+
+{# Estilo para o container principal #}
+<style>
+    .confirmacao-card {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        text-align: center;
+        /* Caixa Branca com Bordas Lisas (ajuste do .perfil-card) */
+        background-color: #fff;
+        border-radius: 12px; /* Bordas lisas/arredondadas */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra suave */
+    }
+    .confirmacao-card h1 {
+        font-size: 1.8rem; /* Letra um pouco maior */
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    .confirmacao-card p {
+        font-size: 1.1rem; /* Letra um pouco maior */
+        color: #666; 
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+    
+    /* Estilo para o botão Cancelar (cor por trás) */
+    .btn-cancelar {
+        color: #333 !important; /* Cor do texto */
+        background-color: #f0f0f0; /* Fundo cinza suave */
+        font-weight: 600 !important;
+        padding: 8px 18px; 
+        border: 1px solid #ccc;
+        border-radius: 5px; 
+        text-decoration: none !important;
+        display: inline-block;
+        transition: background-color 0.2s;
+    }
+    .btn-cancelar:hover {
+        background-color: #e0e0e0;
+    }
+</style>
+
+<div class="confirmacao-card">
     
     {# TÍTULO DINÂMICO #}
-    <h1 style="
-        font-size: 1.6rem; 
-        font-weight: 700; 
-        margin-bottom: 10px;
-        {# Cor do título: Vermelho se for perigoso, preto se for padrão #}
-        color: {% if perigo %}#cc0000{% else %}#333{% endif %};
-    ">
+    <h1 style="color: {% if perigo %}#cc0000{% else %}#333{% endif %};">
         {{ titulo }}
     </h1>
     
-    {# MENSAGEM DINÂMICA (Pode conter negrito do Django) #}
-    <p style="font-size: 1rem; color: #666; margin-bottom: 25px;">
-        {{ mensagem|safe }} 
-    </p>
+    {# MENSAGEM DINÂMICA #}
+    <p>{{ mensagem|safe }}</p>
     
     {# FORMULÁRIO DINÂMICO APONTANDO PARA A URL DE AÇÃO CORRETA #}
     <form method="POST" action="{% url url_acao %}" style="margin-top: 20px;">
         {% csrf_token %}
         
-        {# BOTÃO DE AÇÃO DINÂMICO #}
+        {# BOTÃO DE AÇÃO PRINCIPAL #}
         <button type="submit" class="edit-profile-btn" 
                 style="
                     background-color: #cc0000; 
@@ -42,9 +76,8 @@
             {{ texto_botao }}
         </button>
         
-        {# Link de Cancelamento #}
-        <a href="{% url 'Echo_app:perfil' %}" 
-           style="color: #333; text-decoration: none; font-weight: 500; font-size: 0.9rem;">
+        {# LINK DE CANCELAMENTO (CORRIGIDO PARA VOLTAR AO PERFIL) #}
+        <a href="{% url 'Echo_app:perfil' %}" class="btn-cancelar">
             Cancelar e Voltar
         </a>
     </form>
