@@ -1,4 +1,11 @@
-{% extends 'Echo_app/base.html' %} 
+{% extends 'Echo_app/base.html' %}
+
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'Echo_app/css/perfil_editar.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4" style="max-width: 700px;">
     <div class="card shadow-sm">
