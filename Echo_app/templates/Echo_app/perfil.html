@@ -28,7 +28,7 @@
         <div class="perfil-info">
             <h3 class="saudacao">Seja bem-vindo, Usuário!</h3>
             <p class="user-email">{{ request.user.email|default:"email@exemplo.com" }}</p>
-            <a href="#" class="edit-profile-btn">Editar perfil</a>
+            <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-profile-btn">Editar perfil</a>
         </div>
     </div>
     

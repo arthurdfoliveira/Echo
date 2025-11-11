@@ -1,0 +1,59 @@
+{% extends 'Echo_app/base.html' %} 
+{% block content %}
+<div class="container mt-4" style="max-width: 700px;">
+    
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h2 class="card-title">Editar Perfil</h2>
+            <p class="card-subtitle mb-4 text-muted">
+                Atualize suas informações e escolha seus tópicos de interesse.
+            </p>
+
+            <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" 
+                           value="{{ usuario.first_name }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           value="{{ usuario.email }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+                    <input class="form-control" type="file" id="foto_perfil" name="foto_perfil">
+                </div>
+
+                <hr class="my-4">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Minhas Categorias de Interesse:</label>
+                    <div class="list-group">
+                        {% for categoria in todas_categorias %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-2" 
+                                   type="checkbox" 
+                                   name="categoria" 
+                                   value="{{ categoria.pk }}"
+                                   {% if categoria in perfil.categorias_de_interesse.all %}checked{% endif %}
+                            >
+                            {{ categoria.nome }}
+                        </label>
+                        {% empty %}
+                        <p class="text-muted">Nenhuma categoria foi encontrada.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary mt-3">Salvar Alterações</button>
+                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-secondary mt-3">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

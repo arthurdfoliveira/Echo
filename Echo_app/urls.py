@@ -12,7 +12,8 @@ urlpatterns = [
     path("registrar/", views.registrar, name="registrar"),
     path("sair/", views.sair, name="sair"),
     path("excluir-conta/", views.excluir_conta, name="excluir_conta"),
-    path("perfil/", views.perfil, name="perfil"),
+    path("perfil/", views.perfil_detalhe, name="perfil"),
+    path("perfil/editar/", views.perfil_editar, name="perfil_editar"),
     
     # ✅ Página Principal
     # Como o arquivo principal já enviou a rota vazia ("") para cá,

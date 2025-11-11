@@ -13,6 +13,8 @@ from django.db import IntegrityError
 from django.db.models import Q  # Para consultas complexas
 from django.shortcuts import render  
 from django.db import transaction   
+from django.contrib.auth.models import User
+from .models import PerfilUsuario, Categoria
 
 # Importa os modelos da aplicação
 from .models import (Noticia, InteracaoNoticia, Notificacao, PerfilUsuario, Categoria)
@@ -510,7 +512,16 @@ def marcar_todas_lidas(request):
 # ===============================================
 
 @login_required
-def perfil(request):
+def perfil_detalhe(request):
+    """
+    Apenas EXIBE a página de perfil bonita (o seu perfil.html).
+    """
+    # Esta view é simples, só precisa renderizar o template.
+    # O seu template 'perfil.html' já pega 'request.user.email'
+    return render(request, "Echo_app/perfil.html")
+
+@login_required
+def perfil_editar(request):
     """
     Exibe e permite a atualização do perfil do usuário.
     Atualiza first_name, email, categorias de interesse e foto de perfil.
@@ -548,7 +559,7 @@ def perfil(request):
                     "categorias_selecionadas_ids": categorias_ids,
                 },
             }
-            return render(request, "Echo_app/perfil.html", context)
+            return render(request, "Echo_app/perfil_editar.html", context)
 
         # Salva alterações do perfil
         usuario.first_name = first_name
@@ -574,7 +585,7 @@ def perfil(request):
         "perfil": perfil,
         "todas_categorias": todas_categorias,
     }
-    return render(request, "Echo_app/perfil.html", context)
+    return render(request, "Echo_app/perfil_editar.html", context)
 
 
 # ===============================================
