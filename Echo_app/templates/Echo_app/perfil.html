@@ -52,7 +52,7 @@
     <!-- Categorias de interesse -->
     {% if perfil.categorias_de_interesse.all %}
     <div class="perfil-categorias mt-3">
-        <h5>Minhas Categorias de Interesse</h5>
+        <h5 class="categorias-title">Minhas Categorias de Interesse</h5>
         <ul class="lista-categorias">
             {% for categoria in perfil.categorias_de_interesse.all %}
                 <li class="categoria-item">{{ categoria.nome }}</li>
