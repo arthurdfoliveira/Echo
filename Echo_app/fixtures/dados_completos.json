@@ -1,121 +1,381 @@
 [
 {
-    "model": "Echo_app.categoria",
-    "pk": 1,
-    "fields": {
-        "nome": "Economia"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 1,
+  "fields": {
+    "nome": "Economia"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 2,
-    "fields": {
-        "nome": "Política"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 2,
+  "fields": {
+    "nome": "Política"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 3,
-    "fields": {
-        "nome": "Esporte"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 3,
+  "fields": {
+    "nome": "Esporte"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 4,
-    "fields": {
-        "nome": "Meio Ambiente"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 4,
+  "fields": {
+    "nome": "Meio Ambiente"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 5,
-    "fields": {
-        "nome": "Saúde"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 5,
+  "fields": {
+    "nome": "Saúde"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 6,
-    "fields": {
-        "nome": "Música"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 6,
+  "fields": {
+    "nome": "Música"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 7,
-    "fields": {
-        "nome": "Mídia Social"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 7,
+  "fields": {
+    "nome": "Mídia Social"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 8,
-    "fields": {
-        "nome": "Educação"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 8,
+  "fields": {
+    "nome": "Educação"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 9,
-    "fields": {
-        "nome": "Ciência"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 9,
+  "fields": {
+    "nome": "Ciência"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 10,
-    "fields": {
-        "nome": "Inovação"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 10,
+  "fields": {
+    "nome": "Inovação"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 11,
-    "fields": {
-        "nome": "Tecnologia"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 11,
+  "fields": {
+    "nome": "Tecnologia"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 12,
-    "fields": {
-        "nome": "Cultura"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 12,
+  "fields": {
+    "nome": "Cultura"
+  }
 },
 {
-    "model": "Echo_app.categoria",
-    "pk": 13,
-    "fields": {
-        "nome": "Turismo"
-    }
+  "model": "Echo_app.categoria",
+  "pk": 13,
+  "fields": {
+    "nome": "Turismo"
+  }
 },
 {
-    "model": "Echo_app.noticia",
-    "pk": 1,
-    "fields": {
-        "titulo": "teste1",
-        "imagem": "",
-        "conteudo": "noticia so pra teste\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n1",
-        "data_publicacao": "2025-10-24T18:43:41Z",
-        "autor": 1,
-        "curtidas_count": 0,
-        "salvamentos_count": 0,
-        "categoria": null
-    }
+  "model": "Echo_app.noticia",
+  "pk": 1,
+  "fields": {
+    "titulo": "CESAR School conquista título na Copa Estudantil do Recife",
+    "imagem": "noticias/jogo.webp",
+    "fotografo": null,
+    "conteudo": "A equipe da CESAR School escreveu seu nome na história do esporte escolar pernambucano ao conquistar, pela primeira vez, o título da Copa Estudantil Metropolitana de Futebol. Em uma final eletrizante, o time derrotou o Colégio Santa Helena por 4 a 1, nesta sexta-feira (24), no campo da Universidade Federal de Pernambuco (UFPE).\r\n\r\nO destaque da partida foi o meia Matheus Freire, que comandou as ações ofensivas e marcou o primeiro gol, aos 15 minutos do primeiro tempo, após uma bela jogada coletiva. O Santa Helena ainda empatou antes do intervalo, mas no segundo tempo o CESAR voltou com tudo com partipação de Matheus Fialho.\r\n\r\nCom gols de Vitor Gadelha, Raul Maia e Arthur Oliveira, a equipe selou a vitória e levantou a taça sob aplausos da torcida, que lotou as arquibancadas com bandeiras e cânticos de incentivo.\r\n\r\n“É uma sensação indescritível. Trabalhamos duro o ano inteiro e ver esse esforço dar resultado é muito gratificante”, disse Arthur Moury, eleito o melhor jogador do torneio.\r\n\r\nO técnico Diego Magnata também celebrou o feito: “Esse grupo é fantástico. Mostrou maturidade, foco e amor pela camisa da CESAR.”\r\n\r\nCom o título, a CESAR School garante vaga no Campeonato Estadual e confirma sua ascenção como uma das principais forças no estado.",
+    "data_publicacao": "2025-11-05T15:03:50Z",
+    "autor": 2,
+    "curtidas_count": 1,
+    "salvamentos_count": 1,
+    "categoria": 3,
+    "urgente": false
+  }
 },
 {
-    "model": "Echo_app.noticia",
-    "pk": 3,
-    "fields": {
-        "titulo": "noticia teste",
-        "imagem": "noticias/IMG-20251027-WA00031.jpg",
-        "conteudo": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et fringilla libero, et faucibus arcu. Nam risus mauris, scelerisque sit amet mi vitae, pretium hendrerit augue. Praesent lobortis volutpat elit, quis accumsan ante molestie eu. Duis id dui eget lacus varius porta non id dui. Nam ut vulputate sapien, vitae convallis dui. Etiam enim libero, euismod sit amet est vitae, rhoncus aliquet eros. Curabitur a erat ac justo consequat dapibus. Phasellus sed est eu mi eleifend tempor interdum non quam. Maecenas elementum ipsum ut tristique ornare. Quisque neque nisl, accumsan elementum vulputate ut, imperdiet et elit. Proin porttitor cursus eros nec pulvinar. Nulla quis libero hendrerit, eleifend libero ac, semper lacus. Donec mauris lectus, gravida ac iaculis at, ullamcorper at nisl. Nam efficitur purus ipsum, et scelerisque arcu gravida ut. Vivamus sodales condimentum molestie. Donec vel urna vel risus egestas fringilla in et tellus.\r\n\r\nVestibulum tincidunt mauris enim, gravida eleifend felis blandit a. Proin et lorem in arcu porta tincidunt. Nam suscipit, quam vitae feugiat ultrices, diam massa congue purus, in malesuada elit dui ac ante. Suspendisse nec neque libero. Mauris et dapibus sapien. Maecenas euismod dignissim nunc, ac rutrum magna scelerisque ac. Pellentesque iaculis suscipit massa et consequat. Praesent sit amet sem consequat, tincidunt justo vel, tristique urna. Duis ac finibus mauris, eget tempus libero. Curabitur ac venenatis tortor. Morbi posuere blandit tempus. Ut a tincidunt enim, eu vulputate augue. Nullam condimentum elementum nulla vitae aliquet. Quisque vestibulum feugiat urna vel bibendum. Donec gravida lectus ut sapien placerat commodo.\r\n\r\nEtiam eu massa magna. Sed ullamcorper pharetra purus quis fermentum. Curabitur est ex, auctor et cursus quis, dignissim et massa. Aliquam blandit mi posuere ante viverra ultricies. Cras viverra laoreet elementum. Integer finibus, nisi non bibendum viverra, tortor nibh viverra ante, ut viverra eros lorem lobortis mi. Integer commodo nisl turpis. Fusce rhoncus tempor gravida.\r\n\r\nMauris sit amet sem et lectus vulputate tincidunt. Quisque tincidunt quis sem sed lacinia. Mauris dapibus magna leo, id dapibus nisi semper convallis. Aenean sollicitudin porta iaculis. Nunc iaculis nisl non ipsum eleifend, ac sodales massa rhoncus. Quisque convallis eget dolor bibendum facilisis. Ut lectus massa, ullamcorper at nunc commodo, mollis consequat nulla. Mauris eu fermentum sapien.\r\n\r\nDonec vel justo tincidunt, lacinia diam in, tristique libero. Maecenas luctus mollis metus sed aliquam. Aliquam non dapibus lacus. Quisque a condimentum dui. Morbi a convallis ligula. Donec dictum, nisl sit amet tristique fermentum, nunc lorem cursus sem, in cursus libero elit vitae tortor. Proin vel sollicitudin lorem. Donec et quam hendrerit, venenatis ex sit amet, tristique justo.",
-        "data_publicacao": "2025-11-01T17:45:36Z",
-        "autor": 1,
-        "curtidas_count": 0,
-        "salvamentos_count": 0,
-        "categoria": 13
-    }
+  "model": "Echo_app.noticia",
+  "pk": 2,
+  "fields": {
+    "titulo": "Novo Hospital em Portugal",
+    "imagem": "noticias/hospitalSintra.jpeg",
+    "fotografo": null,
+    "conteudo": "O novo Hospital de Sintra, Portugal, foi inaugurado em 2025 e o seu local é a própria cidade de Sintra. A abertura do serviço de urgência básica ocorreu em 12 de julho de 2025, seguida pela ativação das cirurgias e internamento durante a semana seguinte, de forma faseada. O novo hospital foi construído para aliviar a pressão sobre o Hospital Amadora-Sintra.",
+    "data_publicacao": "2025-07-12T17:00:00Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 5,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 3,
+  "fields": {
+    "titulo": "Brasil sem tilápia? Entenda o que significa a inclusão do peixe em lista de espécies invasoras",
+    "imagem": "noticias/tilapia.jpeg",
+    "fotografo": null,
+    "conteudo": "Já imaginou o Brasil sem tilápia? A inclusão dela na Lista Nacional Oficial de Espécies Exóticas Invasoras da Comissão Nacional de Biodiversidade (Conabio) gerou preocupação entre os produtores, que temem novas restrições à criação, que é o peixe do Brasil.\r\n\r\nUma espécie é considerada invasora quando ela começa a aparecer em lugares em que não é nativa. Nesse caso a tilápia, ela tem aparecido em rios fora das áreas de produção, o que causa desequilíbrios ambientais, segundo o Ministério do Meio Ambiente.\r\n\r\nJá a característica \"exótica\" é porque a tilápia não é nativa do Brasil, mas do continente africano, da bacia do Rio Nilo. Por isso ela é chamada de “Tilápia-do-Nilo” e o nome científico é Oreochromis niloticus.\r\n\r\nA medida, porém, não implica em banimento do uso ou cultivo da tilápia, informou o Ministério do Meio Ambiente. Ou seja, ainda vai dar para comer tilápia no Brasil.\r\n\r\nA instituição ressalta que o Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis (Ibama) é responsável por autorizar o cultivo de espécies exóticas e que ele permite a criação da tilápia",
+    "data_publicacao": "2025-11-08T16:09:46Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 1,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 4,
+  "fields": {
+    "titulo": "Cúpula de Belém surpreende ao trazer de volta o petróleo para o foco das negociações da COP",
+    "imagem": "noticias/cop30.jpeg",
+    "fotografo": null,
+    "conteudo": "Às vésperas da COP30, em Belém, poucos apostariam que o Brasil traria a pauta do afastamento dos combustíveis fósseis para o centro do debate na Conferência da ONU sobre as Mudanças Climáticas.\r\n\r\nNesta sexta-feira (7), porém, no encerramento da Cúpula dos Líderes, que precede a COP, organizações ambientalistas celebraram o impulso político dado pelo anfitrião do evento – o governo brasileiro – à discussão sobre o grande elefante na sala das negociações climáticas. \r\n\r\nAo defender que os países debatam como encaminharão o fim da dependência dos combustíveis fósseis, e ao reconhecer as contradições sobre o tema em seu próprio governo, o presidente Luiz Inácio Lula da Silva (PT) relançou um tema que estava esquecido sob a mesa desde 2023, em meio a um contexto de retomada de guerras no mundo e de crise do multilateralismo.\r\n\r\nA COP28, em Dubai, chegou à histórica decisão de que a humanidade precisa \"se afastar\" dessas fontes poluentes.\r\n\r\n\"Agora, voltamos a falar sobre como a gente vai fazer esse caminho para longe dos combustíveis fósseis. Faltava a gente falar desse assunto\", frisa André Castro Santos, diretor técnico da organização LaClima",
+    "data_publicacao": "2025-11-08T16:11:19Z",
+    "autor": null,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 4,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 5,
+  "fields": {
+    "titulo": "Tornado no Paraná: autoridades prestam solidariedade a moradores de cidade destruída",
+    "imagem": "noticias/tornado.jpeg",
+    "fotografo": null,
+    "conteudo": "Autoridades se manifestaram neste sábado (8) sobre o tornado que atingiu Cidades na região Centro-Sul do Paraná, com ventos com ventos que chegaram a 250 km/h nesta sexta.\r\n\r\nAo menos seis pessoas morreram e 600 receberam atendimento médico. Cinco mortes ocorreram em Rio Bonito do Iguaçu , a cidade mais atingida, e uma foi em Guarapuava.\r\n\r\nEm Rio Bonito do Iguaçu as vítimas são três homens com idades de 49, 57 e 83 anos, e duas mulheres, com idades de 47 e 14 anos. A vítima de Guarapuava é um homem de 53 anos.\r\n\r\nO tornado se formou devido a um ciclone extratropical que atinge o sul do país e também provocou chuva forte e estragos no Rio Grande do Sul e em Santa Catarina. No Sudeste, os estados de São Paulo e do Rio de Janeiro estão em alerta.",
+    "data_publicacao": "2025-11-08T16:12:46Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 2,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 6,
+  "fields": {
+    "titulo": "Linkin Park faz show em SP neste sábado; veja como deve ser a apresentação",
+    "imagem": "noticias/LP.avif",
+    "fotografo": null,
+    "conteudo": "Demorou menos de um ano, mas o Linkin Park está de volta ao Brasil e realiza em São Paulo, neste sábado (8), o segundo dos três shows marcados no país em 2025.\r\n\r\nDepois de tocar no Morumbis, a banda ainda segue para Brasília, onde se apresenta na próxima terça-feira (11). Na última quarta (5), estiveram em Curitiba.\r\n\r\nEm 2024, o grupo se reuniu após sete anos afastado dos palcos por causa da morte do vocalista Chester Bennington. Para a gravação do disco novo, \"From Zero\", contou com a adição da cantora Emily Armstrong e do baterista Colin Brittain.\r\n\r\nNo mesmo ano, o Linkin Park chegou a realizar dois shows no Brasil. No primeiro deles, em São Paulo, realizou uma apresentação impecável e a nova vocalista provou estar à altura do desafio.",
+    "data_publicacao": "2025-11-08T16:15:47Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 6,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 7,
+  "fields": {
+    "titulo": "Comissão do Senado aprova projeto para proteger crianças e adolescentes na internet",
+    "imagem": "noticias/senado.webp",
+    "fotografo": null,
+    "conteudo": "A Comissão de Comunicação e Direito Digital do Senado Federal aprovou, nesta quarta-feira (27), um projeto de lei (PL) que estabelece diretrizes para as redes sociais e outras plataformas, com o objetivo de proteger crianças e adolescentes que utilizam a internet.\r\n\r\nAprovada com 9 votos a 0, a proposta se encontra em regime terminativo. Se não houver recurso por parte do Senado, o texto irá direto para a análise da Câmara dos Deputados. Caso haja recurso, o plenário da Casa Alta também terá que aprovar o tema.\r\n\r\nDe relatoria do senador Flávio Arns (PSB), o texto determina que plataformas digitais adotem uma série de medidas para proteger menores de idade.",
+    "data_publicacao": "2025-11-08T16:16:56Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 7,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 8,
+  "fields": {
+    "titulo": "Alunos ‘nota mil’ na redação do Enem dão 4 dicas para texto de sucesso",
+    "imagem": "noticias/redacao.jpg",
+    "fotografo": null,
+    "conteudo": "A dois dias do primeiro domingo do Exame Nacional do Ensino Médio (Enem) 2025, o que fazer para aumentar as chances da tão sonhada nota mil na redação? Ninguém melhor para responder do que... quem conseguiu essa proeza nas últimas edições da prova.\r\n\r\nO JC conversou com três candidatos (assista ao vídeo acima) que tiraram a pontuação máxima:\r\n\r\nAnna Beatriz Rebouças, do Enem 2024, aprovada em Medicina na Universidade Estadual do Rio Grande do Norte (UERN);\r\nAna Flávia Pereira, do Enem 2019, aprovada em Medicina na Universidade Federal do Rio Grande (Furg);\r\nLucas Felpi, do Enem 2018, formado em Ciência da Computação e Ciências Políticas na Universidade de Michigan (EUA).",
+    "data_publicacao": "2025-11-08T16:18:07Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 8,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 9,
+  "fields": {
+    "titulo": "Astronautas chineses fazem o primeiro churrasco no espaço",
+    "imagem": "noticias/churrasco.webp",
+    "fotografo": null,
+    "conteudo": "Para quem gosta de carne, nada melhor que marcar um churrasco com os amigos. No entanto, astronautas chineses foram além na última terça-feira (4/11): eles assaram uma carninha na estação espacial Tiangong, localizada a cerca de 400 km de distância da Terra. É a primeira vez que um churrasco é feito fora do nosso planeta. No cardápio, asas de frango e bife.",
+    "data_publicacao": "2025-11-08T16:19:46Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 9,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 10,
+  "fields": {
+    "titulo": "Meta planeja investir US$ 600 bilhões em data centers de IA nos EUA",
+    "imagem": "noticias/meta.avif",
+    "fotografo": null,
+    "conteudo": "A Meta anunciou nesta sexta-feira (7) que investirá US$ 600 bilhões (cerca de R$ 3 trilhões) nos EUA nos próximos três anos, mirando inclusive a construção de data centers de inteligência artificial.\r\n\r\nO valor já tinha sido mencionado em setembro pelo presidente-executivo da Meta, Mark Zuckerberg para o presidente dos Estados Unidos, Donald Trump.\r\n\r\nOpenAI pagará US$ 38 bilhões para ter infraestrutura da Amazon na corrida pela IA\r\n'Bolha' da IA pode estourar? Trilhões em investimentos esbarram em baixo retorno\r\nNo mês passado, a big tech fechou um acordo de financiamento de US$ 27 bilhões (R$ 143 bilhões) com a Blue Owl Capital para financiar um data center no estado norte-americano da Louisiana, seu maior projeto global.",
+    "data_publicacao": "2025-11-08T16:21:11Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 10,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 11,
+  "fields": {
+    "titulo": "Por que Elon Musk quer produzir robôs humanoides",
+    "imagem": "noticias/robo.avif",
+    "fotografo": null,
+    "conteudo": "Ele já apareceu em showrooms da Tesla, nas linhas de produção da empresa — e até posou ao lado de Kim Kardashian.\r\n\r\nMas a visão de Elon Musk para o robô humanoide Optimus é muito mais ambiciosa do que isso.\r\n\r\nDesde que o apresentou pela primeira vez em um evento da Tesla em 2022, o bilionário da tecnologia tem dito que o robô de sua empresa poderá desempenhar um papel enorme nos lares e na vida de pessoas em todo o mundo.\r\n\r\nJunto com os táxis-robôs autônomos e os caminhões Cybertruck, Musk acredita que os robôs da Tesla são peça-chave para consolidar a presença da empresa no campo da inteligência artificial (IA).\r\n\r\nE os investidores que aprovaram, na quinta-feira, seu pacote salarial de 1 trilhão de dólares (cerca de R$ 5,6 trilhões) parecem concordar.",
+    "data_publicacao": "2025-11-08T16:22:16Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 11,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 12,
+  "fields": {
+    "titulo": "AC/DC anuncia duas novas datas para turnê no Brasil em 2026",
+    "imagem": "noticias/acdc.webp",
+    "fotografo": null,
+    "conteudo": "AC/DC anunciou duas novas datas de shows em sua passagem pelo Brasil em 2026. O grupo, que já tinha apresentação agendada no Morumbis, em São Paulo, no dia 24 de fevereiro, retorna ao estádio no dia 28 do mesmo mês e, também, em 04 de março.\r\n\r\nA última vez que a banda se apresentou no Brasil foi em 2009.\r\n\r\nO grupo australiano vem ao país com a turnê \"Power Up\", que inclui datas na Argentina, no Chile, no México e nos Estados Unidos.\r\n\r\nOs ingressos para o show estão disponíveis desde a manha desta sexta-feira (7), pela Ticketmaster. Os valores variam de R$ 425,00 (meia-entrada para arquibancada) e R$ 1.590 (inteira para cadeira inferior).\r\n\r\nO show de abertura será do grupo The Pretty Reckless.\r\n\r\nEssa será a primeira vez que o AC/DC vem ao Brasil após a morte do guitarrista Malcolm Young, em 2017. Ele foi substituído por Stevie Young, sobrinho de Malcolm e do guitarrista Angus.\r\n\r\nServiço: AC/DC em São Paulo\r\n\r\nQuando: 24 e 28 de fevereiro, e 3 de março de 2026\r\nOnde: Estádio MorumBis\r\nIngresso:\r\n\r\nArquibancada: R$ 850 (inteira) / R$ 425 (meia entrada)\r\nPista A&B: R$ (inteira) 1.350 / R$ 675 (meia entrada)\r\nCadeira Superior: R$ 1.490 (inteira) / R$ 745 (meia entrada)\r\nCadeira inferior: R$ 1.590 (inteira) / R$ 795 (meia entrada)",
+    "data_publicacao": "2025-11-08T16:23:20Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 12,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 13,
+  "fields": {
+    "titulo": "Instagram x realidade: como Bali virou vítima de seu próprio sucesso nas redes sociais",
+    "imagem": "noticias/bali.avif",
+    "fotografo": null,
+    "conteudo": "Bali, o famoso paraíso tropical da Indonésia, vem cativando os turistas há muitos anos.\r\n\r\nMas também vem deixando cada vez mais pessoas desiludidas, como aconteceu recentemente com Zoe Rae.\r\n\r\n\"Desde que aterrissamos em Bali, algo parecia estar errado\", conta ela, em um vídeo gravado em julho no seu quarto de hotel e publicado no YouTube.\r\n\r\n\"Viemos para Bali com muitas expectativas porque havíamos visto todos se divertindo nas redes sociais. Mas, se você tirar uma foto da cafeteria e afastar o zoom, verá qual é a realidade.\"",
+    "data_publicacao": "2025-11-08T16:25:45Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 13,
+    "urgente": false
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 14,
+  "fields": {
+    "titulo": "Baleado em megaoperação, agente do Bope ficou 17 minutos morto e foi reanimado: 'nasci de novo'",
+    "imagem": "noticias/bope.avif",
+    "fotografo": null,
+    "conteudo": "Um agente do Bope baleado durante a megaoperação do dia 28 de outubro ficou 17 minutos morto após uma parada cardiorrespiratória durante uma cirurgia no Hospital Central da Polícia Militar do Rio. Após quase 20 minutos de reanimação, ele sobreviveu sem nenhum dano cerebral ou neurológico.\r\n\r\nO policial está estável, consciente e conversa normalmente. Ele ainda apresenta limitações de mobilidade, mas deve passar por uma nova cirurgia, nesta sexta-feira (7),para recuperar os movimentos do braço baleado por criminosos do Comando Vermelho, na última semana.",
+    "data_publicacao": "2025-11-08T17:08:55Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 2,
+    "urgente": true
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 15,
+  "fields": {
+    "titulo": "Esperamos encerrar a guerra na Ucrânia em breve, diz Trump...",
+    "imagem": "noticias/guerra.png",
+    "fotografo": null,
+    "conteudo": "O presidente dos Estados Unidos, Donald Trump (Partido Republicano), disse nesta 6ª feira (7.nov.2025) que as negociações para encerrar a guerra entre Rússia e Ucrânia devem levar ao fim do conflito em breve. A declaração foi dada ao lado do primeiro-ministro da Hungria, Viktor Orbán (Fidesz, direita), na Casa Branca. “Acho que vamos conseguir encerrar essa guerra em um futuro não muito longo”, afirmou Trump. A reunião bilateral com o premiê húngaro também visa a facilitar o encontro entre o presidente norte-americano e o líder russo, Vladimir Putin, em Budapeste....\r\n\r\n\r\n 025 Todos os direitos são reservados ao Poder360, conforme a Lei nº 9.610/98. A publicação, redistribuição, transmissão e reescrita sem autorização prévia são proibidas.",
+    "data_publicacao": "2025-11-08T17:11:52Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 2,
+    "urgente": true
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 16,
+  "fields": {
+    "titulo": "Bitcoin avança após operar abaixo de US$ 100 mil, mas tem queda semanal",
+    "imagem": "noticias/bitcoin.webp",
+    "fotografo": null,
+    "conteudo": "O bitcoin e outras criptomoedas importantes registraram alta nesta sexta-feira (7), em tentativa de firmar recuperação. Investidores assimilam temores de enfraquecimento da economia dos EUA e impactos do shutdown, que aumentaram apostas do mercado acerca de novos cortes de juros.\r\n\r\nPor volta das 17 horas (em Brasília), o bitcoin tinha alta de 1,78%, a US$ 103.248,62, com queda semanal aproximada em 6,70%, enquanto o ethereum subia 3,60%, a US$ 3.438,58, também com queda semanal de 12%, de acordo com a plataforma Coinbase.\r\n\r\nApós oscilar e voltar a cair ao patamar de US$ 99 mil durante a manhã, o bitcoin se recuperou no começo da tarde e passou a operar com sinal positivo. Para o FxPro, a movimentação indica um aparente aumento no fluxo de compra.",
+    "data_publicacao": "2025-11-08T17:13:35Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 1,
+    "urgente": true
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 17,
+  "fields": {
+    "titulo": "Monsters of Rock anuncia Guns N' Roses como atração principal para edição de 2026",
+    "imagem": "noticias/guns.jpg",
+    "fotografo": null,
+    "conteudo": "Os fãs que perderam o show do Guns N’ Roses no Allianz Parque em outubro terão oportunidade de ver a banda em breve. O grupo foi anunciado como headliner (atração principal) do festival Monsters of Rock 2026, que acontece no dia 4 de abril em São Paulo.\r\n\r\nÉ o primeiro nome para a 9ª edição do festival no Brasil. O show marcará a estreia do Guns no evento, que, entre uma infinidade de gigantes do rock e do heavy metal, já trouxe Slayer, Motorhead, Kiss, Alice Cooper e Black Sabbath para tocar na capital paulista.\r\n\r\nDona de um dos repertórios mais conhecidos do rock n’ roll, a banda de Los Angeles deve executar clássicos no festival, segundo a organização. \"Sweet Child O’Mine\", \"Welcome To The Jungle\", \"November Rain\" e \"Paradise City\", canções que transcendem o público fiel da banda, são alguns dos exemplos.",
+    "data_publicacao": "2025-11-08T17:14:35Z",
+    "autor": 2,
+    "curtidas_count": 7,
+    "salvamentos_count": 6,
+    "categoria": 6,
+    "urgente": true
+  }
+},
+{
+  "model": "Echo_app.noticia",
+  "pk": 18,
+  "fields": {
+    "titulo": "Culpa da Virginia? Vini Jr. pode ser vendido do Real Madrid; entenda",
+    "imagem": "noticias/virginia.webp",
+    "fotografo": null,
+    "conteudo": "O atacante brasileiro Vini Jr. se tornou um dos assuntos mais comentados no Brasil após oficializar o namoro com Virginia Fonseca, mas a imprensa europeia destaca problemas no Real Madrid. Segundo o jornal alemão Sport Bild, o clube avalia vender o atleta após episódios das últimas semanas.\r\n\r\nO jornal cita o desentendimento público do jogador com o técnico Xabi Alonso durante o El Clássico contra o Barcelona, no fim de outubro. Vini teria protestado ao ser substituído, gerando desconforto interno e repercussão nas redes. Depois do episódio, o atleta foi orientado a pedir desculpas à comissão técnica e ao elenco.\r\n\r\nO Real Madrid não se manifestou oficialmente sobre negociações envolvendo o atacante. A repercussão internacional ocorre em meio à exposição do relacionamento.",
+    "data_publicacao": "2025-11-08T17:15:44Z",
+    "autor": 2,
+    "curtidas_count": 0,
+    "salvamentos_count": 0,
+    "categoria": 3,
+    "urgente": true
+  }
 }
 ]
