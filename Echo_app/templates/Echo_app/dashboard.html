@@ -9,6 +9,14 @@
 
 {% block content %}
 
+<!-- Publicidade Topo -->
+<div class="ad-container ad-top">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-content">
+        <img src="https://via.placeholder.com/970x90/f0f0f0/666?text=Anúncio+970x90" alt="Publicidade" class="ad-image">
+    </div>
+</div>
+
 <section class="recommended-section">
     <div class="section-header">
         <a href="#" class="section-title-link">
@@ -52,6 +60,14 @@
         {% endif %}
     </div>
 </section>
+
+<!-- Publicidade entre Recomendados e Urgentes -->
+<div class="ad-container ad-between-sections">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-content">
+        <img src="https://via.placeholder.com/728x90/f0f0f0/666?text=Anúncio+728x90" alt="Publicidade" class="ad-image">
+    </div>
+</div>
 
 <section class="urgent-section">
     <div class="section-header">
@@ -101,6 +117,14 @@
     </div>
 </section>
 
+<!-- Publicidade após Notícias Urgentes -->
+<div class="ad-container ad-after-urgent">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-content">
+        <img src="https://via.placeholder.com/728x90/f0f0f0/666?text=Anúncio+728x90" alt="Publicidade" class="ad-image">
+    </div>
+</div>
+
 <section class="latest-news-section">
     <div class="section-header">
         <a href="#" class="section-title-link"><h2 class="section-title">Últimas notícias</h2></a>
@@ -122,6 +146,14 @@
         {% include 'Echo_app/partials/lista_noticias.html' %}
     </div>
 </section>
+
+<!-- Publicidade Rodapé -->
+<div class="ad-container ad-bottom">
+    <div class="ad-label">Publicidade</div>
+    <div class="ad-content">
+        <img src="https://via.placeholder.com/970x90/f0f0f0/666?text=Anúncio+970x90" alt="Publicidade" class="ad-image">
+    </div>
+</div>
 
 <div class="bottom-spacer"></div>
 

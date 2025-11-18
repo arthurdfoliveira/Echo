@@ -6,6 +6,109 @@
     max-width: none !important;
 }
 
+/* ===================================== */
+/* ESPAÇOS DE PUBLICIDADE */
+/* ===================================== */
+.ad-container {
+    width: 100%;
+    text-align: center;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.ad-label {
+    font-size: 0.7rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.ad-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90px;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 970px;
+    margin: 0 auto;
+}
+
+.ad-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Publicidade topo - destaque máximo */
+.ad-top {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+}
+
+/* Publicidade entre seções */
+.ad-between-sections {
+    margin: 3rem auto;
+    background: #fafbfc;
+}
+
+/* Publicidade após urgentes */
+.ad-after-urgent {
+    margin: 2rem auto;
+}
+
+/* Publicidade rodapé */
+.ad-bottom {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+}
+
+/* Responsividade dos anúncios */
+@media (max-width: 768px) {
+    .ad-container {
+        margin: 1.5rem auto;
+        padding: 0.75rem;
+    }
+    
+    .ad-content {
+        min-height: 60px;
+        max-width: 100%;
+    }
+    
+    .ad-top, .ad-bottom {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .ad-between-sections, .ad-after-urgent {
+        margin: 2rem auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .ad-container {
+        margin: 1rem auto;
+        padding: 0.5rem;
+    }
+    
+    .ad-content {
+        min-height: 50px;
+    }
+    
+    .ad-label {
+        font-size: 0.65rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
 /* =====================================
    BOLHAS DE CATEGORIA (RE-ADICIONADO)
    ===================================== */
