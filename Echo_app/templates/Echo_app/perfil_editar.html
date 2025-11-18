@@ -7,83 +7,139 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4" style="max-width: 700px;">
-    <div class="card shadow-sm">
-        <div class="card-body p-4">
-            <h2 class="card-title">Editar Perfil</h2>
-            <p class="card-subtitle mb-4 text-muted">
-                Atualize suas informações e escolha seus tópicos de interesse.
-            </p>
+<div class="edit-profile-container">
+    <div class="edit-profile-card">
+        <h2 class="edit-profile-title">Editar perfil</h2>
+        
+        <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                    {% if perfil.foto_perfil %}
+                        <img src="{{ perfil.foto_perfil.url }}" alt="Foto de perfil" class="avatar-image">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <label for="foto_perfil" class="avatar-edit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                    </label>
+                    <input type="file" id="foto_perfil" name="foto_perfil" style="display: none;">
+                </div>
+            </div>
 
-            <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <div class="info-section">
-                <!-- Nome -->
-                <div class="mb-3">
-                    <label for="first_name" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                           value="{{ usuario.first_name }}">
+            <!-- Suas Informações -->
+            <div class="form-section">
+                <h3 class="section-title">Suas informações</h3>
+                
+                <div class="form-group">
+                    <label for="first_name">Nome *</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ usuario.first_name }}" required>
                 </div>
 
-                <!-- Email -->
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" 
-                           value="{{ usuario.email }}" required>
+                <div class="form-group">
+                    <label for="last_name">Sobrenome *</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ usuario.last_name }}">
                 </div>
 
-                <!-- Foto atual -->
-                {% if perfil.foto_perfil %}
-                <div class="avatar-section">
-                    <div class="avatar-circle">
-                        <img src="{{ perfil.foto_perfil.url }}" alt="Foto de perfil atual">
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Upload nova foto -->
-                <div class="mb-3">
-                    <label for="foto_perfil" class="form-label">Nova Foto de Perfil</label>
-                    <input class="form-control" type="file" id="foto_perfil" name="foto_perfil">
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" value="{{ usuario.email }}" required>
                 </div>
 
-                <!-- Biografia -->
-                <div class="mb-3">
-                    <label for="biografia" class="form-label">Biografia</label>
-                    <textarea class="form-control" id="biografia" name="biografia" rows="3"
-                              placeholder="Fale um pouco sobre você...">{{ perfil.biografia }}</textarea>
+                <div class="form-group">
+                    <label for="biografia">Biografia</label>
+                    <textarea id="biografia" name="biografia" rows="3" placeholder="Conte um pouco sobre você...">{{ perfil.biografia|default:'' }}</textarea>
                 </div>
-                </div>
+            </div>
 
-                <hr class="my-4">
-
-                <!-- Categorias -->
-                <div class="categories-section">
-                    <label class="categories-title">Minhas Categorias de Interesse:</label>
-                    <div class="list-group">
-                        {% for categoria in todas_categorias %}
-                        <label class="list-group-item">
-                            <input class="form-check-input me-2" 
-                                   type="checkbox" 
-                                   name="categoria" 
-                                   value="{{ categoria.pk }}"
-                                   {% if categoria in perfil.categorias_de_interesse.all %}checked{% endif %}>
-                            {{ categoria.nome }}
-                        </label>
-                        {% empty %}
-                        <p class="text-muted">Nenhuma categoria foi encontrada.</p>
-                        {% endfor %}
-                    </div>
+            <!-- Categorias de Interesse -->
+            <div class="form-section">
+                <h3 class="section-title">Categorias de interesse</h3>
+                
+                <div class="categories-grid">
+                    {% for categoria in todas_categorias %}
+                    <label class="category-pill {% if categoria in perfil.categorias_de_interesse.all %}selected{% endif %}">
+                        <input type="checkbox" name="categoria" value="{{ categoria.pk }}" 
+                               {% if categoria in perfil.categorias_de_interesse.all %}checked{% endif %}>
+                        <span>{{ categoria.nome }}</span>
+                        <span class="pill-icon">+</span>
+                    </label>
+                    {% empty %}
+                    <p class="no-categories">Nenhuma categoria disponível.</p>
+                    {% endfor %}
                 </div>
+            </div>
 
-                <!-- Botões -->
-                <div class="buttons-section">
-                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                    <a href="{% url 'Echo_app:perfil' %}" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
+            <!-- Botões -->
+            <div class="form-actions">
+                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-cancel">Cancelar</a>
+                <button type="submit" class="btn btn-save">Salvar</button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+// Toggle categoria pills
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryPills = document.querySelectorAll('.category-pill');
+    
+    categoryPills.forEach(pill => {
+        const checkbox = pill.querySelector('input[type="checkbox"]');
+        
+        // Inicializar estado visual baseado no checkbox
+        if (checkbox && checkbox.checked) {
+            pill.classList.add('selected');
+        }
+        
+        pill.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                
+                if (checkbox.checked) {
+                    pill.classList.add('selected');
+                } else {
+                    pill.classList.remove('selected');
+                }
+            }
+        });
+    });
+    
+    // Preview da foto de perfil
+    const fotoInput = document.getElementById('foto_perfil');
+    const avatarImage = document.querySelector('.avatar-image');
+    const avatarPlaceholder = document.querySelector('.avatar-placeholder');
+    
+    if (fotoInput) {
+        fotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    if (avatarImage) {
+                        avatarImage.src = event.target.result;
+                    } else if (avatarPlaceholder) {
+                        // Criar elemento de imagem se não existir
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.className = 'avatar-image';
+                        avatarPlaceholder.parentNode.replaceChild(img, avatarPlaceholder);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
