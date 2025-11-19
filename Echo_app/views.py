@@ -638,3 +638,25 @@ def noticias_curtidas(request):
         'total_curtidas': len(noticias_curtidas_list)
     }
     return render(request, 'Echo_app/noticias_curtidas.html', context)
+
+# ===============================================
+# Parte de Notícias Salvas (NOVA)
+# ===============================================
+
+@login_required
+def noticias_salvas_view(request):
+    """
+    Exibe a lista de notícias que o usuário salvou.
+    """
+    salvamentos = InteracaoNoticia.objects.filter(
+        usuario=request.user, 
+        tipo='SALVAMENTO'  # Filtro principal: apenas salvamentos
+    ).order_by('-data_interacao').select_related('noticia')
+
+    noticias_salvas_list = [interacao.noticia for interacao in salvamentos]
+    
+    context = {
+        'noticias_salvas': noticias_salvas_list, 
+        'total_salvos': len(noticias_salvas_list)
+    }
+    return render(request, 'Echo_app/noticias_salvas.html', context)

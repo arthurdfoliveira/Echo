@@ -39,4 +39,5 @@ urlpatterns = [
     path('pesquisar/', views.pesquisar_noticias, name='pesquisar_noticias'),
 
     path('curtidas/', views.noticias_curtidas, name='noticias_curtidas'),
+    path('salvos/', views.noticias_salvas_view, name='noticias_salvas'),
 ]
