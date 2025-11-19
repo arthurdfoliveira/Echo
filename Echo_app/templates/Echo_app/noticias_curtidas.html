@@ -1,86 +1,99 @@
 {% extends "Echo_app/base.html" %}
 {% load static %}
 
-{% block title %}Notícias Curtidas | Echo News{% endblock %}
+{% block title %}Minhas Curtidas{% endblock %}
+
+{% block extra_css %}
+<!-- 
+    IMPORTANTE: Este arquivo lista_noticias_jornal.css PRECISA ser criado.
+    Ele contém a estilização de alta fidelidade para o layout horizontal.
+-->
+<link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
-    <header class="mb-8">
-        <h1 class="text-3xl font-extrabold text-red-700 border-b-4 border-red-500 pb-2">
-            Minhas Notícias Curtidas
-        </h1>
-        <p class="mt-2 text-lg text-gray-600">
-            Você curtiu um total de {{ total_curtidas }} notícias até agora.
-        </p>
-    </header>
+
+<div class="content-container">
+
+    <!-- Título alinhado com o estilo do perfil.css -->
+    <h1 class="main-title">Minhas Curtidas</h1>
+    
+    <div class="curtidas-header">
+        <p class="curtidas-info">Você curtiu um total de <strong>{{ noticias_curtidas|length }}</strong> notícias.</p>
+    </div>
 
     {% if noticias_curtidas %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Lista de Notícias no formato Jornal (horizontal) -->
+        <div class="noticias-listagem">
+            
             {% for noticia in noticias_curtidas %}
-                <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-                    <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="block">
+            <article class="noticia-item">
+                
+                <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="noticia-link">
+                    
+                    <!-- Imagem/Placeholder -->
+                    <div class="noticia-imagem-box">
                         {% if noticia.imagem %}
                             <img 
                                 src="{{ noticia.imagem.url }}" 
                                 alt="Imagem da notícia: {{ noticia.titulo }}" 
-                                class="w-full h-48 object-cover"
+                                class="noticia-imagem"
                             >
                         {% else %}
-                            <div class="w-full h-48 bg-red-100 flex items-center justify-center">
-                                <span class="text-red-500 font-semibold">Sem Imagem</span>
+                            <div class="imagem-placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>Sem Imagem</span>
                             </div>
                         {% endif %}
+                    </div>
+                    
+                    <!-- Corpo do Texto -->
+                    <div class="noticia-body">
+                        <!-- Categoria no estilo tag -->
+                        <span class="noticia-tag tag-{{ noticia.categoria.nome|slugify|default:'geral' }}">
+                            {{ noticia.categoria.nome|default:"Geral" }}
+                        </span>
                         
-                        <div class="p-4 sm:p-6">
-                            <span class="text-xs font-semibold uppercase tracking-wider 
-                                {% if noticia.categoria.nome == 'Esportes' %}text-red-600 bg-red-100 
-                                {% elif noticia.categoria.nome == 'Tecnologia' %}text-blue-600 bg-blue-100 
-                                {% elif noticia.categoria.nome == 'Política' %}text-green-600 bg-green-100
-                                {% else %}text-gray-600 bg-gray-100{% endif %} 
-                                px-3 py-1 rounded-full mb-3 inline-block"
-                            >
-                                {{ noticia.categoria.nome|default:"Geral" }}
+                        <h2 class="noticia-titulo">
+                            {{ noticia.titulo }}
+                        </h2>
+                        
+                        <p class="noticia-resumo">
+                            {{ noticia.conteudo|safe|striptags|truncatechars:150 }}
+                        </p>
+                        
+                        <div class="noticia-meta">
+                            <span class="meta-data">
+                                {{ noticia.data_publicacao|date:"d/m/Y \à\s H:i" }}
                             </span>
-                            
-                            <h2 class="text-xl font-bold text-gray-900 mb-2 hover:text-red-700 transition-colors">
-                                {{ noticia.titulo|truncatechars:70 }}
-                            </h2>
-                            
-                            <p class="text-sm text-gray-500 line-clamp-3">
-                                {{ noticia.conteudo|safe|striptags|truncatechars:150 }}
-                            </p>
-                            
-                            <div class="mt-4 flex items-center justify-between text-xs text-gray-400">
-                                <span class="text-red-500 font-bold">
-                                    <i class="fas fa-heart mr-1"></i> 
-                                    Curtiu
-                                </span>
-                                <span>
-                                    <i class="fas fa-calendar-alt mr-1"></i> 
-                                    {{ noticia.data_publicacao|date:"d/m/Y H:i" }}
-                                </span>
-                            </div>
+                            <!-- Ícone de Curtido para indicar que está na lista -->
+                            <span class="meta-curtida">
+                                <i class="fas fa-heart"></i>
+                            </span>
                         </div>
-                    </a>
-                </article>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="text-center py-12 bg-white rounded-lg shadow-md border border-dashed border-red-300">
-            <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-.318-.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-            <h3 class="mt-2 text-lg font-medium text-gray-900">Nenhuma notícia curtida ainda</h3>
-            <p class="mt-1 text-sm text-gray-500">
-                Comece a curtir notícias clicando no ícone de "coração" na página de detalhe da notícia.
-            </p>
-            <div class="mt-6">
-                <a href="{% url 'Echo_app:dashboard' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Voltar para o Dashboard
+                    </div>
+                    
                 </a>
-            </div>
+            </article>
+            {% endfor %}
+            
+        </div>
+        
+    {% else %}
+        <!-- Mensagem de estado vazio (Empty State) no padrão de design do perfil -->
+        <div class="empty-state">
+            <i class="fas fa-heart-broken empty-icon"></i>
+            <h3 class="empty-title">Nenhuma notícia curtida</h3>
+            <p class="empty-text">
+                Explore o dashboard e clique no coração nas notícias que mais te interessarem.
+            </p>
+            <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para o Dashboard
+            </a>
         </div>
     {% endif %}
 </div>
+
 {% endblock %}
