@@ -98,7 +98,8 @@ def entrar(request):
         if not username or not password:
             contexto['erro_login'] = 'Por favor, preencha o usuário e a senha.'
             contexto['username_preenchido'] = username
-            return render(request, "Echo_app/entrar.html", contexto)
+            template_name = "Echo_app/entrar.html" if not request.user.is_authenticated else "Echo_app/dashboard.html"
+            return render(request, template_name, contexto)
 
         user = authenticate(request, username=username, password=password)
 
@@ -113,7 +114,8 @@ def entrar(request):
             
         contexto['username_preenchido'] = username
             
-    return render(request, "Echo_app/entrar.html", contexto)
+    template_name = "Echo_app/entrar.html" if not request.user.is_authenticated else "Echo_app/dashboard.html"
+    return render(request, template_name, contexto)
 
 
 def sair(request):
