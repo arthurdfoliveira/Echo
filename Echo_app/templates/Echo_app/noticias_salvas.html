@@ -1,0 +1,90 @@
+{% extends "Echo_app/base.html" %}
+{% load static %}
+
+{% block title %}Meus Salvos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="content-container">
+
+    <h1 class="main-title">Meus Salvos</h1>
+    
+    <div class="curtidas-header"> 
+        <p class="curtidas-info">Você tem um total de <strong>{{ noticias_salvas|length }}</strong> itens salvos.</p>
+    </div>
+
+    {% if noticias_salvas %}
+        
+        <div class="noticias-listagem">
+            
+            {% for noticia in noticias_salvas %}
+            <article class="noticia-item">
+                
+                <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="noticia-link">
+                    
+                    <div class="noticia-imagem-box">
+                        {% if noticia.imagem %}
+                            <img 
+                                src="{{ noticia.imagem.url }}" 
+                                alt="Imagem da notícia: {{ noticia.titulo }}" 
+                                class="noticia-imagem"
+                            >
+                        {% else %}
+                            <div class="imagem-placeholder">
+                                <i class="fas fa-image"></i>
+                                <span>Sem Imagem</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="noticia-body">
+                        
+                        <span class="noticia-tag tag-{{ noticia.categoria.nome|slugify|default:'geral' }}">
+                            {{ noticia.categoria.nome|default:"Geral" }}
+                        </span>
+                        
+                        <h2 class="noticia-titulo">
+                            {{ noticia.titulo }}
+                        </h2>
+                        
+                        <p class="noticia-resumo">
+                            {{ noticia.conteudo|safe|striptags|truncatechars:150 }}
+                        </p>
+                        
+                        <div class="noticia-meta">
+                            <span class="meta-data">
+                                {{ noticia.data_publicacao|date:"d/m/Y \à\s H:i" }}
+                            </span>
+                            
+                            <span class="meta-curtida">
+                                <i class="fas fa-bookmark"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                </a>
+            </article>
+            {% endfor %}
+            
+        </div>
+        
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-bookmark empty-icon"></i> 
+            <h3 class="empty-title">Nenhuma notícia salva</h3>
+            <p class="empty-text">
+                Use o ícone de bandeira ou bookmark nas notícias para criar suas coleções de leitura.
+            </p>
+            <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para o Dashboard
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
