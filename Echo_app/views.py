@@ -614,25 +614,50 @@ def configuracoes_conta(request):
 def noticias_curtidas(request):
     usuario = request.user
     
-    interacoes = InteracaoNoticia.objects.filter(
+    # Parâmetros de Filtro/Pesquisa da URL
+    termo_pesquisa = request.GET.get('q', '').strip()
+    categoria_slug = request.GET.get('categoria', '').strip()
+    
+    # 1. Busca todas as interações de 'CURTIDA' do usuário
+    # Ordenamos pela data de interação para pegar as mais recentes primeiro
+    interacoes_qs = InteracaoNoticia.objects.filter(
         usuario=usuario, 
         tipo='CURTIDA'
     ).select_related('noticia', 'noticia__categoria').order_by('-data_interacao')
     
+    # 2. Aplica filtro de Categoria, se houver
+    if categoria_slug:
+        # Filtra interações que pertencem a notícias da categoria selecionada (usando o slug)
+        interacoes_qs = interacoes_qs.filter(noticia__categoria__slug=categoria_slug)
+        
+    # 3. Aplica filtro de Pesquisa, se houver
+    if termo_pesquisa:
+        # Filtra interações onde o título ou conteúdo da notícia contenha o termo
+        interacoes_qs = interacoes_qs.filter(
+            Q(noticia__titulo__icontains=termo_pesquisa) | 
+            Q(noticia__conteudo__icontains=termo_pesquisa)
+        )
+        
+    # 4. Extrai as notícias, removendo duplicatas (pois um usuário pode curtir a mesma notícia várias vezes, embora o seu modelo deve evitar isso, é uma boa prática garantir a unicidade)
     seen_ids = set()
-    noticias = []
-    for item in interacoes:
+    noticias_curtidas = []
+    for item in interacoes_qs:
         if item.noticia.id not in seen_ids:
-            noticias.append(item.noticia)
+            noticias_curtidas.append(item.noticia)
             seen_ids.add(item.noticia.id)
-    
-    categorias = Categoria.objects.all()
+            
+    # 5. Carrega TODAS as categorias para o filtro do template (corrigindo o defeito #1)
+    # Usamos "categorias_disponiveis" no template para evitar conflito.
+    categorias_disponiveis = Categoria.objects.all().order_by('nome')
 
     context = {
-        'noticias_curtidas': noticias,
-        'categorias': categorias,
-        'total_curtidas': len(noticias)
+        # 'noticias_curtidas' agora contém a lista filtrada
+        'noticias_curtidas': noticias_curtidas,
+        # Variável correta para exibir no filtro do template
+        'categorias_disponiveis': categorias_disponiveis, 
+        'total_curtidas': len(noticias_curtidas)
     }
+    # Mantemos o nome do template conforme o padrão
     return render(request, 'Echo_app/noticias_curtidas.html', context)
 
 
