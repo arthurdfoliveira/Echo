@@ -75,18 +75,13 @@ jobs:
           slot-name: 'Production'
           
       - name: Install dependencies
-        run: pip install -r ECHO/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Cleaning testing files
         run: |
-          cd ECHO/
-          rm db.sqlite3
-          rm .env
-          cd ..
-
+          rm -f db.sqlite3
+          rm -f .env
+          
       - name: Zip artifact for deployment
         run: |
-          cd ECHO/
-          zip release.zip ./* -r
-          cd ..
-          mv ECHO/release.zip .
+          zip -r release.zip .
