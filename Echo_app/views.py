@@ -20,13 +20,10 @@ User = get_user_model()
 
 
 # ===============================================
-# Parte de Autenticação e Registro (Raul)
+# Parte de Autenticação e Registro
 # ===============================================
 
 def registrar(request):
-    """
-    Renderiza a página de registro e processa a criação de um novo usuário.
-    """
     contexto = {'erros': [], 'dados_preenchidos': {}} 
     
     try:
@@ -85,9 +82,6 @@ def registrar(request):
 
 
 def entrar(request):
-    """
-    Renderiza a página de login e processa a autenticação.
-    """
     contexto = {}
     
     if request.method == "POST":
@@ -120,12 +114,13 @@ def entrar(request):
 
 def sair(request):
     """
-    Desloga o usuário e redireciona.
+    Desloga o usuário e redireciona para o Dashboard (versão offline).
     """
     if request.method == 'POST':
         logout(request)
         messages.success(request, "Você saiu da sua conta com sucesso.")
-        return redirect("Echo_app:entrar") 
+        # ALTERADO: Redireciona para dashboard em vez de entrar
+        return redirect("Echo_app:dashboard") 
 
     contexto = {
         'titulo': 'Tem certeza que deseja sair?',
@@ -139,9 +134,6 @@ def sair(request):
 
 @login_required
 def excluir_conta(request):
-    """
-    Exibe a confirmação de exclusão ou exclui a conta.
-    """
     if request.method == 'POST':
         user = request.user
         logout(request)
@@ -167,42 +159,49 @@ def excluir_conta(request):
 
 
 # ===============================================
-# Parte do Dashboard (ATUALIZADA)
+# Parte do Dashboard
 # ===============================================
 
 def dashboard(request):
     """
-    Exibe a página principal.
+    Exibe a página principal (Logado ou Visitante).
     """
     user = request.user
     categorias_interesse = []
     noticias_recomendadas_list = []
 
+    # 1. Lógica para definir as notícias do Carrossel Principal
     if user.is_authenticated:
+        # SE LOGADO: Baseado nas preferências do usuário
         try:
             perfil = user.perfil 
             categorias_interesse = perfil.categorias_de_interesse.all()
         except PerfilUsuario.DoesNotExist:
             perfil, created = PerfilUsuario.objects.get_or_create(usuario=user)
         
-        # Carrossel de Recomendados (3 notícias)
         noticias_recomendadas_list = Noticia.recomendar_para(user)[:3]
+    else:
+        # SE VISITANTE: Baseado nas mais curtidas (Maior Engajamento)
+        noticias_recomendadas_list = Noticia.objects.order_by('-curtidas_count')[:3]
     
+    # 2. Notícias Urgentes
     try:
         urgentes_qs = Noticia.objects.filter(urgente=True).order_by('-data_publicacao')
         if noticias_recomendadas_list:
-            # Evita repetir notícias que já estão no carrossel de recomendados
+            # Evita repetir notícias que já estão no carrossel principal
             ids_excluidos = [n.id for n in noticias_recomendadas_list]
             urgentes_qs = urgentes_qs.exclude(id__in=ids_excluidos)
         noticias_urgentes = urgentes_qs[:5] 
     except Exception:
         noticias_urgentes = None
 
+    # 3. Últimas Notícias (Tendências)
     try:
         ultimas_noticias = Noticia.objects.filter(urgente=False).order_by('-data_publicacao')[:5]
     except Exception:
         ultimas_noticias = None
         
+    # 4. Categorias para Filtro
     try:
         categorias_para_filtro = Categoria.objects.all()
     except Exception:
@@ -211,7 +210,7 @@ def dashboard(request):
     context = {
         "nome": user.first_name or user.username if user.is_authenticated else "Visitante",
         "email": user.email if user.is_authenticated else "",
-        "noticias_recomendadas_list": noticias_recomendadas_list, # Lista para o carrossel
+        "noticias_recomendadas_list": noticias_recomendadas_list,
         "categorias_interesse": categorias_interesse,
         "noticias_urgentes": noticias_urgentes,
         "ultimas_noticias": ultimas_noticias,
@@ -219,6 +218,7 @@ def dashboard(request):
         "usuario_autenticado": user.is_authenticated,
     }
     
+    # Seleciona o template correto
     template_name = "Echo_app/dashboard.html" if user.is_authenticated else "Echo_app/dashboard_off.html"
     return render(request, template_name, context)
 
@@ -300,7 +300,7 @@ def pesquisar_noticias(request):
 
 
 # ===============================================
-# Parte de Notícias e Interações (Teteu)
+# Parte de Notícias e Interações (Detalhes)
 # ===============================================
 
 class NoticiaDetalheView(DetailView):
@@ -313,7 +313,6 @@ class NoticiaDetalheView(DetailView):
         noticia_atual = self.object
         user = self.request.user
         
-        # --- LÓGICA PARA "VEJA TAMBÉM" (PERSONALIZADA) ---
         qs_base = Noticia.objects.none()
 
         if user.is_authenticated:
@@ -336,7 +335,6 @@ class NoticiaDetalheView(DetailView):
             noticias_relacionadas = list(noticias_relacionadas) + list(mais_recentes)
 
         context['noticias_relacionadas'] = noticias_relacionadas
-        # ------------------------------------------------
 
         context['usuario_curtiu'] = False
         context['usuario_salvou'] = False
@@ -408,7 +406,7 @@ def salvar_noticia(request, noticia_id):
 
 
 # ===============================================
-# Parte das Notificações (Oliver)
+# Parte das Notificações
 # ===============================================
 
 @login_required
@@ -609,25 +607,18 @@ def configuracoes_conta(request):
 
 
 # ===============================================
-# LISTA DE NOTÍCIAS CURTIDAS (CORRIGIDA)
+# LISTA DE NOTÍCIAS CURTIDAS
 # ===============================================
 
 @login_required
 def noticias_curtidas(request):
-    """
-    Exibe a lista de notícias que o usuário curtiu.
-    CORRIGIDO: Busca interações primeiro para evitar duplicatas.
-    """
     usuario = request.user
     
-    # 1. Busca interações do usuário
     interacoes = InteracaoNoticia.objects.filter(
         usuario=usuario, 
         tipo='CURTIDA'
     ).select_related('noticia', 'noticia__categoria').order_by('-data_interacao')
     
-    # 2. Filtra manualmente para garantir que não haja duplicatas
-    # (Caso o banco tenha dados sujos de testes anteriores)
     seen_ids = set()
     noticias = []
     for item in interacoes:
@@ -635,7 +626,6 @@ def noticias_curtidas(request):
             noticias.append(item.noticia)
             seen_ids.add(item.noticia.id)
     
-    # 3. Categorias para o filtro
     categorias = Categoria.objects.all()
 
     context = {
@@ -647,15 +637,11 @@ def noticias_curtidas(request):
 
 
 # ===============================================
-# LISTA DE NOTÍCIAS SALVAS (CORRIGIDA)
+# LISTA DE NOTÍCIAS SALVAS
 # ===============================================
 
 @login_required
 def noticias_salvas_view(request):
-    """
-    Exibe a lista de notícias que o usuário salvou.
-    CORRIGIDO: Busca interações primeiro para evitar duplicatas.
-    """
     usuario = request.user
 
     interacoes = InteracaoNoticia.objects.filter(

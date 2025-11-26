@@ -9,7 +9,6 @@
 
 {% block content %}
 
-<!-- Publicidade Topo -->
 <div class="ad-container ad-top">
     <div class="ad-label">Publicidade</div>
     <div class="ad-content">
@@ -20,48 +19,70 @@
 <section class="recommended-section">
     <div class="section-header">
         <a href="#" class="section-title-link">
-            <h2 class="section-title">Recomendado</h2>
+            <h2 class="section-title">Maior Engajamento</h2>
         </a>
         <a href="#" class="see-more subtle-btn">Ver mais</a>
     </div>
 
-    <div class="news-feed">
-        {% if noticia_recomendada %}
-            {% with noticia=noticia_recomendada %}
-                <a href="{% url 'Echo_app:noticia_detalhe' noticia.id %}" class="news-card-link">
-                    <article class="news-card large-card">
-                        <div class="card-image-placeholder">
-                            {% if noticia.imagem %}
-                                <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}">
-                            {% else %}
-                                <div class="image-placeholder recommended-placeholder">📰</div>
-                            {% endif %}
-                        </div>
-                        <div class="card-content">
-                            <h3>{{ noticia.titulo }}</h3>
-                            
-                            <p class="news-description">
-                                {{ noticia.conteudo|striptags|truncatewords:40 }}
-                            </p>
+    <div class="rec-slider-container">
+        
+        <button class="rec-arrow rec-arrow-left" id="rec-prev-btn">
+            <i class="bi bi-chevron-left"></i>
+        </button>
 
-                            <div class="card-meta">
-                                <span class="category">{{ noticia.categoria.nome|default:"Geral" }}</span>
-                                <span>{{ noticia.data_publicacao|date:"d M, Y" }}</span>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-            {% endwith %}
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-icon">📰</div>
-                <p>Ainda não há notícias para você.<br>Comece a interagir com os artigos para receber recomendações personalizadas!</p>
-            </div>
-        {% endif %}
+        <div class="rec-slider-wrapper" id="rec-slider-wrapper">
+            
+            {% if noticias_recomendadas_list %}
+                {% for noticia in noticias_recomendadas_list %}
+                    <div class="rec-slide-item">
+                        <a href="{% url 'Echo_app:noticia_detalhe' noticia.id %}" class="news-card-link">
+                            <article class="news-card large-card">
+                                <div class="card-image-placeholder">
+                                    {% if noticia.imagem %}
+                                        <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}">
+                                    {% else %}
+                                        <div class="image-placeholder recommended-placeholder">🔥</div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-content">
+                                    <h3>{{ noticia.titulo }}</h3>
+                                    
+                                    <p class="news-description">
+                                        {{ noticia.conteudo|striptags|truncatewords:20 }}
+                                    </p>
+
+                                    <div class="card-meta">
+                                        <span class="category">{{ noticia.categoria.nome|default:"Geral" }}</span>
+                                        <span>{{ noticia.data_publicacao|date:"d M, Y" }}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">🔥</div>
+                    <p>As notícias mais quentes aparecerão aqui em breve!</p>
+                </div>
+            {% endif %}
+            
+        </div>
+
+        <button class="rec-arrow rec-arrow-right" id="rec-next-btn">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+
     </div>
+
+    {% if noticias_recomendadas_list %}
+    <div class="rec-progress-container">
+        <div class="rec-progress-bar" id="rec-progress-fill"></div>
+    </div>
+    {% endif %}
+
 </section>
 
-<!-- Publicidade entre Recomendados e Urgentes -->
 <div class="ad-container ad-between-sections">
     <div class="ad-label">Publicidade</div>
     <div class="ad-content">
@@ -99,7 +120,7 @@
                             <p class="urgent-description">{{ noticia.conteudo|striptags|truncatewords:15 }}</p>
                         </div>
                     </a>
-                    </div>
+                </div>
                 {% endfor %}
             {% else %}
                 <div class="empty-state-slider">
@@ -117,7 +138,6 @@
     </div>
 </section>
 
-<!-- Publicidade após Notícias Urgentes -->
 <div class="ad-container ad-after-urgent">
     <div class="ad-label">Publicidade</div>
     <div class="ad-content">
@@ -147,7 +167,6 @@
     </div>
 </section>
 
-<!-- Publicidade Rodapé -->
 <div class="ad-container ad-bottom">
     <div class="ad-label">Publicidade</div>
     <div class="ad-content">
@@ -165,7 +184,68 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    // === CÓDIGO DO SLIDER DE NOTÍCIAS URGENTES ===
+    // =========================================
+    // 1. CARROSSEL DE MAIOR ENGAJAMENTO (COM TIMER DE 10S)
+    // =========================================
+    const recWrapper = document.getElementById('rec-slider-wrapper');
+    const recPrevBtn = document.getElementById('rec-prev-btn');
+    const recNextBtn = document.getElementById('rec-next-btn');
+    const recProgressBar = document.getElementById('rec-progress-fill');
+    
+    let autoSlideTimer;
+    const SLIDE_DURATION = 10000; // 10 segundos
+
+    if (recWrapper && recPrevBtn && recNextBtn && recProgressBar) {
+        
+        function startAutoSlide() {
+            clearTimeout(autoSlideTimer);
+
+            // Reseta animação da barra
+            recProgressBar.style.transition = 'none';
+            recProgressBar.style.width = '0%';
+            void recProgressBar.offsetWidth; // Força repaint
+
+            // Inicia animação
+            recProgressBar.style.transition = `width ${SLIDE_DURATION}ms linear`;
+            recProgressBar.style.width = '100%';
+
+            autoSlideTimer = setTimeout(() => {
+                slide(1);
+            }, SLIDE_DURATION);
+        }
+
+        function slide(direction) {
+            const item = recWrapper.querySelector('.rec-slide-item');
+            if (!item) return;
+            
+            const scrollAmount = item.clientWidth; 
+            const maxScroll = recWrapper.scrollWidth - recWrapper.clientWidth;
+            const currentScroll = recWrapper.scrollLeft;
+
+            // Loop infinito
+            if (direction === 1 && currentScroll >= maxScroll - 5) {
+                recWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+            } else if (direction === -1 && currentScroll <= 5) {
+                recWrapper.scrollTo({ left: maxScroll, behavior: 'smooth' });
+            } else {
+                recWrapper.scrollBy({
+                    left: direction * scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+            startAutoSlide();
+        }
+
+        recPrevBtn.addEventListener('click', () => slide(-1));
+        recNextBtn.addEventListener('click', () => slide(1));
+
+        startAutoSlide();
+    }
+
+
+    // =========================================
+    // 2. SLIDER DE URGENTES (MANTIDO IGUAL)
+    // =========================================
     const navDots = document.querySelectorAll('.urgent-nav-dot');
     const newsCards = document.querySelectorAll('.urgent-news-card');
     const newsWrapper = document.querySelector('.urgent-news-wrapper');
@@ -181,36 +261,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateNewsView(index) {
             if (newsCards.length === 0) return; 
-
             const cardWidth = getCardWidth();
             
             navDots.forEach(dot => dot.classList.remove('active'));
             navDots.forEach((dot, i) => {
-                if (i >= totalNews) {
-                    dot.style.display = 'none';
-                } else {
-                    dot.style.display = 'block';
-                }
+                if (i >= totalNews) dot.style.display = 'none';
+                else dot.style.display = 'block';
             });
-            if(navDots[index]) {
-                navDots[index].classList.add('active');
-            }
+            if(navDots[index]) navDots[index].classList.add('active');
 
             const scrollPosition = index * cardWidth;
-            newsWrapper.scrollTo({
-                left: scrollPosition,
-                behavior: 'smooth'
-            });
+            newsWrapper.scrollTo({ left: scrollPosition, behavior: 'smooth' });
 
             newsCards.forEach((card, i) => {
                 card.classList.remove('active', 'partial-view', 'full-view');
-                if (i === index) {
-                    card.classList.add('active', 'full-view');
-                } else if (i === index + 1) {
-                    card.classList.add('partial-view');
-                } else {
-                    card.classList.add('full-view');
-                }
+                if (i === index) card.classList.add('active', 'full-view');
+                else if (i === index + 1) card.classList.add('partial-view');
+                else card.classList.add('full-view');
             });
             currentIndex = index;
         }
@@ -218,9 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
         navDots.forEach(dot => {
             dot.addEventListener('click', function() {
                 const index = parseInt(this.getAttribute('data-index'));
-                if (index < totalNews) {
-                    updateNewsView(index);
-                }
+                if (index < totalNews) updateNewsView(index);
             });
         });
 
@@ -230,21 +295,20 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollTimer = setTimeout(() => {
                 const cardWidth = getCardWidth();
                 if (cardWidth === 0) return;
-                
                 const scrollPos = newsWrapper.scrollLeft;
                 const newIndex = Math.round(scrollPos / cardWidth);
-                
                 if (newIndex !== currentIndex && newIndex >= 0 && newIndex < totalNews) {
                     updateNewsView(newIndex);
                 }
             }, 150);
         });
-
         updateNewsView(0);
         window.addEventListener('resize', () => updateNewsView(currentIndex));
     }
 
-    // === CÓDIGO DO FILTRO DE CATEGORIAS (AJAX) ===
+    // =========================================
+    // 3. FILTRO DE CATEGORIAS (AJAX)
+    // =========================================
     const categoryBubbles = document.querySelectorAll('.category-bubble-filter');
     const newsListContainer = document.getElementById('latest-news-list-container');
     const filterUrl = "{% url 'Echo_app:filtrar_noticias' %}"; 
@@ -254,21 +318,13 @@ document.addEventListener('DOMContentLoaded', function() {
             bubble.addEventListener('click', function(e) {
                 e.preventDefault(); 
                 const categoria = this.getAttribute('data-categoria');
-
                 categoryBubbles.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
-
                 newsListContainer.innerHTML = '<p class="latest-news-empty">Carregando...</p>';
-
                 fetch(`${filterUrl}?categoria=${encodeURIComponent(categoria)}`)
                     .then(response => response.ok ? response.text() : Promise.reject('Falha na rede'))
-                    .then(html => {
-                        newsListContainer.innerHTML = html;
-                    })
-                    .catch(error => {
-                        console.error('Erro ao filtrar notícias:', error);
-                        newsListContainer.innerHTML = '<p class="latest-news-empty">Erro ao carregar notícias. Tente novamente.</p>';
-                    });
+                    .then(html => { newsListContainer.innerHTML = html; })
+                    .catch(error => { newsListContainer.innerHTML = '<p class="latest-news-empty">Erro.</p>'; });
             });
         });
     }
