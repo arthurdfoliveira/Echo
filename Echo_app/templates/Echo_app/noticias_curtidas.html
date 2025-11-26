@@ -19,21 +19,18 @@
     <h1 class="main-title">Minhas Curtidas</h1>
     
     <!-- ============================================== -->
-    <!-- SEÇÃO: BARRA DE PESQUISA E FILTROS (Corrigido) -->
+    <!-- SEÇÃO: BARRA DE PESQUISA E FILTROS (CORREÇÃO DE URL) -->
     <!-- ============================================== -->
     <div class="filter-section">
         
-        <!-- Barra de Pesquisa (Corrigido para enviar todos os filtros) -->
+        <!-- Barra de Pesquisa (Mantém o filtro de categoria oculto se ativo) -->
         <form method="GET" class="search-form" action="{% url 'Echo_app:noticias_curtidas' %}">
             
             <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q|default:'' }}">
             
-            <!-- 
-                CAMPO OCULTO: Mantém o filtro de categoria ativo durante a pesquisa.
-                Se a categoria estiver selecionada, ela é enviada junto com a pesquisa 'q'.
-                Usamos 'request.GET.categoria' que é o SLUG da categoria.
-            -->
+            <!-- CAMPO OCULTO: Mantém o filtro de categoria ativo durante a pesquisa. -->
             {% if request.GET.categoria %}
+                <!-- CORREÇÃO: Usar o parâmetro 'categoria' no campo hidden -->
                 <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
             {% endif %}
 
@@ -42,28 +39,26 @@
             </button>
         </form>
         
-        <!-- Filtros de Categoria (CORREÇÃO: Classe 'active' e URLs) -->
+        <!-- Filtros de Categoria (CORREÇÃO: Garantindo o Active State e a URL Completa) -->
         <div class="category-filters">
             
-            <!-- 
-                Variáveis auxiliares para simplificar a URL e verificar o estado ativo.
-                'q_param' é o termo de pesquisa atual.
-                'cat_ativa' é o slug da categoria ativa.
-            -->
             {% url 'Echo_app:noticias_curtidas' as curtidas_url %}
+            
+            <!-- Define as variáveis de contexto para simplificar a leitura -->
             {% with q_param=request.GET.q|default:'' cat_ativa=request.GET.categoria|default:'' %}
             
-            <!-- 1. Botão "Tudo" (CORREÇÃO: Fica ativo SOMENTE se não houver 'cat_ativa') -->
+            <!-- 1. Botão "Tudo" (Fica ativo SOMENTE se NENHUMA categoria estiver selecionada) -->
+            <!-- CORREÇÃO: O link 'Tudo' deve remover o parâmetro 'categoria' e manter 'q' -->
             <a href="{{ curtidas_url }}?q={{ q_param }}" 
                class="filter-button {% if not cat_ativa %}active{% endif %}">
                 Tudo
             </a>
             
-            <!-- 2. Iterar sobre TODAS as categorias disponíveis -->
+            <!-- 2. Botões de Categoria -->
             {% for categoria in categorias_disponiveis %}
                 <!-- 
-                    CORREÇÃO DA URL: Garante que tanto a categoria quanto o termo de pesquisa 'q' 
-                    sejam mantidos.
+                    CORREÇÃO CRÍTICA AQUI: A URL DEVE SER COMPLETA. 
+                    Passa o SLUG da categoria e MANTÉM o termo de pesquisa (q_param).
                 -->
                 <a href="{{ curtidas_url }}?categoria={{ categoria.slug }}&q={{ q_param }}" 
                    class="filter-button {% if cat_ativa == categoria.slug %}active{% endif %}">

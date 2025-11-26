@@ -610,6 +610,10 @@ def configuracoes_conta(request):
 # LISTA DE NOTÍCIAS CURTIDAS
 # ===============================================
 
+# ===============================================
+# LISTA DE NOTÍCIAS CURTIDAS (CORRIGIDA)
+# ===============================================
+
 @login_required
 def noticias_curtidas(request):
     usuario = request.user
@@ -619,7 +623,6 @@ def noticias_curtidas(request):
     categoria_slug = request.GET.get('categoria', '').strip()
     
     # 1. Busca todas as interações de 'CURTIDA' do usuário
-    # Ordenamos pela data de interação para pegar as mais recentes primeiro
     interacoes_qs = InteracaoNoticia.objects.filter(
         usuario=usuario, 
         tipo='CURTIDA'
@@ -628,6 +631,7 @@ def noticias_curtidas(request):
     # 2. Aplica filtro de Categoria, se houver
     if categoria_slug:
         # Filtra interações que pertencem a notícias da categoria selecionada (usando o slug)
+        # Se o seu slug estiver em branco no banco, isso pode falhar.
         interacoes_qs = interacoes_qs.filter(noticia__categoria__slug=categoria_slug)
         
     # 3. Aplica filtro de Pesquisa, se houver
@@ -638,28 +642,31 @@ def noticias_curtidas(request):
             Q(noticia__conteudo__icontains=termo_pesquisa)
         )
         
-    # 4. Extrai as notícias, removendo duplicatas (pois um usuário pode curtir a mesma notícia várias vezes, embora o seu modelo deve evitar isso, é uma boa prática garantir a unicidade)
+    # 4. Extrai as notícias, garantindo unicidade e mantendo a ordem.
+    # Usamos list comprehension para extrair a notícia de cada interação no queryset filtrado.
+    noticias_curtidas_com_duplicatas = [item.noticia for item in interacoes_qs]
+    
+    # Remove duplicatas mantendo a ordem (necessário se o mesmo usuário puder curtir a notícia
+    # múltiplas vezes, o que o modelo InteracaoNoticia permite).
     seen_ids = set()
     noticias_curtidas = []
-    for item in interacoes_qs:
-        if item.noticia.id not in seen_ids:
-            noticias_curtidas.append(item.noticia)
-            seen_ids.add(item.noticia.id)
-            
-    # 5. Carrega TODAS as categorias para o filtro do template (corrigindo o defeito #1)
-    # Usamos "categorias_disponiveis" no template para evitar conflito.
+    for noticia in noticias_curtidas_com_duplicatas:
+        if noticia.id not in seen_ids:
+            noticias_curtidas.append(noticia)
+            seen_ids.add(noticia.id)
+
+    # 5. Carrega TODAS as categorias para o filtro do template
     categorias_disponiveis = Categoria.objects.all().order_by('nome')
 
     context = {
-        # 'noticias_curtidas' agora contém a lista filtrada
         'noticias_curtidas': noticias_curtidas,
-        # Variável correta para exibir no filtro do template
         'categorias_disponiveis': categorias_disponiveis, 
-        'total_curtidas': len(noticias_curtidas)
+        'total_curtidas': len(noticias_curtidas),
+        # Passa o slug ativo para o HTML para manter o estado do botão
+        'categoria_ativa': categoria_slug 
     }
-    # Mantemos o nome do template conforme o padrão
+    
     return render(request, 'Echo_app/noticias_curtidas.html', context)
-
 
 # ===============================================
 # LISTA DE NOTÍCIAS SALVAS
