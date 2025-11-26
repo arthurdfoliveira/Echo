@@ -74,8 +74,8 @@ jobs:
           app-name: 'JCecho'
           slot-name: 'Production'
           
-      - name: Install dependencies
-        run: pip install -r ECHO/requirements.txt
+      - name: Instalar Dependências
+        run: pip install -r src/requirements.txt
 
       - name: Cleaning testing files
         run: |
