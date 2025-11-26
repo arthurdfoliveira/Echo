@@ -89,4 +89,4 @@ jobs:
           cd ECHO/
           zip release.zip ./* -r
           cd ..
-          mv SECHO/release.zip .
+          mv ECHO/release.zip .
