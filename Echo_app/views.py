@@ -626,49 +626,56 @@ def configuracoes_conta(request):
 # LISTA DE NOTÍCIAS CURTIDAS (CORRIGIDA)
 # ===============================================
 
+# ===============================================
+# LISTA DE NOTÍCIAS CURTIDAS (CORRIGIDA - FILTRO POR NOME)
+# ===============================================
+
 @login_required
 def noticias_curtidas(request):
     usuario = request.user
     
-    # Pega os parâmetros da URL (ex: ?categoria=esportes&q=futebol)
+    # Parâmetros de Filtro/Pesquisa da URL
     termo_pesquisa = request.GET.get('q', '').strip()
-    categoria_nome = request.GET.get('categoria', '').strip() # Usando 'nome' ou 'slug' dependendo do seu link
+    # AGORA USAMOS O NOME, NÃO O SLUG
+    categoria_nome = request.GET.get('categoria', '').strip() 
     
-    # 1. Começa pegando TODAS as curtidas do usuário
+    # 1. Busca todas as interações de 'CURTIDA' do usuário
     interacoes_qs = InteracaoNoticia.objects.filter(
-        usuario=usuario, 
+        usuario=request.user, 
         tipo='CURTIDA'
     ).select_related('noticia', 'noticia__categoria').order_by('-data_interacao')
     
-    # 2. Filtra por Categoria se houver
+    # 2. Aplica filtro de Categoria (POR NOME)
     if categoria_nome:
-        # Tenta filtrar pelo nome exato ou slug. Ajuste 'nome' ou 'slug' conforme seu modelo Categoria
-        # Aqui estou assumindo que você vai passar o NOME da categoria no link
-        interacoes_qs = interacoes_qs.filter(noticia__categoria__nome__iexact=categoria_nome)
+        # Filtra onde o NOME da categoria é igual ao parâmetro da URL
+        interacoes_qs = interacoes_qs.filter(
+            noticia__categoria__nome__iexact=categoria_nome
+        )
         
-    # 3. Filtra por Pesquisa se houver
+    # 3. Aplica filtro de Pesquisa
     if termo_pesquisa:
         interacoes_qs = interacoes_qs.filter(
             Q(noticia__titulo__icontains=termo_pesquisa) | 
             Q(noticia__conteudo__icontains=termo_pesquisa)
         )
         
-    # 4. Monta a lista final de notícias (sem duplicatas)
+    # 4. Extrai notícias únicas
     seen_ids = set()
     noticias_curtidas = []
     for item in interacoes_qs:
-        if item.noticia.id not in seen_ids:
-            noticias_curtidas.append(item.noticia)
-            seen_ids.add(item.noticia.id)
+        noticia = item.noticia
+        if noticia.id not in seen_ids:
+            noticias_curtidas.append(noticia)
+            seen_ids.add(noticia.id)
 
-    # 5. Pega todas as categorias para montar os botões lá em cima
+    # 5. Carrega todas as categorias
     categorias_disponiveis = Categoria.objects.all().order_by('nome')
 
     context = {
         'noticias_curtidas': noticias_curtidas,
         'categorias_disponiveis': categorias_disponiveis, 
         'total_curtidas': len(noticias_curtidas),
-        # Passa a categoria ativa de volta para o template saber qual botão pintar de vermelho
+        # Passa o NOME ativo para o HTML
         'categoria_ativa': categoria_nome 
     }
     

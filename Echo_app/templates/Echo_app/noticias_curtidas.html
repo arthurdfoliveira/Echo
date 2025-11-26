@@ -6,47 +6,61 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
 
-<!-- CSS EXTRA PARA GARANTIR QUE O CLIQUE FUNCIONE (IGNORANDO SOBREPOSIÇÕES) -->
 <style>
+    /* FORÇAR O CLIQUE A FUNCIONAR */
     .filter-section {
         position: relative;
-        z-index: 1000; /* Garante que fique acima de tudo */
+        z-index: 100000;
         display: flex;
         flex-direction: column;
         gap: 15px; 
         margin-bottom: 25px;
+        pointer-events: none; 
     }
     
     .category-filters {
+        position: relative; 
+        z-index: 100010; 
         display: flex;
         flex-wrap: nowrap; 
         overflow-x: auto; 
-        padding-bottom: 10px;
-        gap: 10px;
+        padding-bottom: 8px;
+        pointer-events: none;
     }
 
     .filter-button {
-        display: inline-block;
-        padding: 8px 16px;
-        border-radius: 20px; 
-        border: 1px solid #ccc; 
-        background-color: #fff;
-        color: #333;
-        text-decoration: none;
-        font-weight: 500;
+        display: inline-flex; 
+        align-items: center;
+        justify-content: center;
         white-space: nowrap;
+        text-decoration: none;
+        padding: 8px 16px;
+        margin-right: 8px;
+        border-radius: 9999px; 
+        transition: background-color 0.2s, color 0.2s;
+        border: 1px solid #ccc; 
+        background-color: #f7f7f7;
+        color: #333;
         cursor: pointer;
+        position: relative; 
+        z-index: 100020; 
+        pointer-events: auto !important; /* Link clicável */
     }
     
     .filter-button:hover {
-        background-color: #f0f0f0;
+        background-color: #e0e0e0;
     }
     
-    /* ESTILO DO BOTÃO ATIVO (VERMELHO) */
     .filter-button.active {
-        background-color: #cc0000; 
+        background-color: #dc3545; 
         color: white;
-        border-color: #cc0000;
+        border-color: #dc3545;
+    }
+
+    .search-form {
+        position: relative;
+        z-index: 99990; 
+        pointer-events: auto !important; 
     }
 </style>
 {% endblock %}
@@ -57,14 +71,12 @@
 
     <h1 class="main-title">Minhas Curtidas</h1>
     
-    <!-- SEÇÃO DE FILTROS -->
     <div class="filter-section">
         
-        <!-- BARRA DE PESQUISA -->
+        <!-- Barra de Pesquisa -->
         <form method="GET" class="search-form" action="{% url 'Echo_app:noticias_curtidas' %}">
             <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q|default:'' }}">
             
-            <!-- Se já tem categoria selecionada, mantém ela ao pesquisar -->
             {% if categoria_ativa %}
                 <input type="hidden" name="categoria" value="{{ categoria_ativa }}">
             {% endif %}
@@ -74,65 +86,63 @@
             </button>
         </form>
         
-        <!-- BOTÕES DE CATEGORIA -->
+        <!-- Filtros -->
         <div class="category-filters">
             
-            <!-- URL base para facilitar -->
-            {% url 'Echo_app:noticias_curtidas' as base_url %}
+            {% url 'Echo_app:noticias_curtidas' as curtidas_url %}
+            {% with q_param=request.GET.q|default:'' %}
             
-            <!-- 1. BOTÃO TUDO -->
-            <!-- Se 'categoria_ativa' estiver vazio, este botão ganha a classe 'active' -->
-            <a href="{{ base_url }}?q={{ request.GET.q }}" 
+            <!-- Botão TUDO: Fica ativo se 'categoria_ativa' for vazia -->
+            <a href="{{ curtidas_url }}?q={{ q_param }}" 
                class="filter-button {% if not categoria_ativa %}active{% endif %}">
                 Tudo
             </a>
             
-            <!-- 2. BOTÕES DAS OUTRAS CATEGORIAS -->
-            {% for cat in categorias_disponiveis %}
+            <!-- Botões de Categoria -->
+            {% for categoria in categorias_disponiveis %}
                 <!-- 
-                    Link envia: ?categoria=NOME_DA_CATEGORIA 
-                    Se categoria_ativa for igual ao nome desta categoria, adiciona classe 'active'
+                   MUDANÇA IMPORTANTE: Usamos 'categoria.nome' aqui pois seu banco não tem slug.
+                   A URL ficará algo como: /curtidas/?categoria=Politica&q=...
                 -->
-                <a href="{{ base_url }}?categoria={{ cat.nome }}&q={{ request.GET.q }}" 
-                   class="filter-button {% if categoria_ativa == cat.nome %}active{% endif %}">
-                    {{ cat.nome }}
+                <a href="{{ curtidas_url }}?categoria={{ categoria.nome }}&q={{ q_param }}" 
+                   class="filter-button {% if categoria_ativa == categoria.nome %}active{% endif %}">
+                    {{ categoria.nome }}
                 </a>
             {% endfor %}
+            
+            {% endwith %}
 
         </div>
     </div>
 
-    <!-- HEADER COM CONTADOR -->
     <div class="curtidas-header">
         <p class="curtidas-info">
             {% if categoria_ativa %}
-                Filtrando por: <strong>{{ categoria_ativa }}</strong>.
+                Filtrando por: <strong>{{ categoria_ativa }}</strong>
             {% endif %}
             Total: <strong>{{ total_curtidas }}</strong> notícias.
         </p>
     </div>
 
-    <!-- LISTA DE NOTÍCIAS -->
     {% if noticias_curtidas %}
         <div class="noticias-listagem">
             {% for noticia in noticias_curtidas %}
             <article class="noticia-item">
                 <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="noticia-link">
-                    
                     <div class="noticia-imagem-box">
                         {% if noticia.imagem %}
                             <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}" class="noticia-imagem">
                         {% else %}
-                            <div class="imagem-placeholder"><span>Sem Imagem</span></div>
+                            <div class="imagem-placeholder"><i class="fas fa-image"></i><span>Sem Imagem</span></div>
                         {% endif %}
                     </div>
-                    
                     <div class="noticia-body">
                         <span class="noticia-tag">{{ noticia.categoria.nome|default:"Geral" }}</span>
                         <h2 class="noticia-titulo">{{ noticia.titulo }}</h2>
-                        <p class="noticia-resumo">{{ noticia.conteudo|striptags|truncatechars:100 }}</p>
+                        <p class="noticia-resumo">{{ noticia.conteudo|safe|striptags|truncatechars:150 }}</p>
                         <div class="noticia-meta">
-                            <span>{{ noticia.data_publicacao|date:"d/m/Y" }}</span>
+                            <span class="meta-data">{{ noticia.data_publicacao|date:"d/m/Y \à\s H:i" }}</span>
+                            <span class="meta-curtida"><i class="fas fa-heart"></i></span>
                         </div>
                     </div>
                 </a>
@@ -141,8 +151,9 @@
         </div>
     {% else %}
         <div class="empty-state">
-            <h3>Nenhuma notícia encontrada com esses filtros.</h3>
-            <a href="{% url 'Echo_app:noticias_curtidas' %}" class="empty-btn-link">Limpar Filtros</a>
+            <i class="fas fa-heart-broken empty-icon"></i>
+            <h3 class="empty-title">Nenhuma notícia encontrada</h3>
+            <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">Voltar para o Dashboard</a>
         </div>
     {% endif %}
 </div>
