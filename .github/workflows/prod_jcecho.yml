@@ -75,7 +75,8 @@ jobs:
           slot-name: 'Production'
           
       - name: Instalar Dependências
-        run: pip install -r src/requirements.txt
+        working-directory: src # Define a pasta 'src' como o diretório de trabalho
+        run: pip install -r requirements.txt # O caminho é relativo a 'src'
 
       - name: Cleaning testing files
         run: |
