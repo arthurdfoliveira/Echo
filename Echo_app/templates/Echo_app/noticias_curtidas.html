@@ -5,8 +5,8 @@
 
 {% block extra_css %}
 <!-- 
-    IMPORTANTE: Este arquivo lista_noticias_jornal.css precisa existir
-    na pasta static/Echo_app/css/
+    IMPORTANTE: Este arquivo lista_noticias_jornal.css PRECISA estar na pasta static/Echo_app/css/.
+    Ele contém a estilização para a lista e os novos filtros.
 -->
 <link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
 {% endblock %}
@@ -19,44 +19,64 @@
     <h1 class="main-title">Minhas Curtidas</h1>
     
     <!-- ============================================== -->
-    <!-- NOVA SEÇÃO: BARRA DE PESQUISA E FILTROS -->
+    <!-- SEÇÃO: BARRA DE PESQUISA E FILTROS (Corrigido) -->
     <!-- ============================================== -->
     <div class="filter-section">
         
-        <!-- Barra de Pesquisa -->
-        <!-- O action aponta para a mesma página para aplicar a pesquisa -->
-        <form method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q }}">
+        <!-- Barra de Pesquisa (Corrigido para enviar todos os filtros) -->
+        <form method="GET" class="search-form" action="{% url 'Echo_app:noticias_curtidas' %}">
+            
+            <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q|default:'' }}">
+            
+            <!-- 
+                CAMPO OCULTO: Mantém o filtro de categoria ativo durante a pesquisa.
+                Se a categoria estiver selecionada, ela é enviada junto com a pesquisa 'q'.
+                Usamos 'request.GET.categoria' que é o SLUG da categoria.
+            -->
+            {% if request.GET.categoria %}
+                <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
+            {% endif %}
+
             <button type="submit" class="search-button">
                 <i class="fas fa-search"></i>
             </button>
         </form>
         
-        <!-- Filtros de Categoria (Horizontal Scroll) -->
+        <!-- Filtros de Categoria (CORREÇÃO: Classe 'active' e URLs) -->
         <div class="category-filters">
             
+            <!-- 
+                Variáveis auxiliares para simplificar a URL e verificar o estado ativo.
+                'q_param' é o termo de pesquisa atual.
+                'cat_ativa' é o slug da categoria ativa.
+            -->
             {% url 'Echo_app:noticias_curtidas' as curtidas_url %}
+            {% with q_param=request.GET.q|default:'' cat_ativa=request.GET.categoria|default:'' %}
             
-            <!-- Botão "Tudo" (limpa o filtro de categoria) -->
-            <a href="{{ curtidas_url }}?q={{ request.GET.q|default:'' }}" 
-               class="filter-button {% if not request.GET.categoria %}active{% endif %}">
+            <!-- 1. Botão "Tudo" (CORREÇÃO: Fica ativo SOMENTE se não houver 'cat_ativa') -->
+            <a href="{{ curtidas_url }}?q={{ q_param }}" 
+               class="filter-button {% if not cat_ativa %}active{% endif %}">
                 Tudo
             </a>
             
-            <!-- Iterar sobre as categorias disponíveis (assumindo que esta lista é passada pela view) -->
+            <!-- 2. Iterar sobre TODAS as categorias disponíveis -->
             {% for categoria in categorias_disponiveis %}
-                <a href="{{ curtidas_url }}?categoria={{ categoria.slug }}&q={{ request.GET.q|default:'' }}" 
-                   class="filter-button {% if request.GET.categoria == categoria.slug %}active{% endif %}">
+                <!-- 
+                    CORREÇÃO DA URL: Garante que tanto a categoria quanto o termo de pesquisa 'q' 
+                    sejam mantidos.
+                -->
+                <a href="{{ curtidas_url }}?categoria={{ categoria.slug }}&q={{ q_param }}" 
+                   class="filter-button {% if cat_ativa == categoria.slug %}active{% endif %}">
                     {{ categoria.nome }}
                 </a>
-            {% empty %}
-                <!-- Se não houver categorias, mostra apenas "Tudo" -->
             {% endfor %}
+            
+            {% endwith %}
 
         </div>
     </div>
     <!-- ============================================== -->
-    <!-- FIM DA NOVA SEÇÃO -->
+    <!-- FIM DA SEÇÃO CORRIGIDA -->
     <!-- ============================================== -->
 
     <div class="curtidas-header">
@@ -70,7 +90,7 @@
 
     {% if noticias_curtidas %}
         
-        <!-- Lista de Notícias no formato Jornal (horizontal) (Conteúdo que você já aprovou) -->
+        <!-- Lista de Notícias no formato Jornal (Conteúdo aprovado) -->
         <div class="noticias-listagem">
             
             {% for noticia in noticias_curtidas %}
