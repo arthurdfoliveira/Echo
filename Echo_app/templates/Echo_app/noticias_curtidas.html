@@ -4,7 +4,10 @@
 {% block title %}Minhas Curtidas{% endblock %}
 
 {% block extra_css %}
-
+<!-- 
+    IMPORTANTE: Este arquivo lista_noticias_jornal.css precisa existir
+    na pasta static/Echo_app/css/
+-->
 <link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
 {% endblock %}
 
@@ -12,16 +15,62 @@
 
 <div class="content-container">
 
-    <!-- Título alinhado com o estilo do perfil.css -->
+    <!-- Título principal -->
     <h1 class="main-title">Minhas Curtidas</h1>
     
+    <!-- ============================================== -->
+    <!-- NOVA SEÇÃO: BARRA DE PESQUISA E FILTROS -->
+    <!-- ============================================== -->
+    <div class="filter-section">
+        
+        <!-- Barra de Pesquisa -->
+        <!-- O action aponta para a mesma página para aplicar a pesquisa -->
+        <form method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q }}">
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+        
+        <!-- Filtros de Categoria (Horizontal Scroll) -->
+        <div class="category-filters">
+            
+            {% url 'Echo_app:noticias_curtidas' as curtidas_url %}
+            
+            <!-- Botão "Tudo" (limpa o filtro de categoria) -->
+            <a href="{{ curtidas_url }}?q={{ request.GET.q|default:'' }}" 
+               class="filter-button {% if not request.GET.categoria %}active{% endif %}">
+                Tudo
+            </a>
+            
+            <!-- Iterar sobre as categorias disponíveis (assumindo que esta lista é passada pela view) -->
+            {% for categoria in categorias_disponiveis %}
+                <a href="{{ curtidas_url }}?categoria={{ categoria.slug }}&q={{ request.GET.q|default:'' }}" 
+                   class="filter-button {% if request.GET.categoria == categoria.slug %}active{% endif %}">
+                    {{ categoria.nome }}
+                </a>
+            {% empty %}
+                <!-- Se não houver categorias, mostra apenas "Tudo" -->
+            {% endfor %}
+
+        </div>
+    </div>
+    <!-- ============================================== -->
+    <!-- FIM DA NOVA SEÇÃO -->
+    <!-- ============================================== -->
+
     <div class="curtidas-header">
-        <p class="curtidas-info">Você curtiu um total de <strong>{{ noticias_curtidas|length }}</strong> notícias.</p>
+        <p class="curtidas-info">
+            {% if request.GET.categoria %}
+                Mostrando notícias curtidas na categoria <strong>"{{ request.GET.categoria|title }}"</strong>.
+            {% endif %}
+            Total de notícias curtidas: <strong>{{ noticias_curtidas|length }}</strong>.
+        </p>
     </div>
 
     {% if noticias_curtidas %}
         
-        <!-- Lista de Notícias no formato Jornal (horizontal) -->
+        <!-- Lista de Notícias no formato Jornal (horizontal) (Conteúdo que você já aprovou) -->
         <div class="noticias-listagem">
             
             {% for noticia in noticias_curtidas %}
@@ -78,7 +127,7 @@
         </div>
         
     {% else %}
-        <!-- Mensagem de estado vazio (Empty State) no padrão de design do perfil -->
+        <!-- Mensagem de estado vazio (Empty State) -->
         <div class="empty-state">
             <i class="fas fa-heart-broken empty-icon"></i>
             <h3 class="empty-title">Nenhuma notícia curtida</h3>
