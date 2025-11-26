@@ -46,7 +46,7 @@
     display: block;
 }
 
-/* Publicidade topo - destaque máximo */
+/* Publicidade topo */
 .ad-top {
     margin-top: 0;
     margin-bottom: 2rem;
@@ -71,46 +71,9 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
 }
 
-/* Responsividade dos anúncios */
-@media (max-width: 768px) {
-    .ad-container {
-        margin: 1.5rem auto;
-        padding: 0.75rem;
-    }
-    
-    .ad-content {
-        min-height: 60px;
-        max-width: 100%;
-    }
-    
-    .ad-top, .ad-bottom {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .ad-between-sections, .ad-after-urgent {
-        margin: 2rem auto;
-    }
-}
-
-@media (max-width: 480px) {
-    .ad-container {
-        margin: 1rem auto;
-        padding: 0.5rem;
-    }
-    
-    .ad-content {
-        min-height: 50px;
-    }
-    
-    .ad-label {
-        font-size: 0.65rem;
-        margin-bottom: 0.5rem;
-    }
-}
 
 /* =====================================
-   BOLHAS DE CATEGORIA (RE-ADICIONADO)
+   BOLHAS DE CATEGORIA
    ===================================== */
 .category-bubbles-container {
     overflow-x: auto;
@@ -152,10 +115,9 @@
 }
 
 
-/* SEÇÕES DE TELA INTEIRA */
+/* SEÇÕES DE TELA INTEIRA (CONTAINERS GERAIS) */
 .recommended-section,
 .urgent-section {
-    /* min-height: 100vh; (Removido para permitir alturas naturais) */
     display: flex;
     flex-direction: column;
     background: var(--cor-surface);
@@ -164,6 +126,7 @@
 .recommended-section {
     border-bottom: 3px solid var(--cor-primaria);
     padding-top: 30px; 
+    padding-bottom: 40px;
 }
 
 .urgent-section {
@@ -229,14 +192,72 @@
 }
 
 /* ===============================================
-   SEÇÃO RECOMENDADO (CARD GRANDE - RESTAURADO)
+   SEÇÃO RECOMENDADO (CARROSSEL COMPACTO + SNAP)
    =============================================== */
-.recommended-section .news-feed {
-    flex: 1;
+.rec-slider-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px; /* Largura controlada */
+    margin: 0 auto;
+    padding: 0 20px 30px; /* Padding inferior reduzido para aproximar a barra */
+}
+
+/* Wrapper com Scroll Snap */
+.rec-slider-wrapper {
     display: flex;
-    align-items: center;
+    overflow-x: auto; 
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    
+    /* Lógica de Snap (Trava no slide) */
+    scroll-snap-type: x mandatory; 
+    -webkit-overflow-scrolling: touch;
+    
+    gap: 0; 
+    width: 100%;
+    
+    /* Esconde scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+.rec-slider-wrapper::-webkit-scrollbar { display: none; }
+
+/* Cada Slide */
+.rec-slide-item {
+    min-width: 100%; /* Ocupa 100% da largura visível */
+    flex-shrink: 0;
+    padding: 0 10px;
+    box-sizing: border-box;
+    
+    /* Centraliza o card dentro do slide */
+    display: flex;
     justify-content: center;
-    padding: 0 20px 80px;
+    
+    /* Ponto de parada */
+    scroll-snap-align: center; 
+    scroll-snap-stop: always;
+}
+
+/* Card Grande (Compactado) */
+.news-card.large-card {
+    background: var(--cor-surface);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    border: 1px solid #f0f0f0;
+    display: block;
+    
+    /* --- Tamanho reduzido --- */
+    width: 100%;
+    max-width: 900px; 
+    margin: 0 auto;
+}
+
+.news-card.large-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border-color: var(--cor-primaria);
 }
 
 .news-card-link {
@@ -244,26 +265,14 @@
     color: inherit;
     display: block;
     width: 100%;
-    max-width: 1400px;
+    display: flex;
+    justify-content: center;
 }
 
-.news-card.large-card {
-    background: var(--cor-surface);
-    border-radius: 25px;
-    overflow: hidden;
-    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.2);
-    transition: all 0.4s ease;
-    border: 3px solid #f8f9fa;
-}
-
-.news-card.large-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 20px 60px rgba(220, 38, 38, 0.3);
-    border-color: var(--cor-primaria);
-}
-
+/* Imagem (Altura Reduzida) */
 .large-card .card-image-placeholder {
-    height: 600px;
+    height: 380px; 
+    width: 100%;
     overflow: hidden;
     background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
     position: relative;
@@ -273,11 +282,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    transition: transform 0.6s ease;
 }
 
 .news-card.large-card:hover .card-image-placeholder img {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .image-placeholder {
@@ -286,66 +295,112 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 84px;
+    font-size: 60px;
     background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
     color: white;
 }
 
-.recommended-placeholder {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Gradiente azul */
-}
-
-
+/* Conteúdo (Fontes menores) */
 .card-content {
-    padding: 50px;
+    padding: 25px 40px;
+    text-align: left;
+    width: 100%;
 }
 
 .card-content h3 {
-    font-size: 42px;
+    font-size: 24px; 
     font-weight: 800;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: var(--cor-texto);
     line-height: 1.2;
-    letter-spacing: -0.5px;
 }
 
-/* === O ESTILO QUE VOCÊ PEDIU (RESTAURADO) === */
 .news-description {
     color: var(--cor-texto-secundario);
-    font-size: 20px;
-    line-height: 1.7;
-    margin: 25px 0 35px;
-    font-weight: 400;
+    font-size: 16px; 
+    line-height: 1.5;
+    margin-bottom: 15px;
     opacity: 1;
-    max-width: 800px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-    padding: 20px;
-    border-radius: 15px;
-    border-left: 4px solid var(--cor-primaria);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .card-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 16px;
+    font-size: 13px;
     color: #999;
-    padding-top: 25px;
-    border-top: 2px solid #f0f0f0;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
 }
 
 .category {
     background: var(--cor-primaria);
     color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 4px 12px;
+    border-radius: 12px;
     font-weight: 700;
     text-transform: uppercase;
+    font-size: 10px;
     letter-spacing: 1px;
-    font-size: 14px;
 }
-/* === FIM DOS ESTILOS RESTAURADOS === */
+
+/* Setas de Navegação */
+.rec-arrow {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #eee;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.rec-arrow:hover {
+    background-color: var(--cor-primaria);
+    color: white;
+    border-color: var(--cor-primaria);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.rec-arrow-left {
+    left: 30px;
+}
+
+.rec-arrow-right {
+    right: 30px;
+}
+
+.rec-slider-container:has(.empty-state) .rec-arrow {
+    display: none;
+}
+
+/* --- BARRA DE PROGRESSO (NOVA) --- */
+.rec-progress-container {
+    width: 100%;
+    max-width: 900px; /* Alinhado com o card */
+    margin: 0 auto 10px; /* Centralizado */
+    height: 4px;
+    background-color: #e9ecef; /* Fundo cinza claro */
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.rec-progress-bar {
+    height: 100%;
+    background-color: #dc3545; /* VERMELHO */
+    width: 0%;
+    /* A transição é controlada pelo JS */
+}
 
 
 /* ===============================================
@@ -469,19 +524,18 @@
 /* ESTADOS VAZIOS (AGORA EM DOIS LUGARES) */
 .empty-state { /* Para a página inteira (se não houver recomendados) */
     text-align: center;
-    padding: 100px 50px;
-    background: var(--cor-surface);
+    padding: 80px 20px;
+    background: #fff;
     border-radius: 25px;
-    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.1);
-    border: 3px solid #f0f0f0;
+    border: 2px dashed #e0e0e0;
     max-width: 700px;
     margin: 0 auto;
 }
-.empty-icon { font-size: 84px; margin-bottom: 30px; }
+.empty-icon { font-size: 60px; margin-bottom: 20px; color: #ddd; }
 .empty-state p {
     color: var(--cor-texto-secundario);
     line-height: 1.6;
-    font-size: 20px;
+    font-size: 18px;
 }
 .empty-state-slider { /* Para dentro de um slider */
     width: 100%;
@@ -619,19 +673,25 @@
     .section-header { padding: 30px 16px 20px; }
     .section-header h2 { font-size: 26px; }
     
-    .recommended-section .news-feed { padding: 0 16px 50px; }
-    .large-card .card-image-placeholder { height: 350px; }
-    .card-content { padding: 35px 25px; }
-    .card-content h3 { font-size: 28px; }
-    .news-description { font-size: 16px; padding: 15px; }
+    /* Recomendado (Carrossel) */
+    .rec-slider-container { padding: 0 16px 50px; }
+    .large-card .card-image-placeholder { height: 250px; } /* Reduzido */
+    .card-content { padding: 20px; }
+    .card-content h3 { font-size: 22px; }
+    .news-description { font-size: 14px; }
     
+    .rec-arrow { width: 40px; height: 40px; font-size: 1rem; }
+    .rec-arrow-left { left: 5px; }
+    .rec-arrow-right { right: 5px; }
+    
+    /* Urgente */
     .urgent-news-wrapper { padding: 0 16px; }
     .urgent-news-card { max-width: calc(100% - 40px); }
-    .urgent-news-slider { height: auto; }
     .urgent-image-container { height: 200px; }
     .urgent-title { font-size: 1.2rem; }
     .urgent-description { font-size: 0.9rem; }
 
+    /* Últimas */
     .latest-news-list { padding: 0 16px; }
     .latest-card-text h3 { font-size: 1rem; white-space: normal; }
     .latest-card-text p { white-space: normal; }
@@ -643,9 +703,8 @@
     .section-header h2 { font-size: 22px; }
     .see-more.subtle-btn { font-size: 14px; padding: 10px 18px; }
     
-    .large-card .card-image-placeholder { height: 280px; }
-    .card-content h3 { font-size: 24px; }
-    .news-description, .urgent-description { font-size: 15px; }
+    .large-card .card-image-placeholder { height: 200px; }
+    .card-content h3 { font-size: 20px; }
     
     .category-bubbles { justify-content: flex-start; gap: 8px; }
     .bubble { padding: 10px 18px; font-size: 13px; }

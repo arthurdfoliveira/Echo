@@ -137,7 +137,7 @@ def sair(request):
     return render(request, "Echo_app/confirmar_acao.html", contexto)
 
 
-@login_required  # <--- CORREÇÃO AQUI (Adicionado o @)
+@login_required
 def excluir_conta(request):
     """
     Exibe a confirmação de exclusão ou exclui a conta.
@@ -176,7 +176,7 @@ def dashboard(request):
     """
     user = request.user
     categorias_interesse = []
-    noticias_recomendadas = None
+    noticias_recomendadas_list = []
 
     if user.is_authenticated:
         try:
@@ -185,12 +185,15 @@ def dashboard(request):
         except PerfilUsuario.DoesNotExist:
             perfil, created = PerfilUsuario.objects.get_or_create(usuario=user)
         
-        noticias_recomendadas = Noticia.recomendar_para(user).first()
+        # Carrossel de Recomendados (3 notícias)
+        noticias_recomendadas_list = Noticia.recomendar_para(user)[:3]
     
     try:
         urgentes_qs = Noticia.objects.filter(urgente=True).order_by('-data_publicacao')
-        if noticias_recomendadas:
-            urgentes_qs = urgentes_qs.exclude(pk=noticias_recomendadas.pk)
+        if noticias_recomendadas_list:
+            # Evita repetir notícias que já estão no carrossel de recomendados
+            ids_excluidos = [n.id for n in noticias_recomendadas_list]
+            urgentes_qs = urgentes_qs.exclude(id__in=ids_excluidos)
         noticias_urgentes = urgentes_qs[:5] 
     except Exception:
         noticias_urgentes = None
@@ -208,7 +211,7 @@ def dashboard(request):
     context = {
         "nome": user.first_name or user.username if user.is_authenticated else "Visitante",
         "email": user.email if user.is_authenticated else "",
-        "noticia_recomendada": noticias_recomendadas, 
+        "noticias_recomendadas_list": noticias_recomendadas_list, # Lista para o carrossel
         "categorias_interesse": categorias_interesse,
         "noticias_urgentes": noticias_urgentes,
         "ultimas_noticias": ultimas_noticias,
@@ -218,6 +221,7 @@ def dashboard(request):
     
     template_name = "Echo_app/dashboard.html" if user.is_authenticated else "Echo_app/dashboard_off.html"
     return render(request, template_name, context)
+
 
 # ===============================================
 # VIEW PARA FILTRAR NOTÍCIAS (AJAX)
@@ -300,10 +304,6 @@ def pesquisar_noticias(request):
 # ===============================================
 
 class NoticiaDetalheView(DetailView):
-    """
-    Exibe os detalhes de uma única notícia.
-    O 'Veja Também' agora prioriza as preferências do usuário.
-    """
     model = Noticia
     template_name = 'Echo_app/noticia_detalhe.html'
     context_object_name = 'noticia'
@@ -314,44 +314,30 @@ class NoticiaDetalheView(DetailView):
         user = self.request.user
         
         # --- LÓGICA PARA "VEJA TAMBÉM" (PERSONALIZADA) ---
-        
-        # 1. Começa com um QuerySet vazio
         qs_base = Noticia.objects.none()
 
-        # 2. Tenta pegar as preferências do usuário logado
         if user.is_authenticated:
             try:
-                # Usa getattr para evitar erro se o perfil não existir
                 perfil = getattr(user, 'perfil', None)
                 if perfil and perfil.categorias_de_interesse.exists():
-                    # Filtra pelas categorias que o usuário escolheu
                     qs_base = Noticia.objects.filter(categoria__in=perfil.categorias_de_interesse.all())
             except Exception:
-                pass # Se der erro, continua com qs_base vazio
+                pass
 
-        # 3. Fallback: Se não achou preferências (ou usuário anônimo), usa a categoria da notícia atual
         if not qs_base.exists():
             qs_base = Noticia.objects.filter(categoria=noticia_atual.categoria)
 
-        # 4. Aplica os filtros finais (Exclui a notícia atual e pega as 3 mais recentes)
         noticias_relacionadas = qs_base.exclude(id=noticia_atual.id).order_by('-data_publicacao')[:3]
 
-        # 5. Se AINDA não tiver 3 notícias, completa com as últimas do site (Geral)
         if len(noticias_relacionadas) < 3:
-            # IDs para não repetir
             ids_excluidos = [noticia_atual.id] + [n.id for n in noticias_relacionadas]
-            
             quantidade_faltante = 3 - len(noticias_relacionadas)
-            
             mais_recentes = Noticia.objects.exclude(id__in=ids_excluidos).order_by('-data_publicacao')[:quantidade_faltante]
-            
-            # Junta as listas
             noticias_relacionadas = list(noticias_relacionadas) + list(mais_recentes)
 
         context['noticias_relacionadas'] = noticias_relacionadas
         # ------------------------------------------------
 
-        # --- LÓGICA DE INTERAÇÃO (MANTIDA) ---
         context['usuario_curtiu'] = False
         context['usuario_salvou'] = False
 
@@ -474,9 +460,7 @@ def marcar_todas_lidas(request):
 
 @login_required
 def perfil_detalhe(request):
-    # Garante que o perfil exista ou cria um
     perfil, created = PerfilUsuario.objects.get_or_create(usuario=request.user)
-    
     context = {
         'usuario': request.user,
         'perfil': perfil
@@ -622,44 +606,75 @@ def configuracoes_conta(request):
         'form': form
     }
     return render(request, 'Echo_app/configuracoes.html', context)
+
+
+# ===============================================
+# LISTA DE NOTÍCIAS CURTIDAS (CORRIGIDA)
+# ===============================================
+
 @login_required
 def noticias_curtidas(request):
     """
     Exibe a lista de notícias que o usuário curtiu.
+    CORRIGIDO: Busca interações primeiro para evitar duplicatas.
     """
-    # Filtra todas as interações do tipo CURTIDA para o usuário atual
-    curtidas = InteracaoNoticia.objects.filter(
-        usuario=request.user, 
-        tipo='CURTIDA'  # Filtro principal: apenas curtidas
-    ).order_by('-data_interacao').select_related('noticia')
-
-    # Extrai as notícias curtidas para o template
-    noticias_curtidas_list = [interacao.noticia for interacao in curtidas]
+    usuario = request.user
     
+    # 1. Busca interações do usuário
+    interacoes = InteracaoNoticia.objects.filter(
+        usuario=usuario, 
+        tipo='CURTIDA'
+    ).select_related('noticia', 'noticia__categoria').order_by('-data_interacao')
+    
+    # 2. Filtra manualmente para garantir que não haja duplicatas
+    # (Caso o banco tenha dados sujos de testes anteriores)
+    seen_ids = set()
+    noticias = []
+    for item in interacoes:
+        if item.noticia.id not in seen_ids:
+            noticias.append(item.noticia)
+            seen_ids.add(item.noticia.id)
+    
+    # 3. Categorias para o filtro
+    categorias = Categoria.objects.all()
+
     context = {
-        'noticias_curtidas': noticias_curtidas_list,
-        'total_curtidas': len(noticias_curtidas_list)
+        'noticias_curtidas': noticias,
+        'categorias': categorias,
+        'total_curtidas': len(noticias)
     }
     return render(request, 'Echo_app/noticias_curtidas.html', context)
 
+
 # ===============================================
-# Parte de Notícias Salvas (NOVA)
+# LISTA DE NOTÍCIAS SALVAS (CORRIGIDA)
 # ===============================================
 
 @login_required
 def noticias_salvas_view(request):
     """
     Exibe a lista de notícias que o usuário salvou.
+    CORRIGIDO: Busca interações primeiro para evitar duplicatas.
     """
-    salvamentos = InteracaoNoticia.objects.filter(
-        usuario=request.user, 
-        tipo='SALVAMENTO'  # Filtro principal: apenas salvamentos
-    ).order_by('-data_interacao').select_related('noticia')
+    usuario = request.user
 
-    noticias_salvas_list = [interacao.noticia for interacao in salvamentos]
+    interacoes = InteracaoNoticia.objects.filter(
+        usuario=usuario, 
+        tipo='SALVAMENTO'
+    ).select_related('noticia', 'noticia__categoria').order_by('-data_interacao')
+
+    seen_ids = set()
+    noticias = []
+    for item in interacoes:
+        if item.noticia.id not in seen_ids:
+            noticias.append(item.noticia)
+            seen_ids.add(item.noticia.id)
     
+    categorias = Categoria.objects.all()
+
     context = {
-        'noticias_salvas': noticias_salvas_list, 
-        'total_salvos': len(noticias_salvas_list)
+        'noticias_salvas': noticias,
+        'categorias': categorias,
+        'total_salvos': len(noticias)
     }
     return render(request, 'Echo_app/noticias_salvas.html', context)
