@@ -1,9 +1,14 @@
 {% extends 'Echo_app/base.html' %} 
 {% load static %} 
+
+{% block title %}Minhas Notificações{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'Echo_app/css/notificacao.css' %}?v={% now 'U' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4" style="max-width: 900px;">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container mt-4" style="max-width: 700px;"> <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Minhas Notificações</h2>
         <form action="{% url 'Echo_app:marcar_todas_lidas' %}" method="POST" class="m-0">
             {% csrf_token %}
@@ -15,37 +20,37 @@
 
     <h4>Recomendadas para você</h4>
     <p class="text-muted">Com base nas suas categorias de interesse.</p>
-    <div class="notificacao-list mb-4">
+    
+    <div class="notificacao-list mb-5">
         
         {% for notificacao in notificacoes_recomendadas %}
              {% if notificacao.noticia %}
-                <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" 
-                class="notificacao-link">
+                <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" class="notificacao-link">
              {% else %}
                 <a href="#" class="notificacao-link" onclick="alert('Esta notícia não está mais disponível');">
              {% endif %}
-                    <div class="notificacao-card {% if not notificacao.lida %}list-group-item-primary{% endif %}">
-                        
-                        {% if notificacao.noticia and notificacao.noticia.imagem %}
-                            <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
-                        {% else %}
-                            <img src="{% static 'Echo_app/images/placeholder.png' %}" alt="Sem Imagem" class="notificacao-imagem">
-                        {% endif %}
-                        
-                        <div class="notificacao-corpo">
-                            <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-1 fw-bold">{{ notificacao.manchete }}</p>
-                                <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
-                            </div>
-                            {% if notificacao.noticia and notificacao.noticia.categoria %}
-                                <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
-                            {% endif %}
+             
+                <div class="notificacao-card {% if not notificacao.lida %}list-group-item-primary{% endif %}">
+                    
+                    {% if notificacao.noticia and notificacao.noticia.imagem %}
+                        <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
+                    {% else %}
+                        <img src="{% static 'Echo_app/images/placeholder.png' %}" alt="Sem Imagem" class="notificacao-imagem">
+                    {% endif %}
+                    
+                    <div class="notificacao-corpo">
+                        <div class="d-flex w-100 justify-content-between">
+                            <p class="mb-1 fw-bold">{{ notificacao.manchete }}</p>
+                            <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
                         </div>
+                        {% if notificacao.noticia and notificacao.noticia.categoria %}
+                            <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
+                        {% endif %}
                     </div>
+                </div>
             </a>
         
         {% empty %}
-            {% comment %} pagenotfound <a href="{% url 'Echo_app:noticia_detalhe' 1 %}" class="notificacao-link"> {% endcomment %}
             <a href="#" class="notificacao-link" onclick="alert('Exemplo de notícia de tecnologia.');">
                 <div class="notificacao-card list-group-item-primary">
                     <img src="{% static 'Echo_app/images/exemplo_tech.png' %}" alt="Tecnologia" class="notificacao-imagem">
@@ -59,7 +64,6 @@
                 </div>
             </a>
             
-            {% comment %} pagenotfound <a href="{% url 'Echo_app:noticia_detalhe' 1 %}" class="notificacao-link"> {% endcomment %}
             <a href="#" class="notificacao-link" onclick="alert('Exemplo de notícia de esportes.');">
                 <div class="notificacao-card">
                     <img src="{% static 'Echo_app/images/exemplo_esportes.png' %}" alt="Esportes" class="notificacao-imagem">
@@ -72,22 +76,46 @@
                     </div>
                 </div>
             </a>
-        
-        {% endfor %} </div> <h4>Outras Notificações</h4>
-    <div class="list-group">
+        {% endfor %} 
+    </div> 
+
+    <h4>Outras Notificações</h4>
+    
+    <div class="notificacao-list">
         
         {% for notificacao in notificacoes_outras %}
-            <div class="list-group-item {% if not notificacao.lida %}fw-bold{% endif %}">
-                <div class="d-flex w-100 justify-content-between">
-                    <p class="mb-1">{{ notificacao.manchete }}</p>
-                    <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
+            {% if notificacao.noticia %}
+               <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" class="notificacao-link">
+            {% else %}
+               <a href="#" class="notificacao-link">
+            {% endif %}
+            
+                <div class="notificacao-card {% if not notificacao.lida %}list-group-item-primary{% endif %}">
+                    
+                    {% if notificacao.noticia and notificacao.noticia.imagem %}
+                        <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
+                    {% else %}
+                        <img src="{% static 'Echo_app/images/placeholder.png' %}" alt="Sem Imagem" class="notificacao-imagem">
+                    {% endif %}
+                    
+                    <div class="notificacao-corpo">
+                        <div class="d-flex w-100 justify-content-between">
+                            <p class="mb-1 fw-bold">{{ notificacao.manchete }}</p>
+                            <small class="text-muted">{{ notificacao.data_criacao|timesince }} atrás</small>
+                        </div>
+                        {% if notificacao.noticia and notificacao.noticia.categoria %}
+                            <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+            </a>
         
         {% empty %}
-             <div class="list-group-item">
-                <p class="mb-0 text-muted">Você não tem outras notificações.</p>
+             <div class="p-3 text-center text-muted">
+                <p class="mb-0">Você não tem outras notificações.</p>
             </div>
-        
-        {% endfor %} </div> </div>
+        {% endfor %} 
+    </div>
+
+</div>
 {% endblock %}
