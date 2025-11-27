@@ -1,7 +1,7 @@
 {% extends "Echo_app/base.html" %}
 {% load static %}
 
-{% block title %}Meu perfil{% endblock %}
+{% block title %}Meu Perfil{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
@@ -9,97 +9,95 @@
 
 {% block content %}
 
-<h1 class="main-title">Meu perfil</h1>
+<div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
 
-<div class="perfil-card">
+    <h1 class="main-title" style="text-align: center; margin-bottom: 30px; color: #333;">Meu Perfil</h1>
 
-    <!-- Cabeçalho do perfil -->
-    <div class="perfil-header">
+    <div class="perfil-card" style="background: #fff; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 30px;">
+
+        <!-- CABEÇALHO DO PERFIL -->
+        <div class="perfil-header" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            
+            <!-- ÁREA DA FOTO (AVATAR) - TAMANHO AUMENTADO AQUI -->
+            <div class="perfil-avatar-container" style="position: relative; width: 220px; height: 220px; margin-bottom: 20px;">
+                {% if perfil.foto_perfil %}
+                    <img id="perfil-avatar-img" 
+                         src="{{ perfil.foto_perfil.url }}" 
+                         alt="Foto de Perfil" 
+                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 5px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                {% else %}
+                    <img id="perfil-avatar-img" 
+                         src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=256&font-size=0.5&bold=true" 
+                         alt="Avatar Padrão" 
+                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 5px solid #f0f0f0; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                {% endif %}
+
+                <!-- Botão de Editar (Aumentado também) -->
+                <a href="{% url 'Echo_app:perfil_editar' %}" title="Alterar foto" 
+                   style="position: absolute; bottom: 10px; right: 10px; background: #fff; border-radius: 50%; width: 50px; height: 50px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; font-size: 24px;">
+                    ✎
+                </a>
+            </div>
+            
+            <!-- INFO DO USUÁRIO -->
+            <div class="perfil-info" style="width: 100%;">
+                <h3 class="saudacao" style="margin: 0; font-weight: bold; font-size: 1.8rem;">
+                    {{ request.user.first_name }} {{ request.user.last_name }}
+                </h3>
+                <p class="user-email" style="color: #6c757d; margin: 5px 0; font-size: 1.1rem;">{{ request.user.email }}</p>
+
+                {% if perfil.biografia %}
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 600px;">
+                        <p class="user-bio" style="white-space: pre-line; margin: 0; color: #555; font-size: 1rem;">{{ perfil.biografia }}</p>
+                    </div>
+                {% endif %}
+
+                <div style="margin-top: 25px;">
+                    <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-editar" style="background-color: #333; color: white; padding: 12px 35px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-block;">
+                        Editar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
         
-        <!-- Foto de perfil -->
-        <div class="perfil-avatar-container">
-            {% if perfil.foto_perfil %}
-                <img id="perfil-avatar-img" src="{{ perfil.foto_perfil.url }}" alt="Foto de Perfil" class="perfil-avatar">
-            {% else %}
-                <img id="perfil-avatar-img" src="{% static 'Echo_app/images/default_avatar.png' %}" alt="Foto de Perfil" class="perfil-avatar">
-            {% endif %}
+        <hr class="perfil-divider" style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
 
-            <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-avatar-icon" title="Editar foto">
-                <!-- Ícone SVG -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21.731 2.269a2.64 2.64 0 0 0-3.737 0l-12.72 12.72A1.97 1.97 0 0 0 5.25 15.75v3.626h3.626a1.97 1.97 0 0 0 1.404-.579l12.72-12.72a2.64 2.64 0 0 0 0-3.737ZM7.125 18v1.875H5.25a.375.375 0 0 1-.375-.375v-1.5h1.875ZM18.75 8.25l-7.5-7.5-1.5 1.5 7.5 7.5 1.5-1.5Z" />
-                </svg>
+        <!-- MENU DE OPÇÕES -->
+        <nav class="menu-opcoes" style="display: flex; flex-direction: column; gap: 10px;">
+            <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}" style="padding: 15px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 10px; transition: background 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
+                <span style="margin-right: 15px; font-size: 1.4rem;">❤️</span> 
+                <span style="font-weight: 500; font-size: 1.1rem;">Notícias Curtidas</span>
             </a>
-        </div>
-        
-        <!-- Informações do usuário -->
-        <div class="perfil-info">
-            <h3 class="saudacao">
-                Seja bem-vindo, {{ request.user.first_name|default:"Usuário" }}!
-            </h3>
-            <p class="user-email">{{ request.user.email|default:"email@exemplo.com" }}</p>
 
-            {% if perfil.biografia %}
-                <p class="user-bio mt-2 text-muted" style="white-space: pre-line;">{{ perfil.biografia }}</p>
-            {% endif %}
+            <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}" style="padding: 15px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 10px; transition: background 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
+                <span style="margin-right: 15px; font-size: 1.4rem;">🔖</span> 
+                <span style="font-weight: 500; font-size: 1.1rem;">Notícias Salvas</span>
+            </a>
 
-            <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-profile-btn">Editar perfil</a>
-        </div>
+            <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}" style="padding: 15px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 10px; transition: background 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
+                <span style="margin-right: 15px; font-size: 1.4rem;">⚙️</span> 
+                <span style="font-weight: 500; font-size: 1.1rem;">Configurações da Conta</span>
+            </a>
+
+            <hr style="margin: 15px 0; border-top: 1px solid #eee;">
+
+            <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}" style="padding: 15px; text-decoration: none; color: #dc3545; display: flex; align-items: center; border-radius: 10px; transition: background 0.2s;">
+                <span style="margin-right: 15px; font-size: 1.4rem;">🚪</span> 
+                <span style="font-weight: 500; font-size: 1.1rem;">Sair da Conta</span>
+            </a>
+            
+            <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}" style="padding: 15px; text-decoration: none; color: #6c757d; font-size: 1rem; display: flex; align-items: center; border-radius: 10px; transition: background 0.2s;">
+                <span style="margin-right: 15px; font-size: 1.4rem;">❌</span> 
+                <span>Excluir Conta Permanentemente</span>
+            </a>
+        </nav>
     </div>
-    
-    <hr class="perfil-divider">
-
-    <!-- Categorias de interesse -->
-    {% if perfil.categorias_de_interesse.all %}
-    <div class="perfil-categorias mt-3">
-        <h5 class="categorias-title">Minhas Categorias de Interesse</h5>
-        <ul class="lista-categorias">
-            {% for categoria in perfil.categorias_de_interesse.all %}
-                <li class="categoria-item">{{ categoria.nome }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    <hr class="perfil-divider">
-    {% endif %}
-
-    <!-- Menu lateral / opções -->
-    <nav class="menu-opcoes">
-        
-        <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}">
-            <span class="menu-icon"></span> Curtidas
-        </a>
-
-        <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}">
-            <span class="menu-icon"></span> Salvos
-        </a>
-
-        <hr class="menu-divider"> 
-
-        <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}">
-            <span class="menu-icon"></span> Configurações da conta
-        </a>
-        
-        <a class="menu-item" href="#">
-            <span class="menu-icon"></span> Dispositivos conectados
-        </a>
-        
-        <a class="menu-item" href="#">
-            <span class="menu-icon"></span> Inscrições
-        </a>
-
-        <hr class="menu-divider">
-
-        <!-- Ações -->
-        <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}">
-            <span class="menu-icon"></span> Sair da conta
-        </a>
-        
-        <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}">
-            <span class="menu-icon"></span> Excluir conta 
-        </a>
-        
-    </nav>
-    
 </div>
 
+<style>
+    .menu-item:hover {
+        background-color: #f0f0f0 !important;
+        transform: translateX(5px);
+    }
+</style>
 {% endblock %}
