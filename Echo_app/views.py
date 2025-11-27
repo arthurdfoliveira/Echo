@@ -10,18 +10,20 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 
-# --- IMPORTS IMPORTANTES PARA OS AVATARES ---
+# --- IMPORTS PARA AVATARES E RECUPERAÇÃO DE SENHA ---
 import os
+import random  # Para gerar o código OTP
 from django.conf import settings
 from django.core.files import File
-# --------------------------------------------
+from django.core.mail import send_mail # Para envio de email (opcional)
+# ----------------------------------------------------
 
 from .models import (Noticia, InteracaoNoticia, Notificacao, PerfilUsuario, Categoria)
 
 User = get_user_model()
 
 # ===============================================
-# Parte de Autenticação e Registro (Mantida Igual)
+# Parte de Autenticação e Registro
 # ===============================================
 
 def registrar(request):
@@ -150,6 +152,86 @@ def excluir_conta(request):
     }
     return render(request, 'Echo_app/confirmar_acao.html', contexto)
 
+
+# ===============================================
+# LÓGICA DE RECUPERAÇÃO DE SENHA (OTP)
+# ===============================================
+
+def iniciar_redefinicao_otp(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            # Gera um código de 6 dígitos
+            otp = random.randint(100000, 999999)
+            
+            # Salva na sessão para verificar depois
+            request.session['reset_otp'] = otp
+            request.session['reset_email'] = email
+            
+            # --- DEBUG: Mostra o código no terminal ---
+            print(f"\n[DEBUG] CÓDIGO DE RECUPERAÇÃO PARA {email}: {otp}\n")
+            # ------------------------------------------
+            
+            # Aqui você poderia usar send_mail() para enviar de verdade
+            # send_mail('Seu código Echo', f'Seu código é {otp}', 'noreply@echo.com', [email])
+
+            messages.success(request, f"Código enviado para {email} (Verifique o console do servidor se não tiver email configurado).")
+            return redirect('Echo_app:verificar_otp')
+            
+        except User.DoesNotExist:
+            messages.error(request, "Este e-mail não está cadastrado.")
+            
+    return render(request, 'Echo_app/esqueci_senha.html')
+
+def verificar_otp(request):
+    if request.method == 'POST':
+        otp_digitado = request.POST.get('otp')
+        otp_sessao = request.session.get('reset_otp')
+        
+        if otp_sessao and str(otp_digitado) == str(otp_sessao):
+            # Marca como verificado
+            request.session['otp_verified'] = True
+            return redirect('Echo_app:redefinir_senha_nova')
+        else:
+            messages.error(request, "Código inválido ou expirado.")
+            
+    return render(request, 'Echo_app/verificar_otp.html')
+
+def redefinir_senha_nova(request):
+    # Segurança: Só deixa acessar se tiver verificado o OTP
+    if not request.session.get('otp_verified'):
+        return redirect('Echo_app:iniciar_redefinicao_otp')
+        
+    if request.method == 'POST':
+        senha1 = request.POST.get('senha_nova')
+        senha2 = request.POST.get('confirmar_senha')
+        
+        if senha1 == senha2:
+            email = request.session.get('reset_email')
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(senha1)
+                user.save()
+                
+                # Limpa a sessão
+                del request.session['reset_otp']
+                del request.session['reset_email']
+                del request.session['otp_verified']
+                
+                messages.success(request, "Senha alterada com sucesso! Faça login.")
+                return redirect('Echo_app:entrar')
+            except User.DoesNotExist:
+                messages.error(request, "Erro ao encontrar usuário.")
+        else:
+            messages.error(request, "As senhas não coincidem.")
+            
+    return render(request, 'Echo_app/redefinir_senha.html')
+
+
+# ===============================================
+# DASHBOARD E OUTROS
+# ===============================================
 
 def dashboard(request):
     user = request.user
@@ -377,7 +459,7 @@ def perfil_detalhe(request):
 
 
 # ===============================================
-# PERFIL EDITAR - AQUI ESTÁ A LÓGICA NOVA DOS AVATARES
+# PERFIL EDITAR COM AVATARES
 # ===============================================
 
 @login_required
@@ -385,8 +467,7 @@ def perfil_editar(request):
     usuario = request.user
     perfil, _ = PerfilUsuario.objects.get_or_create(usuario=usuario)
 
-    # 1. Gera a lista de nomes dos arquivos (avatars1.png, avatars2.png...)
-    # Importante: O nome do arquivo tem "avatars" no plural, conforme você informou
+    # Lista de nomes (avatars1.png ... avatars16.png)
     lista_avatars = [f'avatars{i}.png' for i in range(1, 17)]
 
     try:
@@ -401,9 +482,8 @@ def perfil_editar(request):
         categorias_ids = request.POST.getlist("categoria")
         biografia = request.POST.get("biografia", "").strip()
         
-        # Recebe os dados da imagem
-        foto_upload = request.FILES.get("foto_perfil") # Upload manual
-        avatar_escolhido = request.POST.get("avatar_escolhido") # Escolha da lista
+        foto_upload = request.FILES.get("foto_perfil") 
+        avatar_escolhido = request.POST.get("avatar_escolhido")
 
         if not email:
             erros.append("Email é obrigatório.")
@@ -426,37 +506,24 @@ def perfil_editar(request):
             }
             return render(request, "Echo_app/perfil_editar.html", context)
 
-        # Salva dados do usuário
         usuario.first_name = first_name
         usuario.email = email
         usuario.save()
 
-        # Salva categorias
         if categorias_ids:
             categorias = Categoria.objects.filter(pk__in=categorias_ids)
             perfil.categorias_de_interesse.set(categorias)
         else:
             perfil.categorias_de_interesse.clear()
 
-        # ===============================================
-        # LÓGICA DE SALVAMENTO DA IMAGEM
-        # ===============================================
+        # Salvar Imagem
         if foto_upload:
-            # Prioridade 1: Se o usuário fez upload manual, usa o arquivo enviado
             perfil.foto_perfil = foto_upload
-            
         elif avatar_escolhido:
-            # Prioridade 2: Se escolheu um avatar da lista
-            # O caminho é: pasta_do_projeto/Echo_app/static/avatars/avatarsX.png
             avatar_path = os.path.join(settings.BASE_DIR, 'Echo_app/static/avatars', avatar_escolhido)
-            
-            # Verifica se o arquivo existe na pasta static antes de tentar copiar
             if os.path.exists(avatar_path):
                 with open(avatar_path, 'rb') as f:
-                    # Salva uma cópia da imagem no campo foto_perfil
                     perfil.foto_perfil.save(avatar_escolhido, File(f), save=True)
-            else:
-                print(f"ERRO: Arquivo de avatar não encontrado no caminho: {avatar_path}")
 
         perfil.biografia = biografia
         perfil.save()
@@ -467,7 +534,7 @@ def perfil_editar(request):
         "usuario": usuario,
         "perfil": perfil,
         "todas_categorias": todas_categorias,
-        "lista_avatars": lista_avatars, # Envia a lista para o template
+        "lista_avatars": lista_avatars,
     }
     return render(request, "Echo_app/perfil_editar.html", context)
 
