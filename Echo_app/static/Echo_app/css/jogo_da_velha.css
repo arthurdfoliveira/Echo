@@ -1,0 +1,82 @@
+/* --- Echo_app/static/Echo_app/css/jogo_da_velha.css --- */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--cor-fundo, #f0f2f5);
+    font-family: Arial, sans-serif;
+}
+
+.game-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1 {
+    color: var(--cor-texto-principal, #333);
+    margin-bottom: 15px;
+}
+
+#status {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--cor-primaria, #007bff);
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* Tabuleiro 3x3 com 100px por célula */
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px; /* Espaço entre as células */
+    margin: 0 auto 20px auto;
+    border: 3px solid var(--cor-texto-secundario, #666);
+    border-radius: 5px;
+}
+
+.cell {
+    background-color: var(--cor-surface, #eee);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    user-select: none; /* Impede a seleção de texto X/O */
+}
+
+.cell:hover {
+    background-color: #ddd;
+}
+
+/* Estilo para as marcações X e O */
+.cell.X {
+    color: var(--cor-primaria, #007bff); /* Exemplo: Azul */
+}
+
+.cell.O {
+    color: var(--cor-erro, #dc3545); /* Exemplo: Vermelho */
+}
+
+/* Estilo para o botão de reinício */
+#restart-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: var(--cor-primaria, #007bff);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#restart-button:hover {
+    background-color: var(--cor-primaria-hover, #0056b3);
+}
