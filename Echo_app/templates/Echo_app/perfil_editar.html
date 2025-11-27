@@ -4,67 +4,59 @@
 {% block extra_css %}
 <style>
     .edit-profile-container {
-        max-width: 800px;
+        max-width: 900px; /* Container mais largo para caberem avatares grandes */
         margin: 40px auto;
         padding: 20px;
     }
     .edit-profile-card {
         background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        padding: 40px;
     }
     
-    /* --- AJUSTE DE TAMANHO AQUI --- */
+    /* GRELHA GIGANTE */
     .avatar-grid {
         display: grid;
-        /* Aumentei de 80px para 130px para ficarem maiores */
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 20px; /* Mais espaço entre eles */
-        margin-top: 15px;
-        margin-bottom: 30px;
+        /* Ícones grandes: Mínimo de 160px de largura */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        justify-content: center;
     }
+    
     .avatar-option {
         width: 100%;
-        aspect-ratio: 1; /* Garante que fique sempre quadrado/redondo */
-        border-radius: 50%;
+        aspect-ratio: 1; /* Quadrado perfeito */
+        border-radius: 50%; /* Círculo perfeito */
         cursor: pointer;
-        border: 4px solid transparent; /* Borda mais grossa */
-        transition: all 0.2s;
-        object-fit: cover;
+        border: 5px solid transparent; /* Borda invisível para não pular no hover */
+        transition: transform 0.2s, box-shadow 0.2s;
+        object-fit: cover; /* IMAGEM PREENCHE TODO O CÍRCULO */
+        background-color: #f0f0f0; /* Fundo cinza caso a img demore */
     }
+    
     .avatar-option:hover {
-        transform: scale(1.05);
-        border-color: #eee;
+        transform: scale(1.1);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
-    /* Classe para destacar o avatar selecionado */
+    
+    /* SELECIONADO: Borda azul e brilho */
     .avatar-option.selected {
         border-color: #0D8ABC;
-        box-shadow: 0 0 15px rgba(13, 138, 188, 0.4);
+        box-shadow: 0 0 0 4px rgba(13, 138, 188, 0.2);
         transform: scale(1.05);
     }
     
-    .divider {
+    .section-title {
         text-align: center;
-        margin: 30px 0;
-        position: relative;
-    }
-    .divider span {
-        background: white;
-        padding: 0 15px;
-        color: #777;
-        font-weight: bold;
-        position: relative;
-        z-index: 1;
-    }
-    .divider::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        border-top: 1px solid #ddd;
-        z-index: 0;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 </style>
 {% endblock %}
@@ -72,18 +64,15 @@
 {% block content %}
 <div class="edit-profile-container">
     <div class="edit-profile-card">
-        <h2 style="text-align: center; margin-bottom: 30px; font-weight: bold; color: #333;">Editar Perfil</h2>
+        <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900; font-size: 2rem;">Editar Perfil</h2>
         
         <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <!-- Campo oculto -->
             <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
 
-            <!-- SEÇÃO 1: AVATARES -->
-            <div class="mb-4">
-                <h5 style="font-weight: bold; color: #333; margin-bottom: 10px; text-align: center;">Escolha seu Avatar</h5>
-                <p style="font-size: 0.9rem; color: #666; text-align: center; margin-bottom: 20px;">Clique em uma das opções abaixo:</p>
+            <!-- SEÇÃO DE AVATARES -->
+            <div class="mb-5">
+                <h5 class="section-title">Escolha seu Avatar</h5>
                 
                 <div class="avatar-grid">
                     {% for avatar_file in lista_avatars %}
@@ -95,40 +84,41 @@
                 </div>
             </div>
 
-            <div class="divider">
-                <span>OU</span>
+            <div style="text-align: center; margin: 40px 0; border-top: 1px solid #eee; position: relative;">
+                <span style="background: white; padding: 0 20px; position: relative; top: -14px; color: #999; font-weight: bold;">OU FAÇA UPLOAD</span>
             </div>
 
-            <!-- SEÇÃO 2: UPLOAD -->
-            <div class="mb-4" style="text-align: center;">
-                <label for="foto_perfil" style="font-weight: bold; display: block; margin-bottom: 10px;">Faça upload de sua própria foto:</label>
-                <input type="file" class="form-control" name="foto_perfil" id="foto_perfil" accept="image/*" style="max-width: 400px; margin: 0 auto;">
+            <!-- UPLOAD MANUAL -->
+            <div class="mb-5" style="text-align: center;">
+                <div style="background: #f9f9f9; padding: 30px; border-radius: 15px; border: 2px dashed #ddd; display: inline-block; width: 100%; max-width: 500px;">
+                    <label for="foto_perfil" style="font-weight: bold; display: block; margin-bottom: 15px; font-size: 1.1rem;">Carregar foto do dispositivo</label>
+                    <input type="file" class="form-control" name="foto_perfil" id="foto_perfil" accept="image/*">
+                </div>
             </div>
 
-            <hr style="margin: 30px 0;">
-
-            <!-- SEÇÃO 3: DADOS -->
-            <h5 style="font-weight: bold; margin-bottom: 20px;">Seus Dados</h5>
+            <!-- DADOS PESSOAIS -->
+            <h5 class="section-title">Seus Dados</h5>
             
-            <div class="mb-3">
-                <label for="first_name" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" required>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="first_name" class="form-label fw-bold">Nome</label>
+                    <input type="text" class="form-control form-control-lg" id="first_name" name="first_name" value="{{ usuario.first_name }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label fw-bold">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ usuario.email }}" required>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="biografia" class="form-label">Biografia</label>
-                <textarea class="form-control" id="biografia" name="biografia" rows="3">{{ perfil.biografia|default:'' }}</textarea>
+            <div class="mb-4">
+                <label for="biografia" class="form-label fw-bold">Biografia</label>
+                <textarea class="form-control form-control-lg" id="biografia" name="biografia" rows="4" placeholder="Fale um pouco sobre você...">{{ perfil.biografia|default:'' }}</textarea>
             </div>
 
             <!-- BOTÕES -->
-            <div style="display: flex; justify-content: space-between; margin-top: 30px;">
-                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary" style="padding: 10px 40px; font-weight: bold;">Salvar Alterações</button>
+            <div style="display: flex; gap: 20px; margin-top: 40px;">
+                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-light btn-lg" style="flex: 1; font-weight: bold; border: 1px solid #ddd;">Cancelar</a>
+                <button type="submit" class="btn btn-dark btn-lg" style="flex: 2; font-weight: bold; background-color: #000;">Salvar Alterações</button>
             </div>
         </form>
     </div>
