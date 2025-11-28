@@ -758,3 +758,8 @@ def noticias_salvas_view(request):
         'total_salvos': len(noticias)
     }
     return render(request, 'Echo_app/noticias_salvas.html', context)
+
+def jogo_da_velha_view(request):
+    # O template que você criou (ou irá criar) para o jogo
+    return render(request, 'Echo_app/jogo_da_velha.html')
+

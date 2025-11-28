@@ -1,23 +1,92 @@
+{% extends "Echo_app/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Velha - Echo Game</title>
-    
-    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/base.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/jogo_da_velha.css' %}">
-    
-</head>
-<body>
 
-    <div class="game-container">
-        <h1>Jogo da Velha</h1>
+{% block title %}
+    Echo Games | Jogo da Velha
+{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Alinha no topo da área principal */
+            padding: 20px;
+            min-height: 80vh; /* Ocupa a maior parte da tela */
+            background-color: #ffffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px 0;
+            border: 2px solid #333;
+            background-color: #333;
+        }
+
+        .cell {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .cell:hover {
+            background-color: #ffffffff;
+        }
+
+        .cell.X {
+            color: #E10F26; /* Azul para 'X' */
+        }
+
+        .cell.O {
+            color: #000000ff; /* Vermelho para 'O' */
+        }
         
-        <div id="status">Vez do Jogador X</div>
+        #status {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+        }
 
-        <div id="board" class="board">
+        #restart-button {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #restart-button:hover {
+            background-color: #218838;
+        }
+
+        /* Ajuste para garantir que o main não limite demais o container do jogo */
+        .app-content {
+            padding: 0; /* Remove o padding padrão da main se estiver atrapalhando */
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="game-container">
+        <h2 id="status">Vez do Jogador X</h2>
+        <div class="grid-container">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
             <div class="cell" data-index="2"></div>
@@ -28,11 +97,11 @@
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
         </div>
-
         <button id="restart-button">Reiniciar Jogo</button>
     </div>
+{% endblock %}
 
-    <script src="{% static 'Echo_app/js/jogo_da_velha.js' %}"></script>
 
-</body>
-</html>
+{% block extra_js %}
+    {{ block.super }} <script src="{% static 'Echo_app/js/jogo_da_velha.js' %}"></script>
+{% endblock %}
