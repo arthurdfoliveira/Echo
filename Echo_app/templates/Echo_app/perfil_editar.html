@@ -16,7 +16,7 @@
 
     /* Container Centralizado e Largo */
     .edit-profile-container {
-        max-width: 800px !important; /* Mais largo para caber o avatar grande */
+        max-width: 900px !important; /* Mais espaço lateral */
         margin: 40px auto;
         padding: 20px;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -49,10 +49,15 @@
 
     .current-avatar-container {
         position: relative;
-        width: 250px !important;  /* Tamanho forçado GRANDE */
-        height: 250px !important; /* Tamanho forçado GRANDE */
+        /* AUMENTADO DRASTICAMENTE E TRAVADO */
+        width: 300px !important; 
+        height: 300px !important;
+        min-width: 300px !important; /* Garante que não encolha */
+        min-height: 300px !important;
         cursor: pointer;
         transition: transform 0.3s ease;
+        flex-shrink: 0; /* Impede compressão flexbox */
+        margin: 0 auto;
     }
 
     .current-avatar-container:hover {
@@ -64,17 +69,19 @@
         height: 100% !important;
         border-radius: 50% !important;
         object-fit: cover !important;
-        border: 6px solid #fff;
-        box-shadow: 0 12px 24px rgba(0,0,0,0.15); /* Sombra destaque */
+        border: 8px solid #fff; /* Borda mais grossa */
+        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
         background-color: #f0f0f0;
+        max-width: none !important; /* Remove limites globais */
+        max-height: none !important;
     }
 
     .avatar-edit-badge {
         position: absolute;
-        bottom: 15px;
-        right: 15px;
-        width: 54px;
-        height: 54px;
+        bottom: 20px;
+        right: 20px;
+        width: 60px; /* Badge maior */
+        height: 60px;
         background: var(--text-dark);
         border: 4px solid #fff;
         border-radius: 50%;
@@ -82,9 +89,10 @@
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 24px;
+        font-size: 28px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         transition: background 0.2s;
+        z-index: 10;
     }
     
     .avatar-edit-badge:hover {
@@ -258,125 +266,10 @@
     /* Responsividade */
     @media (max-width: 768px) {
         .form-grid { grid-template-columns: 1fr; gap: 0; }
-        .current-avatar-container { width: 180px !important; height: 180px !important; }
+        /* Aumentado o tamanho mobile para 240px (era 180px) */
+        .current-avatar-container { width: 240px !important; height: 240px !important; min-width: 240px !important; min-height: 240px !important; }
         .edit-profile-card { padding: 30px 20px; }
         .modal-avatar-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     }
 </style>
-{% endblock %}
-
-{% block content %}
-<div class="edit-profile-container">
-    <div class="edit-profile-card">
-        <h2 class="edit-profile-title">Editar Perfil</h2>
-        
-        <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <!-- Inputs Ocultos -->
-            <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
-            <input type="file" name="foto_perfil" id="real-file-input" style="display: none;" accept="image/*">
-
-            <!-- 1. FOTO PRINCIPAL GIGANTE (Clicável) -->
-            <div class="avatar-section-wrapper">
-                <div class="current-avatar-container" onclick="openAvatarModal()">
-                    {% if perfil.foto_perfil %}
-                        <img id="main-preview" src="{{ perfil.foto_perfil.url }}" class="current-avatar-img" alt="Avatar Atual">
-                    {% else %}
-                        <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&bold=true" class="current-avatar-img" alt="Avatar Padrão">
-                    {% endif %}
-                    
-                    <div class="avatar-edit-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.731 2.269a2.64 2.64 0 0 0-3.737 0l-12.72 12.72A1.97 1.97 0 0 0 5.25 15.75v3.626h3.626a1.97 1.97 0 0 0 1.404-.579l12.72-12.72a2.64 2.64 0 0 0 0-3.737ZM7.125 18v1.875H5.25a.375.375 0 0 1-.375-.375v-1.5h1.875ZM18.75 8.25l-7.5-7.5-1.5 1.5 7.5 7.5 1.5-1.5Z"/></svg>
-                    </div>
-                </div>
-            </div>
-            
-            <p style="text-align: center; color: #999; font-weight: 600; margin-bottom: 40px; font-size: 0.9rem;">Toque na foto para alterar</p>
-
-            <!-- 2. FORMULÁRIO DE INFORMAÇÕES (Estilizado) -->
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="first_name" class="form-label">NOME</label>
-                    <input type="text" class="custom-input" id="first_name" name="first_name" value="{{ usuario.first_name }}" required placeholder="Seu nome">
-                </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">EMAIL</label>
-                    <input type="email" class="custom-input" id="email" name="email" value="{{ usuario.email }}" required placeholder="seu@email.com">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="biografia" class="form-label">BIOGRAFIA</label>
-                <textarea class="custom-input" id="biografia" name="biografia" placeholder="Conte um pouco sobre você...">{{ perfil.biografia|default:'' }}</textarea>
-            </div>
-
-            <!-- BOTÕES -->
-            <div class="form-actions">
-                <a href="{% url 'Echo_app:perfil' %}" class="btn-custom btn-cancel">Cancelar</a>
-                <button type="submit" class="btn-custom btn-save">Salvar Alterações</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- === MODAL DE ESCOLHA DE AVATAR === -->
-<div class="modal-overlay" id="avatarModal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeAvatarModal()">&times;</span>
-        
-        <h3 style="font-weight: 800; color: #333; margin-bottom: 10px;">Escolha seu Avatar</h3>
-        <p style="color: #666; font-size: 1.1rem;">Selecione um da nossa coleção ou envie o seu</p>
-
-        <!-- Grade de Avatares -->
-        <div class="modal-avatar-grid">
-            {% for avatar_file in lista_avatars %}
-                <img src="{% static 'avatars/'|add:avatar_file %}" 
-                     class="modal-avatar-option" 
-                     onclick="selectAvatarFromGrid('{{ avatar_file }}', this)">
-            {% endfor %}
-        </div>
-
-        <!-- Botão de Upload Manual -->
-        <div class="upload-btn-area">
-            <button type="button" class="btn-custom btn-cancel" onclick="document.getElementById('real-file-input').click()" style="width: auto; padding: 12px 30px; display: inline-block;">
-                Carregar do Computador
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-    const modal = document.getElementById('avatarModal');
-    const mainPreview = document.getElementById('main-preview');
-    const hiddenAvatarInput = document.getElementById('avatar_escolhido');
-    const fileInput = document.getElementById('real-file-input');
-
-    function openAvatarModal() { modal.style.display = 'flex'; }
-    function closeAvatarModal() { modal.style.display = 'none'; }
-
-    window.onclick = function(e) {
-        if (e.target == modal) closeAvatarModal();
-    }
-
-    function selectAvatarFromGrid(filename, imgElement) {
-        hiddenAvatarInput.value = filename;
-        mainPreview.src = imgElement.src;
-        fileInput.value = ""; // Limpa upload manual
-        closeAvatarModal();
-    }
-
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                mainPreview.src = evt.target.result;
-            }
-            reader.readAsDataURL(file);
-            hiddenAvatarInput.value = ""; // Limpa seleção de avatar
-            closeAvatarModal();
-        }
-    });
-</script>
 {% endblock %}
