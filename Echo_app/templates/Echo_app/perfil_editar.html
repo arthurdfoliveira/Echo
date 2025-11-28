@@ -32,24 +32,71 @@
         border-bottom: 1px solid #eee;
         padding-bottom: 30px;
     }
+    
+    /* --- CORREÇÃO DEFINITIVA DO AVATAR --- */
+    .avatar-wrapper {
+        position: relative;
+        /* Tamanho fixo e visível */
+        width: 250px !important; 
+        height: 250px !important;
+        margin-bottom: 20px;
+        cursor: pointer;
+        
+        /* Garante o formato circular e corta o que sobrar */
+        border-radius: 50% !important;
+        overflow: hidden !important; 
+        
+        /* Estilo da borda */
+        border: 6px solid #fff;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        background-color: #f0f0f0; /* Fundo cinza (só aparece se a imagem falhar) */
+        
+        /* Removemos o flexbox aqui para usar position absolute na imagem */
+        display: block !important; 
+    }
+
+    .avatar-wrapper:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s;
+    }
+
+    .avatar-img-fix {
+        /* A TÉCNICA "ABSOLUTA" - Obriga a imagem a preencher tudo */
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        
+        object-fit: cover !important; /* Preenche sem distorcer */
+        border-radius: 0 !important; /* O pai já é redondo */
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: none !important;
+        max-height: none !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+    }
+
     .edit-badge {
         position: absolute;
-        bottom: 25px;
-        right: 25px;
-        width: 70px;
-        height: 70px;
-        background: #1a1a1a;
-        border: 5px solid #fff;
+        bottom: 15px;
+        right: 35px; /* Ajustado para não sair do círculo */
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #fff;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 32px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        font-size: 24px;
         z-index: 10;
         pointer-events: none;
     }
+    
     /* FORMULÁRIO */
     .form-row { display: flex; gap: 30px; margin-bottom: 25px; }
     .form-col { flex: 1; }
@@ -119,17 +166,15 @@
             <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
             <input type="file" name="foto_perfil" id="real-file-input" style="display: none;" accept="image/*">
 
-            <!-- 1. FOTO PRINCIPAL GIGANTE (Estilo Inline FORÇADO) -->
+            <!-- 1. FOTO PRINCIPAL GIGANTE -->
             <div class="avatar-area">
-                <div class="avatar-wrapper" onclick="openModal()" 
-                     style="width: 400px !important; height: 400px !important; min-width: 400px !important; min-height: 400px !important; border-radius: 50% !important; margin-bottom: 20px; cursor: pointer; position: relative; display: block;">
+                <div class="avatar-wrapper" onclick="openModal()">
                     
                     {% if perfil.foto_perfil %}
-                        <img id="main-preview" src="{{ perfil.foto_perfil.url }}?v={% now 'U' %}" alt="Avatar Atual"
-                             style="width: 100% !important; height: 100% !important; min-width: 100% !important; min-height: 100% !important; border-radius: 50% !important; object-fit: cover !important; border: 8px solid #fff !important; box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important; display: block !important;">
+                        <!-- IMAGEM COM CLASSE NOVA 'avatar-img-fix' -->
+                        <img id="main-preview" src="{{ perfil.foto_perfil.url }}?v={% now 'U' %}" alt="Avatar Atual" class="avatar-img-fix">
                     {% else %}
-                        <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&bold=true" alt="Avatar Padrão"
-                             style="width: 100% !important; height: 100% !important; min-width: 100% !important; min-height: 100% !important; border-radius: 50% !important; object-fit: cover !important; border: 8px solid #fff !important; box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important; display: block !important;">
+                        <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&bold=true" alt="Avatar Padrão" class="avatar-img-fix">
                     {% endif %}
                     
                     <div class="edit-badge">
