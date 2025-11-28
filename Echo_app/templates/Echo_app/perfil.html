@@ -4,163 +4,8 @@
 {% block title %}Meu Perfil{% endblock %}
 
 {% block extra_css %}
-<!-- Link para o CSS padrão (mantemos para regras básicas) -->
+<!-- Agora só precisamos carregar o arquivo CSS que corrigimos -->
 <link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
-
-<!-- NOSSO CSS ESPECÍFICO E ROBUSTO (Sobrescreve o anterior) -->
-<style>
-    /* Contentor Principal */
-    .perfil-card {
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        padding: 50px 30px;
-        margin-top: 20px;
-        border: 1px solid #f0f0f0;
-    }
-
-    .main-title {
-        text-align: center; 
-        margin-bottom: 30px; 
-        color: #333; 
-        font-weight: 800;
-        letter-spacing: -0.5px;
-    }
-
-    /* --- AVATAR GIGANTE --- */
-    .perfil-avatar-container {
-        position: relative;
-        width: 280px;  /* Tamanho forçado */
-        height: 280px; /* Tamanho forçado */
-        margin: 0 auto 30px auto; /* Centraliza */
-        border-radius: 50%;
-    }
-
-    /* A imagem ocupa 100% do container acima */
-    #perfil-avatar-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Garante que não distorça */
-        border-radius: 50%;
-        border: 8px solid #fff; /* Borda branca grossa */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra elegante */
-        background-color: #f0f0f0;
-    }
-
-    /* Botão flutuante de editar */
-    .btn-edit-float {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        background: #fff;
-        color: #333;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        border: 2px solid #f0f0f0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        transition: transform 0.2s;
-        text-decoration: none;
-    }
-    .btn-edit-float:hover {
-        transform: scale(1.1);
-        color: #000;
-    }
-
-    /* --- TEXTOS --- */
-    .saudacao {
-        margin: 0;
-        font-weight: 800;
-        font-size: 2.2rem;
-        color: #222;
-        letter-spacing: -1px;
-    }
-    .user-email {
-        color: #888;
-        margin: 10px 0;
-        font-size: 1.1rem;
-        font-weight: 500;
-    }
-
-    /* Caixa da Biografia */
-    .bio-box {
-        background: #f9f9f9;
-        padding: 25px;
-        border-radius: 16px;
-        margin: 25px auto;
-        max-width: 650px;
-        border: 1px solid #eee;
-    }
-    .user-bio {
-        white-space: pre-line;
-        margin: 0;
-        color: #555;
-        font-size: 1.1rem;
-        line-height: 1.6;
-    }
-
-    /* Botão Editar Principal */
-    .btn-editar-main {
-        background-color: #000;
-        color: white;
-        padding: 15px 50px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 1.1rem;
-        display: inline-block;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-editar-main:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-        color: #fff;
-    }
-
-    /* --- MENU LATERAL --- */
-    .menu-opcoes {
-        display: flex; 
-        flex-direction: column; 
-        gap: 15px;
-    }
-    .menu-item {
-        padding: 20px;
-        text-decoration: none;
-        color: #333;
-        display: flex;
-        align-items: center;
-        border-radius: 16px;
-        transition: all 0.2s;
-        background-color: #fff;
-        border: 1px solid #eee;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-    .menu-item:hover {
-        background-color: #f8f9fa;
-        transform: translateX(5px);
-        border-color: #ddd;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        color: #000;
-    }
-    .menu-icon {
-        margin-right: 20px;
-        font-size: 1.5rem;
-        width: 30px;
-        text-align: center;
-    }
-    
-    .acao-logout { color: #dc3545; }
-    .acao-logout:hover { background-color: #fff5f5; border-color: #ffcdd2; }
-    
-    .acao-deletar { color: #999; font-size: 1rem; border: none; background: transparent; }
-    .acao-deletar:hover { background: #f0f0f0; color: #dc3545; }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -172,79 +17,89 @@
     <div class="perfil-card">
 
         <!-- CABEÇALHO DO PERFIL -->
-        <div class="perfil-header" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <div class="perfil-header">
             
             <!-- ÁREA DA FOTO (AVATAR) -->
             <div class="perfil-avatar-container">
                 {% if perfil.foto_perfil %}
-                    <img id="perfil-avatar-img" 
+                    <img class="perfil-avatar" 
                          src="{{ perfil.foto_perfil.url }}" 
                          alt="Foto de Perfil">
                 {% else %}
-                    <img id="perfil-avatar-img" 
+                    <img class="perfil-avatar" 
                          src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&font-size=0.5&bold=true" 
                          alt="Avatar Padrão">
                 {% endif %}
 
-                <!-- Botão de Editar Flutuante -->
-                <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-edit-float" title="Alterar foto">
-                    ✎
+                <!-- Ícone de Editar Foto -->
+                <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-avatar-icon" title="Editar foto">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21.731 2.269a2.64 2.64 0 0 0-3.737 0l-12.72 12.72A1.97 1.97 0 0 0 5.25 15.75v3.626h3.626a1.97 1.97 0 0 0 1.404-.579l12.72-12.72a2.64 2.64 0 0 0 0-3.737ZM7.125 18v1.875H5.25a.375.375 0 0 1-.375-.375v-1.5h1.875ZM18.75 8.25l-7.5-7.5-1.5 1.5 7.5 7.5 1.5-1.5Z" />
+                    </svg>
                 </a>
             </div>
             
             <!-- INFO DO USUÁRIO -->
-            <div class="perfil-info" style="width: 100%;">
+            <div class="perfil-info">
                 <h3 class="saudacao">
                     {{ request.user.first_name }} {{ request.user.last_name }}
                 </h3>
                 <p class="user-email">{{ request.user.email }}</p>
 
                 {% if perfil.biografia %}
-                    <div class="bio-box">
-                        <p class="user-bio">{{ perfil.biografia }}</p>
-                    </div>
+                    <p class="user-bio">{{ perfil.biografia }}</p>
                 {% endif %}
 
-                <div style="margin-top: 30px;">
-                    <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-editar-main">
-                        Editar Perfil
-                    </a>
-                </div>
+                <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-profile-btn">
+                    Editar Perfil
+                </a>
             </div>
         </div>
         
-        <hr class="perfil-divider" style="margin: 50px 0; border: 0; border-top: 1px solid #eee;">
+        <hr class="perfil-divider">
+
+        <!-- CATEGORIAS (Se existirem) -->
+        {% if perfil.categorias_de_interesse.exists %}
+        <div class="perfil-categorias">
+            <h5 class="categorias-title">Meus Interesses</h5>
+            <ul class="lista-categorias">
+                {% for categoria in perfil.categorias_de_interesse.all %}
+                    <li class="categoria-item">{{ categoria.nome }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <hr class="perfil-divider">
+        {% endif %}
 
         <!-- MENU DE OPÇÕES -->
         <nav class="menu-opcoes">
             <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}">
                 <span class="menu-icon">❤️</span> 
-                <span>Notícias Curtidas</span>
+                Notícias Curtidas
             </a>
 
             <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}">
                 <span class="menu-icon">🔖</span> 
-                <span>Notícias Salvas</span>
+                Notícias Salvas
             </a>
 
             <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}">
                 <span class="menu-icon">⚙️</span> 
-                <span>Configurações da Conta</span>
+                Configurações da Conta
             </a>
 
-            <hr style="margin: 20px 0; border-top: 1px solid #eee;">
+            <hr class="menu-divider">
 
             <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}">
                 <span class="menu-icon">🚪</span> 
-                <span>Sair da Conta</span>
+                Sair da Conta
             </a>
             
             <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}">
                 <span class="menu-icon">❌</span> 
-                <span>Excluir Conta Permanentemente</span>
+                Excluir Conta
             </a>
         </nav>
     </div>
 </div>
-
 {% endblock %}
