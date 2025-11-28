@@ -3,25 +3,23 @@
 
 {% block content %}
 <!-- 
-    ESTILOS INLINE (DENTRO DO CONTEÚDO) 
-    Isso garante que o CSS seja aplicado IMEDIATAMENTE.
+    ESTILOS INLINE (DENTRO DO CONTEÚDO)
+    Inclui compensação matemática para o zoom de 0.75 do seu site.
 -->
 <style>
     /* --- ESTRUTURA GERAL --- */
     .edit-profile-container {
         max-width: 900px;
         margin: 20px auto;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        padding: 0 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
-        /* Tenta resetar o zoom global que estava diminuindo tudo */
-        zoom: normal; 
-        transform: scale(1); 
     }
 
     .edit-profile-card {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         padding: 40px;
         border: 1px solid #e0e0e0;
     }
@@ -30,11 +28,11 @@
         text-align: center;
         margin-bottom: 40px;
         font-weight: 800;
-        font-size: 2.5rem; 
+        font-size: 2.5rem;
         color: #1a1a1a;
     }
 
-    /* --- ÁREA DO AVATAR GIGANTE --- */
+    /* --- ÁREA DO AVATAR --- */
     .avatar-area {
         display: flex;
         flex-direction: column;
@@ -46,14 +44,28 @@
 
     .avatar-wrapper {
         position: relative;
-        /* TAMANHO GIGANTE 350px - SE ISSO NÃO MUDAR, O ARQUIVO NÃO ESTÁ CARREGANDO */
-        width: 350px !important; 
-        height: 350px !important;
+        /* CORREÇÃO MATEMÁTICA PARA O ZOOM 0.75:
+           340px no CSS * 0.75 zoom = 255px visíveis (Tamanho Grande Real)
+        */
+        width: 340px !important; 
+        height: 340px !important;
+        
         margin-bottom: 20px;
         cursor: pointer;
         transition: transform 0.2s;
         border-radius: 50%;
-        background-color: #f0f0f0; /* Fundo visível se a imagem falhar */
+        
+        /* Remove fundos e paddings antigos */
+        background-color: transparent !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        
+        /* Borda no wrapper */
+        border: 8px solid #fff; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-sizing: border-box !important;
     }
 
     .avatar-wrapper:hover {
@@ -61,24 +73,32 @@
     }
 
     .avatar-img {
+        /* Força a imagem a preencher 100% dos 340px */
         width: 100% !important;
         height: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        
         border-radius: 50% !important;
         object-fit: cover !important;
-        border: 8px solid #fff;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        display: block; /* Remove espaços extras */
+        
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        background-color: #eee; /* Cor de fundo enquanto carrega */
     }
 
     /* Ícone de câmera */
     .edit-badge {
         position: absolute;
-        bottom: 25px;
-        right: 25px;
-        width: 70px;
+        bottom: 20px;
+        right: 20px;
+        width: 70px; /* Aumentado para compensar o zoom */
         height: 70px;
         background: #1a1a1a;
-        border: 5px solid #fff;
+        border: 4px solid #fff;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -96,7 +116,7 @@
         margin-top: 10px;
     }
 
-    /* --- FORMULÁRIO --- */
+    /* --- FORMULÁRIO ESTILIZADO MANUALMENTE --- */
     .form-row {
         display: flex;
         gap: 30px;
@@ -104,7 +124,7 @@
     }
     
     .form-col {
-        flex: 1; 
+        flex: 1;
     }
 
     .custom-label {
@@ -124,14 +144,15 @@
         border: 2px solid #e0e0e0;
         border-radius: 12px;
         background-color: #f9f9f9;
-        box-sizing: border-box; 
+        box-sizing: border-box; /* Essencial */
         transition: all 0.3s;
         font-family: inherit;
+        color: #333;
     }
 
     .custom-input:focus {
         background-color: #fff;
-        border-color: #dc2626; 
+        border-color: #dc2626; /* Vermelho */
         outline: none;
         box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
     }
@@ -176,7 +197,7 @@
     }
 
     .btn-save {
-        flex: 2; 
+        flex: 2;
         background-color: #dc2626;
         color: white;
         box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
@@ -194,7 +215,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.85); /* Fundo mais escuro */
+        background: rgba(0,0,0,0.85);
         z-index: 9999;
         align-items: center;
         justify-content: center;
@@ -227,7 +248,8 @@
     /* Grelha de Avatares */
     .modal-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ícones grandes */
+        /* Ícones grandes compensados para o zoom */
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 25px;
         margin-top: 30px;
         padding: 10px;
@@ -251,14 +273,13 @@
     /* Responsividade */
     @media (max-width: 700px) {
         .form-row { flex-direction: column; gap: 20px; }
-        .avatar-wrapper { width: 250px !important; height: 250px !important; }
+        .avatar-wrapper { width: 260px !important; height: 260px !important; }
     }
 </style>
 
 <div class="edit-profile-container">
     <div class="edit-profile-card">
-        <!-- TÍTULO ALTERADO PARA VERIFICAÇÃO -->
-        <h2 class="page-title">EDITAR PERFIL - ATUALIZADO</h2>
+        <h2 class="page-title">Editar Perfil</h2>
         
         <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
             {% csrf_token %}
@@ -266,7 +287,7 @@
             <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
             <input type="file" name="foto_perfil" id="real-file-input" style="display: none;" accept="image/*">
 
-            <!-- 1. FOTO PRINCIPAL -->
+            <!-- 1. FOTO PRINCIPAL GIGANTE -->
             <div class="avatar-area">
                 <div class="avatar-wrapper" onclick="openModal()">
                     {% if perfil.foto_perfil %}
@@ -282,7 +303,7 @@
                 <p class="helper-text">Toque na foto para alterar</p>
             </div>
 
-            <!-- 2. FORMULÁRIO -->
+            <!-- 2. FORMULÁRIO DE DADOS -->
             <div class="form-row">
                 <div class="form-col">
                     <label for="first_name" class="custom-label">Nome</label>
@@ -308,7 +329,7 @@
     </div>
 </div>
 
-<!-- === MODAL === -->
+<!-- === MODAL (JANELA DE ESCOLHA) === -->
 <div class="modal-overlay" id="avatarModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -325,7 +346,7 @@
             {% endfor %}
         </div>
 
-        <!-- Botão Upload -->
+        <!-- Botão Upload Manual -->
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
             <button type="button" class="btn-action btn-cancel" onclick="document.getElementById('real-file-input').click()" style="margin: 0 auto; width: auto; padding: 12px 40px;">
                 Carregar do Computador
@@ -343,10 +364,12 @@
     function openModal() { modal.style.display = 'flex'; }
     function closeModal() { modal.style.display = 'none'; }
 
+    // Fechar ao clicar fora
     window.onclick = function(e) {
         if (e.target == modal) closeModal();
     }
 
+    // Selecionar da grade
     function selectAvatarFromGrid(filename, imgElement) {
         hiddenAvatarInput.value = filename;
         mainPreview.src = imgElement.src;
@@ -354,6 +377,7 @@
         closeModal();
     }
 
+    // Upload manual
     fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
