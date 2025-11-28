@@ -3,8 +3,9 @@
 
 {% block extra_css %}
 <style>
+    /* --- Estilos Gerais --- */
     .edit-profile-container {
-        max-width: 900px; /* Container mais largo para caberem avatares grandes */
+        max-width: 700px;
         margin: 40px auto;
         padding: 20px;
     }
@@ -13,50 +14,104 @@
         border-radius: 20px;
         box-shadow: 0 5px 25px rgba(0,0,0,0.1);
         padding: 40px;
+        text-align: center; /* Centraliza tudo */
     }
-    
-    /* GRELHA GIGANTE */
-    .avatar-grid {
-        display: grid;
-        /* Ícones grandes: Mínimo de 160px de largura */
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 25px;
-        margin-top: 20px;
-        margin-bottom: 40px;
-        justify-content: center;
-    }
-    
-    .avatar-option {
-        width: 100%;
-        aspect-ratio: 1; /* Quadrado perfeito */
-        border-radius: 50%; /* Círculo perfeito */
+
+    /* --- Foto Principal (Botão de abrir o modal) --- */
+    .current-avatar-wrapper {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 30px auto;
         cursor: pointer;
-        border: 5px solid transparent; /* Borda invisível para não pular no hover */
-        transition: transform 0.2s, box-shadow 0.2s;
-        object-fit: cover; /* IMAGEM PREENCHE TODO O CÍRCULO */
-        background-color: #f0f0f0; /* Fundo cinza caso a img demore */
+        transition: transform 0.2s;
     }
-    
-    .avatar-option:hover {
-        transform: scale(1.1);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    /* SELECIONADO: Borda azul e brilho */
-    .avatar-option.selected {
-        border-color: #0D8ABC;
-        box-shadow: 0 0 0 4px rgba(13, 138, 188, 0.2);
+    .current-avatar-wrapper:hover {
         transform: scale(1.05);
     }
-    
-    .section-title {
+    .current-avatar-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #f0f0f0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .edit-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #000;
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border: 3px solid #fff;
+    }
+
+    /* --- MODAL (Janela Flutuante) --- */
+    .modal-overlay {
+        display: none; /* Escondido por padrão */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
         text-align: center;
-        font-weight: 800;
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    }
+    .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        cursor: pointer;
+        color: #aaa;
+    }
+
+    /* --- Grelha dentro do Modal --- */
+    .avatar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .avatar-option {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: transform 0.2s;
+        object-fit: cover;
+    }
+    .avatar-option:hover {
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    /* Input de Upload Escondido (Estilizado) */
+    .upload-btn-wrapper {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
     }
 </style>
 {% endblock %}
@@ -64,77 +119,137 @@
 {% block content %}
 <div class="edit-profile-container">
     <div class="edit-profile-card">
-        <h2 style="text-align: center; margin-bottom: 40px; font-weight: 900; font-size: 2rem;">Editar Perfil</h2>
+        <h2 style="font-weight: 900; margin-bottom: 30px; color: #333;">Editar Perfil</h2>
         
         <form method="POST" action="{% url 'Echo_app:perfil_editar' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
-
-            <!-- SEÇÃO DE AVATARES -->
-            <div class="mb-5">
-                <h5 class="section-title">Escolha seu Avatar</h5>
-                
-                <div class="avatar-grid">
-                    {% for avatar_file in lista_avatars %}
-                        <img src="{% static 'avatars/'|add:avatar_file %}" 
-                             alt="Opção de Avatar" 
-                             class="avatar-option"
-                             onclick="selectAvatar('{{ avatar_file }}', this)">
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div style="text-align: center; margin: 40px 0; border-top: 1px solid #eee; position: relative;">
-                <span style="background: white; padding: 0 20px; position: relative; top: -14px; color: #999; font-weight: bold;">OU FAÇA UPLOAD</span>
-            </div>
-
-            <!-- UPLOAD MANUAL -->
-            <div class="mb-5" style="text-align: center;">
-                <div style="background: #f9f9f9; padding: 30px; border-radius: 15px; border: 2px dashed #ddd; display: inline-block; width: 100%; max-width: 500px;">
-                    <label for="foto_perfil" style="font-weight: bold; display: block; margin-bottom: 15px; font-size: 1.1rem;">Carregar foto do dispositivo</label>
-                    <input type="file" class="form-control" name="foto_perfil" id="foto_perfil" accept="image/*">
-                </div>
-            </div>
-
-            <!-- DADOS PESSOAIS -->
-            <h5 class="section-title">Seus Dados</h5>
             
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="first_name" class="form-label fw-bold">Nome</label>
-                    <input type="text" class="form-control form-control-lg" id="first_name" name="first_name" value="{{ usuario.first_name }}" required>
+            <!-- Inputs Ocultos para a Lógica -->
+            <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
+            <!-- Input de arquivo real (escondido visualmente, acionado via JS) -->
+            <input type="file" name="foto_perfil" id="real-file-input" style="display: none;" accept="image/*">
+
+            <!-- 1. FOTO PRINCIPAL (Clicável) -->
+            <div class="current-avatar-wrapper" onclick="openAvatarModal()">
+                {% if perfil.foto_perfil %}
+                    <img id="main-preview" src="{{ perfil.foto_perfil.url }}" alt="Avatar Atual">
+                {% else %}
+                    <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=200" alt="Avatar Padrão">
+                {% endif %}
+                
+                <div class="edit-overlay">📷</div>
+            </div>
+            
+            <p style="color: #777; margin-bottom: 30px; font-size: 0.9rem;">Toque na foto para alterar</p>
+
+            <!-- 2. CAMPOS DO FORMULÁRIO (Centralizados) -->
+            <div style="text-align: left;">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="first_name" class="form-label fw-bold">Nome</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label fw-bold">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="email" class="form-label fw-bold">Email</label>
-                    <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ usuario.email }}" required>
+
+                <div class="mb-4">
+                    <label for="biografia" class="form-label fw-bold">Biografia</label>
+                    <textarea class="form-control" id="biografia" name="biografia" rows="4">{{ perfil.biografia|default:'' }}</textarea>
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label for="biografia" class="form-label fw-bold">Biografia</label>
-                <textarea class="form-control form-control-lg" id="biografia" name="biografia" rows="4" placeholder="Fale um pouco sobre você...">{{ perfil.biografia|default:'' }}</textarea>
-            </div>
-
-            <!-- BOTÕES -->
-            <div style="display: flex; gap: 20px; margin-top: 40px;">
-                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-light btn-lg" style="flex: 1; font-weight: bold; border: 1px solid #ddd;">Cancelar</a>
-                <button type="submit" class="btn btn-dark btn-lg" style="flex: 2; font-weight: bold; background-color: #000;">Salvar Alterações</button>
+            <!-- BOTÕES DE AÇÃO -->
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <a href="{% url 'Echo_app:perfil' %}" class="btn btn-light" style="flex: 1; border: 1px solid #ddd;">Cancelar</a>
+                <button type="submit" class="btn btn-dark" style="flex: 2; font-weight: bold;">Salvar Alterações</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- === O MODAL (Janela que abre ao clicar na foto) === -->
+<div class="modal-overlay" id="avatarModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAvatarModal()">&times;</span>
+        
+        <h4 style="font-weight: bold; margin-bottom: 10px;">Escolha um Avatar</h4>
+        <p style="color: #666;">Selecione um da lista ou faça upload</p>
+
+        <!-- Grelha de Avatares -->
+        <div class="avatar-grid">
+            {% for avatar_file in lista_avatars %}
+                <img src="{% static 'avatars/'|add:avatar_file %}" 
+                     class="avatar-option" 
+                     onclick="selectAvatarFromGrid('{{ avatar_file }}', this)">
+            {% endfor %}
+        </div>
+
+        <!-- Opção de Upload Manual dentro do Modal -->
+        <div class="upload-btn-wrapper">
+            <p style="margin-bottom: 10px; font-weight: bold;">Ou envie do seu computador:</p>
+            <button type="button" class="btn btn-outline-dark" onclick="document.getElementById('real-file-input').click()">
+                Selecionar Arquivo
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
-    function selectAvatar(filename, element) {
-        document.querySelectorAll('.avatar-option').forEach(img => img.classList.remove('selected'));
-        element.classList.add('selected');
-        document.getElementById('avatar_escolhido').value = filename;
-        document.getElementById('foto_perfil').value = "";
+    const modal = document.getElementById('avatarModal');
+    const mainPreview = document.getElementById('main-preview');
+    const hiddenAvatarInput = document.getElementById('avatar_escolhido');
+    const fileInput = document.getElementById('real-file-input');
+
+    // Funções para Abrir/Fechar Modal
+    function openAvatarModal() {
+        modal.style.display = 'flex';
+    }
+    function closeAvatarModal() {
+        modal.style.display = 'none';
     }
 
-    document.getElementById('foto_perfil').addEventListener('change', function() {
-        document.querySelectorAll('.avatar-option').forEach(img => img.classList.remove('selected'));
-        document.getElementById('avatar_escolhido').value = "";
+    // Fechar se clicar fora do conteúdo
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeAvatarModal();
+        }
+    }
+
+    // 1. Quando clica num avatar da grelha
+    function selectAvatarFromGrid(filename, imgElement) {
+        // Atualiza o input oculto para o backend
+        hiddenAvatarInput.value = filename;
+        
+        // Atualiza a foto principal imediatamente para o usuário ver
+        mainPreview.src = imgElement.src;
+        
+        // Limpa o upload de arquivo para não dar conflito
+        fileInput.value = "";
+        
+        // Fecha o modal
+        closeAvatarModal();
+    }
+
+    // 2. Quando faz upload manual
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Atualiza a foto principal com a imagem carregada
+                mainPreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+            
+            // Limpa a seleção da grelha
+            hiddenAvatarInput.value = "";
+            
+            // Fecha o modal
+            closeAvatarModal();
+        }
     });
 </script>
 {% endblock %}
