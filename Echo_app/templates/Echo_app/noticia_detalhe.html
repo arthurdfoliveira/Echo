@@ -62,7 +62,7 @@
                 
                 <!-- Botão Curtir -->
                 <button id="btn-curtir" 
-                    data-url="{% url 'Echo_app:noticia_curtir' noticia_id=noticia.pk %}" 
+                    data-url="{% url 'Echo_app:curtir_noticia' noticia_id=noticia.pk %}" 
                     class="icon-btn auth-required {% if usuario_curtiu %}ativo{% endif %}" 
                     title="Curtir"
                     data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
@@ -71,7 +71,7 @@
                 
                 <!-- Botão Salvar -->
                 <button id="btn-salvar" 
-                    data-url="{% url 'Echo_app:noticia_salvar' noticia_id=noticia.pk %}" 
+                    data-url="{% url 'Echo_app:salvar_noticia' noticia_id=noticia.pk %}" 
                     class="icon-btn auth-required {% if usuario_salvou %}ativo{% endif %}" 
                     title="Salvar"
                     data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
