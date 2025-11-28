@@ -4,59 +4,209 @@
 {% block title %}Meu Perfil{% endblock %}
 
 {% block extra_css %}
+<!-- Link para o CSS padrão (mantemos para regras básicas) -->
 <link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
+
+<!-- NOSSO CSS ESPECÍFICO E ROBUSTO (Sobrescreve o anterior) -->
+<style>
+    /* Contentor Principal */
+    .perfil-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 50px 30px;
+        margin-top: 20px;
+        border: 1px solid #f0f0f0;
+    }
+
+    .main-title {
+        text-align: center; 
+        margin-bottom: 30px; 
+        color: #333; 
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    /* --- AVATAR GIGANTE --- */
+    .perfil-avatar-container {
+        position: relative;
+        width: 280px;  /* Tamanho forçado */
+        height: 280px; /* Tamanho forçado */
+        margin: 0 auto 30px auto; /* Centraliza */
+        border-radius: 50%;
+    }
+
+    /* A imagem ocupa 100% do container acima */
+    #perfil-avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Garante que não distorça */
+        border-radius: 50%;
+        border: 8px solid #fff; /* Borda branca grossa */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra elegante */
+        background-color: #f0f0f0;
+    }
+
+    /* Botão flutuante de editar */
+    .btn-edit-float {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: #fff;
+        color: #333;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        border: 2px solid #f0f0f0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+        text-decoration: none;
+    }
+    .btn-edit-float:hover {
+        transform: scale(1.1);
+        color: #000;
+    }
+
+    /* --- TEXTOS --- */
+    .saudacao {
+        margin: 0;
+        font-weight: 800;
+        font-size: 2.2rem;
+        color: #222;
+        letter-spacing: -1px;
+    }
+    .user-email {
+        color: #888;
+        margin: 10px 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    /* Caixa da Biografia */
+    .bio-box {
+        background: #f9f9f9;
+        padding: 25px;
+        border-radius: 16px;
+        margin: 25px auto;
+        max-width: 650px;
+        border: 1px solid #eee;
+    }
+    .user-bio {
+        white-space: pre-line;
+        margin: 0;
+        color: #555;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    /* Botão Editar Principal */
+    .btn-editar-main {
+        background-color: #000;
+        color: white;
+        padding: 15px 50px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: inline-block;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-editar-main:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        color: #fff;
+    }
+
+    /* --- MENU LATERAL --- */
+    .menu-opcoes {
+        display: flex; 
+        flex-direction: column; 
+        gap: 15px;
+    }
+    .menu-item {
+        padding: 20px;
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        border-radius: 16px;
+        transition: all 0.2s;
+        background-color: #fff;
+        border: 1px solid #eee;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    .menu-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+        border-color: #ddd;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        color: #000;
+    }
+    .menu-icon {
+        margin-right: 20px;
+        font-size: 1.5rem;
+        width: 30px;
+        text-align: center;
+    }
+    
+    .acao-logout { color: #dc3545; }
+    .acao-logout:hover { background-color: #fff5f5; border-color: #ffcdd2; }
+    
+    .acao-deletar { color: #999; font-size: 1rem; border: none; background: transparent; }
+    .acao-deletar:hover { background: #f0f0f0; color: #dc3545; }
+</style>
 {% endblock %}
 
 {% block content %}
 
 <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
 
-    <h1 class="main-title" style="text-align: center; margin-bottom: 30px; color: #333;">Meu Perfil</h1>
+    <h1 class="main-title">Meu Perfil</h1>
 
-    <div class="perfil-card" style="background: #fff; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 40px 30px;">
+    <div class="perfil-card">
 
         <!-- CABEÇALHO DO PERFIL -->
         <div class="perfil-header" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
             
-            <!-- 
-                ÁREA DA FOTO (AVATAR) - AUMENTADO PARA 280px 
-                Nota: A propriedade 'overflow: hidden' garante que nada saia do círculo.
-            -->
-            <div class="perfil-avatar-container" style="position: relative; width: 280px; height: 280px; margin-bottom: 25px; border-radius: 50%;">
+            <!-- ÁREA DA FOTO (AVATAR) -->
+            <div class="perfil-avatar-container">
                 {% if perfil.foto_perfil %}
                     <img id="perfil-avatar-img" 
                          src="{{ perfil.foto_perfil.url }}" 
-                         alt="Foto de Perfil" 
-                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 6px solid #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                         alt="Foto de Perfil">
                 {% else %}
                     <img id="perfil-avatar-img" 
                          src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&font-size=0.5&bold=true" 
-                         alt="Avatar Padrão" 
-                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 6px solid #fff; box-shadow: 0 5px 20px rgba(0,0,0,0.2);">
+                         alt="Avatar Padrão">
                 {% endif %}
 
-                <!-- Botão de Editar Flutuante (Aumentado para acompanhar) -->
-                <a href="{% url 'Echo_app:perfil_editar' %}" title="Alterar foto" 
-                   style="position: absolute; bottom: 15px; right: 15px; background: #fff; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; font-size: 28px; border: 2px solid #f0f0f0;">
+                <!-- Botão de Editar Flutuante -->
+                <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-edit-float" title="Alterar foto">
                     ✎
                 </a>
             </div>
             
             <!-- INFO DO USUÁRIO -->
             <div class="perfil-info" style="width: 100%;">
-                <h3 class="saudacao" style="margin: 0; font-weight: 800; font-size: 2rem;">
+                <h3 class="saudacao">
                     {{ request.user.first_name }} {{ request.user.last_name }}
                 </h3>
-                <p class="user-email" style="color: #6c757d; margin: 8px 0; font-size: 1.2rem;">{{ request.user.email }}</p>
+                <p class="user-email">{{ request.user.email }}</p>
 
                 {% if perfil.biografia %}
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 25px auto; max-width: 650px;">
-                        <p class="user-bio" style="white-space: pre-line; margin: 0; color: #555; font-size: 1.1rem; line-height: 1.6;">{{ perfil.biografia }}</p>
+                    <div class="bio-box">
+                        <p class="user-bio">{{ perfil.biografia }}</p>
                     </div>
                 {% endif %}
 
                 <div style="margin-top: 30px;">
-                    <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-editar" style="background-color: #333; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <a href="{% url 'Echo_app:perfil_editar' %}" class="btn-editar-main">
                         Editar Perfil
                     </a>
                 </div>
@@ -66,43 +216,35 @@
         <hr class="perfil-divider" style="margin: 50px 0; border: 0; border-top: 1px solid #eee;">
 
         <!-- MENU DE OPÇÕES -->
-        <nav class="menu-opcoes" style="display: flex; flex-direction: column; gap: 15px;">
-            <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; transition: all 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">❤️</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Notícias Curtidas</span>
+        <nav class="menu-opcoes">
+            <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}">
+                <span class="menu-icon">❤️</span> 
+                <span>Notícias Curtidas</span>
             </a>
 
-            <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; transition: all 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">🔖</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Notícias Salvas</span>
+            <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}">
+                <span class="menu-icon">🔖</span> 
+                <span>Notícias Salvas</span>
             </a>
 
-            <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; transition: all 0.2s; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">⚙️</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Configurações da Conta</span>
+            <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}">
+                <span class="menu-icon">⚙️</span> 
+                <span>Configurações da Conta</span>
             </a>
 
             <hr style="margin: 20px 0; border-top: 1px solid #eee;">
 
-            <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}" style="padding: 20px; text-decoration: none; color: #dc3545; display: flex; align-items: center; border-radius: 12px; transition: all 0.2s;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">🚪</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Sair da Conta</span>
+            <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}">
+                <span class="menu-icon">🚪</span> 
+                <span>Sair da Conta</span>
             </a>
             
-            <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}" style="padding: 20px; text-decoration: none; color: #6c757d; font-size: 1.1rem; display: flex; align-items: center; border-radius: 12px; transition: all 0.2s;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">❌</span> 
+            <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}">
+                <span class="menu-icon">❌</span> 
                 <span>Excluir Conta Permanentemente</span>
             </a>
         </nav>
     </div>
 </div>
 
-<style>
-    .menu-item:hover {
-        background-color: #fff !important;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        transform: translateY(-2px);
-        border-color: #ddd !important;
-    }
-</style>
 {% endblock %}
