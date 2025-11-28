@@ -2,20 +2,14 @@
 {% load static %}
 
 {% block content %}
-<!-- 
-    ESTILOS INLINE (DENTRO DO CONTEÚDO)
-    Inclui compensação matemática para o zoom de 0.75 do seu site.
--->
+<!-- ESTILOS GERAIS PARA O FORMULÁRIO (LAYOUT) -->
 <style>
-    /* --- ESTRUTURA GERAL --- */
     .edit-profile-container {
         max-width: 900px;
         margin: 20px auto;
-        padding: 0 20px;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
     }
-
     .edit-profile-card {
         background: #fff;
         border-radius: 16px;
@@ -23,7 +17,6 @@
         padding: 40px;
         border: 1px solid #e0e0e0;
     }
-
     .page-title {
         text-align: center;
         margin-bottom: 40px;
@@ -31,8 +24,6 @@
         font-size: 2.5rem;
         color: #1a1a1a;
     }
-
-    /* --- ÁREA DO AVATAR --- */
     .avatar-area {
         display: flex;
         flex-direction: column;
@@ -41,64 +32,14 @@
         border-bottom: 1px solid #eee;
         padding-bottom: 30px;
     }
-
-    .avatar-wrapper {
-        position: relative;
-        /* CORREÇÃO MATEMÁTICA PARA O ZOOM 0.75:
-           340px no CSS * 0.75 zoom = 255px visíveis (Tamanho Grande Real)
-        */
-        width: 340px !important; 
-        height: 340px !important;
-        
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        border-radius: 50%;
-        
-        /* Remove fundos e paddings antigos */
-        background-color: transparent !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        
-        /* Borda no wrapper */
-        border: 8px solid #fff; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        box-sizing: border-box !important;
-    }
-
-    .avatar-wrapper:hover {
-        transform: scale(1.02);
-    }
-
-    .avatar-img {
-        /* Força a imagem a preencher 100% dos 340px */
-        width: 100% !important;
-        height: 100% !important;
-        min-width: 100% !important;
-        min-height: 100% !important;
-        
-        border-radius: 50% !important;
-        object-fit: cover !important;
-        
-        border: none !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        display: block !important;
-        background-color: #eee; /* Cor de fundo enquanto carrega */
-    }
-
-    /* Ícone de câmera */
     .edit-badge {
         position: absolute;
-        bottom: 20px;
-        right: 20px;
-        width: 70px; /* Aumentado para compensar o zoom */
+        bottom: 25px;
+        right: 25px;
+        width: 70px;
         height: 70px;
         background: #1a1a1a;
-        border: 4px solid #fff;
+        border: 5px solid #fff;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -107,174 +48,65 @@
         font-size: 32px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         z-index: 10;
+        pointer-events: none;
     }
-
-    .helper-text {
-        font-size: 1.2rem;
-        color: #666;
-        font-weight: 600;
-        margin-top: 10px;
-    }
-
-    /* --- FORMULÁRIO ESTILIZADO MANUALMENTE --- */
-    .form-row {
-        display: flex;
-        gap: 30px;
-        margin-bottom: 25px;
-    }
-    
-    .form-col {
-        flex: 1;
-    }
-
+    /* FORMULÁRIO */
+    .form-row { display: flex; gap: 30px; margin-bottom: 25px; }
+    .form-col { flex: 1; }
     .custom-label {
-        display: block;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #444;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        display: block; font-weight: 700; margin-bottom: 10px; color: #444;
+        font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;
     }
-
     .custom-input {
-        width: 100%;
-        padding: 16px 20px;
-        font-size: 1.1rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        background-color: #f9f9f9;
-        box-sizing: border-box; /* Essencial */
-        transition: all 0.3s;
-        font-family: inherit;
-        color: #333;
+        width: 100%; padding: 16px 20px; font-size: 1.1rem; border: 2px solid #e0e0e0;
+        border-radius: 12px; background-color: #f9f9f9; box-sizing: border-box;
+        transition: all 0.3s; font-family: inherit; color: #333;
     }
-
     .custom-input:focus {
-        background-color: #fff;
-        border-color: #dc2626; /* Vermelho */
-        outline: none;
+        background-color: #fff; border-color: #dc2626; outline: none;
         box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
     }
-
-    textarea.custom-input {
-        resize: vertical;
-        min-height: 150px;
-        line-height: 1.5;
-    }
-
-    /* --- BOTÕES --- */
-    .btn-container {
-        display: flex;
-        gap: 20px;
-        margin-top: 40px;
-    }
-
+    textarea.custom-input { resize: vertical; min-height: 150px; line-height: 1.5; }
+    /* BOTÕES */
+    .btn-container { display: flex; gap: 20px; margin-top: 40px; }
     .btn-action {
-        flex: 1;
-        padding: 18px;
-        border-radius: 50px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        text-align: center;
-        text-decoration: none;
-        cursor: pointer;
-        border: none;
-        transition: transform 0.2s, box-shadow 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        flex: 1; padding: 18px; border-radius: 50px; font-size: 1.1rem; font-weight: 700;
+        text-align: center; text-decoration: none; cursor: pointer; border: none;
+        display: flex; align-items: center; justify-content: center;
     }
-
-    .btn-cancel {
-        background: #fff;
-        color: #666;
-        border: 2px solid #e0e0e0;
-    }
-    .btn-cancel:hover {
-        background: #f5f5f5;
-        color: #333;
-    }
-
+    .btn-cancel { background: #fff; color: #666; border: 2px solid #e0e0e0; }
+    .btn-cancel:hover { background: #f5f5f5; color: #333; }
     .btn-save {
-        flex: 2;
-        background-color: #dc2626;
-        color: white;
+        flex: 2; background-color: #dc2626; color: white;
         box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
     }
-    .btn-save:hover {
-        background-color: #b91c1c;
-        transform: translateY(-3px);
-    }
-
-    /* --- MODAL --- */
+    .btn-save:hover { background-color: #b91c1c; transform: translateY(-3px); }
+    
+    /* MODAL */
     .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.85);
-        z-index: 9999;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(5px);
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); z-index: 9999; align-items: center;
+        justify-content: center; backdrop-filter: blur(5px);
     }
-
     .modal-content {
-        background: #fff;
-        padding: 40px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 900px;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-        text-align: center;
+        background: #fff; padding: 40px; border-radius: 20px; width: 90%;
+        max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative; text-align: center;
     }
-
     .close-modal {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 40px;
-        cursor: pointer;
-        color: #999;
-        line-height: 1;
+        position: absolute; top: 20px; right: 30px; font-size: 40px; cursor: pointer;
+        color: #999; line-height: 1;
     }
-    .close-modal:hover { color: #333; }
-
-    /* Grelha de Avatares */
     .modal-grid {
-        display: grid;
-        /* Ícones grandes compensados para o zoom */
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 25px;
-        margin-top: 30px;
-        padding: 10px;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 25px; margin-top: 30px; padding: 10px;
     }
-
     .modal-option-img {
-        width: 100%;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 5px solid transparent;
-        transition: transform 0.2s;
-        object-fit: cover;
-        background-color: #eee;
+        width: 100%; aspect-ratio: 1; border-radius: 50%; cursor: pointer;
+        border: 5px solid transparent; transition: transform 0.2s;
+        object-fit: cover; background-color: #eee;
     }
-    .modal-option-img:hover {
-        transform: scale(1.1);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    }
-
-    /* Responsividade */
-    @media (max-width: 700px) {
-        .form-row { flex-direction: column; gap: 20px; }
-        .avatar-wrapper { width: 260px !important; height: 260px !important; }
-    }
+    .modal-option-img:hover { transform: scale(1.1); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    @media (max-width: 700px) { .form-row { flex-direction: column; gap: 20px; } }
 </style>
 
 <div class="edit-profile-container">
@@ -287,20 +119,24 @@
             <input type="hidden" name="avatar_escolhido" id="avatar_escolhido">
             <input type="file" name="foto_perfil" id="real-file-input" style="display: none;" accept="image/*">
 
-            <!-- 1. FOTO PRINCIPAL GIGANTE -->
+            <!-- 1. FOTO PRINCIPAL GIGANTE (Estilo Inline FORÇADO) -->
             <div class="avatar-area">
-                <div class="avatar-wrapper" onclick="openModal()">
+                <div class="avatar-wrapper" onclick="openModal()" 
+                     style="width: 400px !important; height: 400px !important; min-width: 400px !important; min-height: 400px !important; border-radius: 50% !important; margin-bottom: 20px; cursor: pointer; position: relative; display: block;">
+                    
                     {% if perfil.foto_perfil %}
-                        <img id="main-preview" src="{{ perfil.foto_perfil.url }}" class="avatar-img" alt="Avatar Atual">
+                        <img id="main-preview" src="{{ perfil.foto_perfil.url }}?v={% now 'U' %}" alt="Avatar Atual"
+                             style="width: 100% !important; height: 100% !important; min-width: 100% !important; min-height: 100% !important; border-radius: 50% !important; object-fit: cover !important; border: 8px solid #fff !important; box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important; display: block !important;">
                     {% else %}
-                        <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&bold=true" class="avatar-img" alt="Avatar Padrão">
+                        <img id="main-preview" src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&bold=true" alt="Avatar Padrão"
+                             style="width: 100% !important; height: 100% !important; min-width: 100% !important; min-height: 100% !important; border-radius: 50% !important; object-fit: cover !important; border: 8px solid #fff !important; box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important; display: block !important;">
                     {% endif %}
                     
                     <div class="edit-badge">
                         <i class="bi bi-camera-fill"></i>
                     </div>
                 </div>
-                <p class="helper-text">Toque na foto para alterar</p>
+                <p style="font-size: 1.2rem; color: #666; font-weight: 600; margin-top: 10px;">Toque na foto para alterar</p>
             </div>
 
             <!-- 2. FORMULÁRIO DE DADOS -->
