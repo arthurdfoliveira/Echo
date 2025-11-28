@@ -5,6 +5,65 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
+
+<style>
+    .filter-section {
+        position: relative;
+        z-index: 100000; /* Máximo */
+        display: flex;
+        flex-direction: column;
+        gap: 15px; 
+        margin-bottom: 25px;
+        pointer-events: none; /* O clique passa por aqui... */
+    }
+    
+    .category-filters {
+        position: relative; 
+        z-index: 100010; 
+        display: flex;
+        flex-wrap: nowrap; 
+        overflow-x: auto; 
+        padding-bottom: 8px;
+        pointer-events: none; /* ... e por aqui */
+    }
+
+    /* 2. RE-ATIVA O CLIQUE NO BOTÃO */
+    .filter-button {
+        display: inline-flex; 
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        text-decoration: none;
+        padding: 8px 16px;
+        margin-right: 8px;
+        border-radius: 9999px; 
+        transition: background-color 0.2s, color 0.2s;
+        border: 1px solid #ccc; 
+        background-color: #f7f7f7;
+        color: #333;
+        cursor: pointer;
+        position: relative; 
+        z-index: 100020; 
+        user-select: none;
+        pointer-events: auto !important; /* SÓ AQUI O CLIQUE PEGA */
+    }
+    
+    .filter-button:hover {
+        background-color: #e0e0e0;
+    }
+    
+    .filter-button.active {
+        background-color: #dc3545; 
+        color: white;
+        border-color: #dc3545;
+    }
+
+    .search-form {
+        position: relative;
+        z-index: 99990; 
+        pointer-events: auto !important; /* Pesquisa também clicável */
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -12,9 +71,48 @@
 <div class="content-container">
 
     <h1 class="main-title">Meus Salvos</h1>
+
+    <div class="filter-section">
     
-    <div class="curtidas-header"> 
-        <p class="curtidas-info">Você tem um total de <strong>{{ noticias_salvas|length }}</strong> itens salvos.</p>
+    <form method="GET" class="search-form" action="{% url 'Echo_app:noticias_salvas' %}">
+        <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q|default:'' }}">
+        
+        {% if categoria_ativa %}
+            <input type="hidden" name="categoria" value="{{ categoria_ativa }}">
+        {% endif %}
+
+        <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+    
+    <div class="category-filters">
+        {% url 'Echo_app:noticias_salvas' as salvos_url %}
+        {% with q_param=request.GET.q|default:'' %}
+        
+        <a href="{{ salvos_url }}?q={{ q_param }}" 
+           class="filter-button {% if not categoria_ativa %}active{% endif %}">
+            Tudo
+        </a>
+        
+        {% for categoria in categorias_disponiveis %}
+            <a href="{{ salvos_url }}?categoria={{ categoria.nome }}&q={{ q_param }}"
+               class="filter-button {% if categoria_ativa == categoria.nome %}active{% endif %}">
+                {{ categoria.nome }}
+            </a>
+        {% endfor %}
+        
+        {% endwith %}
+    </div>
+    </div>
+    
+    <div class="salvas-header"> 
+        <p class="curtidas-info">
+            {% if categoria_ativa %}
+                Filtrando por: <strong>{{ categoria_ativa }}</strong> —
+            {% endif %}
+            Total: <strong>{{ total_salvos }}</strong> salvos.
+        </p>    
     </div>
 
     {% if noticias_salvas %}
@@ -60,8 +158,8 @@
                                 {{ noticia.data_publicacao|date:"d/m/Y \à\s H:i" }}
                             </span>
                             
-                            <span class="meta-curtida">
-                                <i class="fas fa-bookmark"></i>
+                            <span class="meta-salva">
+                                <i class="fa-solid fa-star"></i>
                             </span>
                         </div>
                     </div>
