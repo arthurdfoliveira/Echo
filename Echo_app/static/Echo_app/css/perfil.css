@@ -1,6 +1,6 @@
 /*
 * Estilos para o template perfil.html
-* Versão Atualizada: Avatar Gigante e Layout Centralizado
+* Versão Atualizada: Suporte a Ícones de Imagem no Menu
 */
 
 /* Reset e Fonte */
@@ -33,24 +33,30 @@ body {
 }
 
 /* ====================================
-   1. HEADER E AVATAR (MODIFICADO)
+   1. HEADER E AVATAR
    ==================================== */
 .perfil-header {
     display: flex;
-    flex-direction: column; /* Centraliza tudo em coluna */
-    align-items: center;    /* Alinha no centro */
-    text-align: center;     /* Texto centralizado */
+    flex-direction: column; 
+    align-items: center;    
+    text-align: center;     
     padding-bottom: 30px;
 }
 
-/* O CULPADO FOI CORRIGIDO AQUI: AUMENTADO DE 100px PARA 250px */
 .perfil-avatar-container {
     position: relative;
     width: 250px; 
     height: 250px;
-    margin-bottom: 25px; /* Espaço embaixo da foto */
-    margin-right: 0;     /* Remove margem lateral antiga */
+    margin-bottom: 25px;
+    margin-right: 0;
     flex-shrink: 0;
+    /* Estilos do HTML in-line foram removidos para:
+       border-radius: 50%;
+       overflow: hidden;
+       box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+       Estes estilos devem ser aplicados no HTML ou garantir que o CSS abaixo funcione.
+       No HTML, adicionamos temporariamente !important para garantir o círculo.
+    */
 }
 
 .perfil-avatar {
@@ -58,39 +64,36 @@ body {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 6px solid #fff; /* Borda branca grossa */
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* Sombra elegante */
+    border: 6px solid #fff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     background-color: #f0f0f0;
 }
 
-/* Ícone de editar flutuante */
+/* Ícone de editar flutuante (Estilo adaptado do HTML in-line) */
 .edit-avatar-icon {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 20px;
+    right: 40px;
     background-color: #fff;
     border-radius: 50%;
-    width: 50px;  /* Aumentado */
-    height: 50px; /* Aumentado */
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     cursor: pointer;
     text-decoration: none;
     transition: transform 0.2s ease;
     border: 1px solid #eee;
+    font-size: 28px; /* Para o ícone ✎ */
+    color: #333;
+    z-index: 10;
 }
 
 .edit-avatar-icon:hover {
     transform: scale(1.1);
     background-color: #f9f9f9;
-}
-
-.edit-avatar-icon svg {
-    width: 24px;
-    height: 24px;
-    color: #333;
 }
 
 /* Informações do usuário */
@@ -124,6 +127,7 @@ body {
     padding: 15px 25px;
     border-radius: 12px;
     max-width: 600px;
+    white-space: pre-line; /* Mantido do estilo in-line */
 }
 
 .edit-profile-btn {
@@ -152,11 +156,11 @@ body {
 }
 
 /* ====================================
-   2. CATEGORIAS (MANTIDO E AJUSTADO)
+   2. CATEGORIAS (MANTIDO)
    ==================================== */
 .perfil-categorias {
     padding: 0 30px;
-    text-align: center; /* Centraliza as categorias */
+    text-align: center;
 }
 
 .categorias-title {
@@ -174,7 +178,7 @@ body {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Centraliza as pílulas */
+    justify-content: center;
     gap: 10px;
 }
 
@@ -189,7 +193,7 @@ body {
 }
 
 /* ====================================
-   3. MENU DE OPÇÕES (MAIS ESPAÇADO)
+   3. MENU DE OPÇÕES (AJUSTADO PARA ÍCONES DE IMAGEM)
    ==================================== */
 .menu-opcoes {
     display: flex;
@@ -220,6 +224,8 @@ body {
     background-color: #f9f9f9;
 }
 
+/* O wrapper dos ícones de imagem (curtidas/salvas) usa a classe .icon-wrapper.
+   O menu-icon é para os emojis restantes. */
 .menu-icon {
     display: flex;
     align-items: center;
@@ -228,6 +234,12 @@ body {
     width: 30px;
     height: 30px;
     margin-right: 15px;
+}
+
+/* Estilo para o texto (span) dentro do menu-item */
+.menu-item > span:not(.menu-icon):not(.icon-wrapper) {
+    font-weight: 600; 
+    font-size: 1.2rem;
 }
 
 .menu-item::after {
@@ -267,7 +279,7 @@ body {
 /* Responsividade Mobile */
 @media (max-width: 480px) {
     .perfil-avatar-container {
-        width: 180px; /* Um pouco menor no celular */
+        width: 180px;
         height: 180px;
     }
     .main-title {

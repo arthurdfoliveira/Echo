@@ -5,122 +5,221 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'Echo_app/css/perfil.css' %}?v={% now 'U' %}">
+
+<style>
+    /* ----------------------------------------------------
+     * ESTILOS DE ÍCONES (Controle de Hover para Imagens e Tamanho Aumentado)
+     * ---------------------------------------------------- */
+    
+    .menu-item {
+        position: relative;
+    }
+
+    /* 🚨 TAMANHO UNIFICADO: 80px para todos os ícones (curtidas/salvas/configurações/sair/excluir) 🚨 */
+    .icon-wrapper {
+        width: 80px; 
+        height: 80px;
+        margin-right: 30px; 
+        position: relative;
+        min-width: 80px; 
+    }
+
+    /* Estilo base para todas as imagens de ícones */
+    .icon-wrapper img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: opacity 0.2s;
+    }
+
+    /* 1. Ícones Curtidas (JÁ EXISTENTE) */
+    .curtidas .icon-filled,
+    .curtidas:hover .icon-empty {
+        display: none; 
+        opacity: 0;
+    }
+    .curtidas .icon-empty {
+        display: block; 
+        opacity: 1;
+    }
+    .curtidas:hover .icon-filled {
+        display: block;
+        opacity: 1;
+    }
+
+    /* 2. Ícones Salvas (JÁ EXISTENTE) */
+    .salvas .icon-filled,
+    .salvas:hover .icon-empty {
+        display: none;
+        opacity: 0;
+    }
+    .salvas .icon-empty {
+        display: block;
+        opacity: 1;
+    }
+    .salvas:hover .icon-filled {
+        display: block;
+        opacity: 1;
+    }
+    
+    /* 3. Ícone Sair (NOVO HOVER) */
+    .acao-logout .icon-filled,
+    .acao-logout:hover .icon-empty {
+        display: none;
+        opacity: 0;
+    }
+    .acao-logout .icon-empty {
+        display: block;
+        opacity: 1;
+    }
+    .acao-logout:hover .icon-filled {
+        display: block;
+        opacity: 1;
+    }
+    
+    /* 4. Ícone Excluir (NOVO HOVER) */
+    .acao-deletar .icon-filled,
+    .acao-deletar:hover .icon-empty {
+        display: none;
+        opacity: 0;
+    }
+    .acao-deletar .icon-empty {
+        display: block;
+        opacity: 1;
+    }
+    .acao-deletar:hover .icon-filled {
+        display: block;
+        opacity: 1;
+    }
+
+    /* * REMOVEMOS O .menu-icon DESTE BLOCO, JÁ QUE TODOS USAM O .icon-wrapper */
+
+    /* * CORREÇÕES DE ESTILO TEMPORÁRIAS (Mantidas) */
+    .perfil-avatar-container {
+        border-radius: 50% !important; 
+        overflow: hidden !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* Adaptando o Botão Editar do HTML antigo ao novo CSS de avatar */
+    .edit-avatar-icon {
+        position: absolute;
+        bottom: 20px; 
+        right: 40px; 
+        background: #fff; 
+        border-radius: 50%; 
+        width: 60px; 
+        height: 60px; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        color: #333; 
+        text-decoration: none; 
+        font-size: 28px; 
+        z-index: 10;
+        transition: transform 0.2s ease;
+    }
+    .edit-avatar-icon:hover {
+        transform: scale(1.1);
+        background-color: #f9f9f9;
+    }
+    
+</style>
 {% endblock %}
 
 {% block content %}
 
-<div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+<div class="container"> 
+    <h1 class="main-title">Meu Perfil</h1>
 
-    <h1 class="main-title" style="text-align: center; margin-bottom: 30px; font-weight: 800; color: #333;">Meu Perfil</h1>
-
-    <div class="perfil-card" style="background: #fff; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 40px 20px;">
-
-        <div class="perfil-header" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+    <div class="perfil-card"> 
+        <div class="perfil-header">
             
-            <!-- 
-                AVATAR GIGANTE (VISUALIZAR) 
-                Tamanho: 300px (para compensar o zoom de 0.75 do site)
-            -->
-            <div class="perfil-avatar-container" 
-                 style="
-                    position: relative !important; 
-                    width: 300px !important; 
-                    height: 300px !important; 
-                    min-width: 300px !important;
-                    min-height: 300px !important;
-                    margin: 0 auto 25px auto !important; 
-                    border-radius: 50% !important;
-                    overflow: hidden !important; /* Corta o que sobrar */
-                    border: 8px solid #fff !important;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-                    background: transparent !important;
-                    padding: 0 !important;
-                 ">
+            <div class="perfil-avatar-container">
                 
                 {% if perfil.foto_perfil %}
                     <img id="perfil-avatar-img" 
                          src="{{ perfil.foto_perfil.url }}?v={% now 'U' %}" 
                          alt="Foto de Perfil"
-                         style="
-                            width: 100% !important; 
-                            height: 100% !important; 
-                            object-fit: cover !important; /* OBRIGATÓRIO: Preenche o círculo */
-                            border-radius: 0 !important;
-                            border: none !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            display: block !important;
-                         ">
+                         class="perfil-avatar"> 
                 {% else %}
                     <img id="perfil-avatar-img" 
                          src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=0D8ABC&color=fff&size=512&font-size=0.5&bold=true" 
                          alt="Avatar Padrão" 
-                         style="
-                            width: 100% !important; 
-                            height: 100% !important; 
-                            object-fit: cover !important;
-                            border: none !important;
-                            margin: 0 !important;
-                            display: block !important;
-                         ">
+                         class="perfil-avatar"> 
                 {% endif %}
 
-                <!-- Botão Editar -->
                 <a href="{% url 'Echo_app:perfil_editar' %}" title="Editar foto" 
-                   style="position: absolute; bottom: 20px; right: 40px; background: #fff; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; font-size: 28px; z-index: 10;">
+                   class="edit-avatar-icon">
                     ✎
                 </a>
             </div>
             
-            <!-- INFO -->
-            <div class="perfil-info" style="width: 100%;">
-                <h3 class="saudacao" style="margin: 0; font-weight: 800; font-size: 2rem;">
+            <div class="perfil-info">
+                <h3 class="saudacao">
                     {{ request.user.first_name }} {{ request.user.last_name }}
                 </h3>
-                <p class="user-email" style="color: #6c757d; margin: 8px 0; font-size: 1.2rem;">{{ request.user.email }}</p>
+                <p class="user-email">{{ request.user.email }}</p>
 
                 {% if perfil.biografia %}
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 25px auto; max-width: 650px;">
-                        <p style="white-space: pre-line; margin: 0; color: #555; font-size: 1.1rem; line-height: 1.6;">{{ perfil.biografia }}</p>
+                    <div class="user-bio">
+                        <p style="white-space: pre-line; margin: 0;">{{ perfil.biografia }}</p>
                     </div>
                 {% endif %}
 
-                <div style="margin-top: 30px;">
-                    <a href="{% url 'Echo_app:perfil_editar' %}" style="background-color: #333; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <div style="margin-top: 20px;">
+                    <a href="{% url 'Echo_app:perfil_editar' %}" class="edit-profile-btn">
                         Editar Perfil
                     </a>
                 </div>
             </div>
         </div>
         
-        <hr class="perfil-divider" style="margin: 50px 0; border: 0; border-top: 1px solid #eee;">
+        <hr class="perfil-divider">
 
-        <!-- MENU -->
-        <nav class="menu-opcoes" style="display: flex; flex-direction: column; gap: 15px;">
-            <a class="menu-item" href="{% url 'Echo_app:noticias_curtidas' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">❤️</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Notícias Curtidas</span>
+        <nav class="menu-opcoes">
+            <a class="menu-item curtidas" href="{% url 'Echo_app:noticias_curtidas' %}">
+                <span class="icon-wrapper">
+                    <img src="{% static 'Echo_app/images/curtida.png' %}" alt="Curtidas Vazio" class="icon-empty">
+                    <img src="{% static 'Echo_app/images/curtida_cheia.png' %}" alt="Curtidas Cheio" class="icon-filled">
+                </span>
+                <span>Notícias Curtidas</span>
             </a>
 
-            <a class="menu-item" href="{% url 'Echo_app:noticias_salvas' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">🔖</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Notícias Salvas</span>
+            <a class="menu-item salvas" href="{% url 'Echo_app:noticias_salvas' %}">
+                <span class="icon-wrapper">
+                    <img src="{% static 'Echo_app/images/salvar.png' %}" alt="Salvas Vazio" class="icon-empty">
+                    <img src="{% static 'Echo_app/images/salvar_cheia.png' %}" alt="Salvas Cheio" class="icon-filled">
+                </span>
+                <span>Notícias Salvas</span>
             </a>
 
-            <a class="menu-item" href="{% url 'Echo_app:configuracoes_conta' %}" style="padding: 20px; text-decoration: none; color: #333; display: flex; align-items: center; border-radius: 12px; background-color: #fcfcfc; border: 1px solid #f0f0f0;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">⚙️</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Configurações da Conta</span>
+            <a class="menu-item configuracoes" href="{% url 'Echo_app:configuracoes_conta' %}">
+                <span class="icon-wrapper">
+                    <img src="{% static 'Echo_app/images/configuracao.png' %}" alt="Configurações">
+                </span>
+                <span>Configurações da Conta</span>
             </a>
 
-            <hr style="margin: 20px 0; border-top: 1px solid #eee;">
+            <hr class="menu-divider">
 
-            <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}" style="padding: 20px; text-decoration: none; color: #dc3545; display: flex; align-items: center; border-radius: 12px;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">🚪</span> 
-                <span style="font-weight: 600; font-size: 1.2rem;">Sair da Conta</span>
+            <a class="menu-item acao-logout" href="{% url 'Echo_app:sair' %}">
+                <span class="icon-wrapper">
+                    <img src="{% static 'Echo_app/images/sair.png' %}" alt="Sair Vazio" class="icon-empty">
+                    <img src="{% static 'Echo_app/images/sair_cheio.png' %}" alt="Sair Cheio" class="icon-filled">
+                </span> 
+                <span>Sair da Conta</span>
             </a>
             
-            <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}" style="padding: 20px; text-decoration: none; color: #6c757d; font-size: 1.1rem; display: flex; align-items: center; border-radius: 12px;">
-                <span style="margin-right: 20px; font-size: 1.5rem;">❌</span> 
+            <a class="menu-item acao-deletar" href="{% url 'Echo_app:excluir_conta' %}">
+                <span class="icon-wrapper">
+                    <img src="{% static 'Echo_app/images/excluir.png' %}" alt="Excluir Vazio" class="icon-empty">
+                    <img src="{% static 'Echo_app/images/excluir_cheio.png' %}" alt="Excluir Cheio" class="icon-filled">
+                </span> 
                 <span>Excluir Conta Permanentemente</span>
             </a>
         </nav>
