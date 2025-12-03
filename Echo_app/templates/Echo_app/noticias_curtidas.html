@@ -1,159 +1,61 @@
-{% extends "Echo_app/base.html" %}
-{% load static %}
-
-{% block title %}Minhas Curtidas{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'Echo_app/css/lista_noticias_jornal.css' %}?v={% now 'U' %}">
-
-<style>
-    /* 1. GARANTIA DE CLICABILIDADE */
-    .filter-section {
-        position: relative;
-        z-index: 100000; /* Máximo */
-        display: flex;
-        flex-direction: column;
-        gap: 15px; 
-        margin-bottom: 25px;
-        pointer-events: none; /* O clique passa por aqui... */
-    }
-    
-    .category-filters {
-        position: relative; 
-        z-index: 100010; 
-        display: flex;
-        flex-wrap: nowrap; 
-        overflow-x: auto; 
-        padding-bottom: 8px;
-        pointer-events: none; /* ... e por aqui */
-    }
-
-    /* 2. RE-ATIVA O CLIQUE NO BOTÃO */
-    .filter-button {
-        display: inline-flex; 
-        align-items: center;
-        justify-content: center;
-        white-space: nowrap;
-        text-decoration: none;
-        padding: 8px 16px;
-        margin-right: 8px;
-        border-radius: 9999px; 
-        transition: background-color 0.2s, color 0.2s;
-        border: 1px solid #ccc; 
-        background-color: #f7f7f7;
-        color: #333;
-        cursor: pointer;
-        position: relative; 
-        z-index: 100020; 
-        user-select: none;
-        pointer-events: auto !important; /* SÓ AQUI O CLIQUE PEGA */
-    }
-    
-    .filter-button:hover {
-        background-color: #e0e0e0;
-    }
-    
-    .filter-button.active {
-        background-color: #dc3545; 
-        color: white;
-        border-color: #dc3545;
-    }
-
-    .search-form {
-        position: relative;
-        z-index: 99990; 
-        pointer-events: auto !important; /* Pesquisa também clicável */
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 
-<div class="content-container">
+<div class="curtidas-container">
 
-    <h1 class="main-title">Minhas Curtidas</h1>
-    
+    <h1 class="titulo-pagina">Curtidas</h1>
+
+    <!-- SEARCH -->
+    <form method="GET" class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Pesquisa" value="{{ request.GET.q }}">
+    </form>
+
     <!-- FILTROS -->
-    <div class="filter-section">
-        
-        <!-- PESQUISA -->
-        <form method="GET" class="search-form" action="{% url 'Echo_app:noticias_curtidas' %}">
-            <input type="text" name="q" placeholder="Pesquisar..." class="search-input" value="{{ request.GET.q|default:'' }}">
-            
-            {% if categoria_ativa %}
-                <input type="hidden" name="categoria" value="{{ categoria_ativa }}">
-            {% endif %}
+    <div class="filtros-container">
+        <a href="?q={{ request.GET.q }}" class="filtro {% if not categoria_ativa %}active{% endif %}">Tudo</a>
 
-            <button type="submit" class="search-button">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-        
-        <!-- BOTÕES DE CATEGORIA -->
-        <div class="category-filters">
-            
-            {% url 'Echo_app:noticias_curtidas' as curtidas_url %}
-            {% with q_param=request.GET.q|default:'' %}
-            
-            <!-- TUDO -->
-            <a href="{{ curtidas_url }}?q={{ q_param }}" 
-               class="filter-button {% if not categoria_ativa %}active{% endif %}">
-                Tudo
-            </a>
-            
-            <!-- CATEGORIAS -->
-            {% for categoria in categorias_disponiveis %}
-                <a href="{{ curtidas_url }}?categoria={{ categoria.nome }}&q={{ q_param }}" 
-                   class="filter-button {% if categoria_ativa == categoria.nome %}active{% endif %}">
-                    {{ categoria.nome }}
-                </a>
-            {% endfor %}
-            
-            {% endwith %}
-
-        </div>
+        {% for categoria in categorias_disponiveis %}
+        <a href="?categoria={{ categoria.nome }}&q={{ request.GET.q }}"
+           class="filtro {% if categoria_ativa == categoria.nome %}active{% endif %}">
+            {{ categoria.nome }}
+        </a>
+        {% endfor %}
     </div>
 
-    <div class="curtidas-header">
-        <p class="curtidas-info">
-            {% if categoria_ativa %}
-                Filtrando por: <strong>{{ categoria_ativa }}</strong>
-            {% endif %}
-            Total: <strong>{{ total_curtidas }}</strong> notícias.
-        </p>
+    <!-- BOTÕES SUPERIORES -->
+    <div class="top-actions">
+        <button class="btn-cancelar">Cancelar</button>
+        <button class="btn-descurtir">
+            Descurtir ({{ noticias_curtidas|length }})
+        </button>
     </div>
 
-    {% if noticias_curtidas %}
-        <div class="noticias-listagem">
-            {% for noticia in noticias_curtidas %}
-            <article class="noticia-item">
-                <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="noticia-link">
-                    <div class="noticia-imagem-box">
-                        {% if noticia.imagem %}
-                            <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}" class="noticia-imagem">
-                        {% else %}
-                            <div class="imagem-placeholder"><span>Sem Imagem</span></div>
-                        {% endif %}
-                    </div>
-                    <div class="noticia-body">
-                        <span class="noticia-tag">{{ noticia.categoria.nome|default:"Geral" }}</span>
-                        <h2 class="noticia-titulo">{{ noticia.titulo }}</h2>
-                        <p class="noticia-resumo">{{ noticia.conteudo|safe|striptags|truncatechars:150 }}</p>
-                        <div class="noticia-meta">
-                            <span class="meta-data">{{ noticia.data_publicacao|date:"d/m/Y \à\s H:i" }}</span>
-                            <span class="meta-curtida"><i class="fas fa-heart"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="empty-state">
-            <h3>Nenhuma notícia encontrada.</h3>
-            <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">Voltar ao Dashboard</a>
-        </div>
-    {% endif %}
+    <!-- GRID -->
+    <div class="grid-curtidas">
+
+        {% for noticia in noticias_curtidas %}
+        <label class="card-noticia">
+
+            <!-- IMAGEM -->
+            <div class="img-area">
+                {% if noticia.imagem %}
+                    <img src="{{ noticia.imagem.url }}" class="img" alt="">
+                {% else %}
+                    <div class="img placeholder"></div>
+                {% endif %}
+
+                <div class="categoria-chip">{{ noticia.categoria.nome }}</div>
+
+                <div class="titulo-noticia">{{ noticia.titulo }}</div>
+
+                <input type="checkbox" name="descurtir_ids" value="{{ noticia.id }}" class="checkbox">
+            </div>
+
+        </label>
+        {% endfor %}
+
+    </div>
+
 </div>
 
 {% endblock %}
