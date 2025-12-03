@@ -124,3 +124,23 @@ Com ele, o público pode **navegar** pelo portal com mais facilidade, **acessar 
   [Relatório](https://docs.google.com/document/d/1XjHNZ55Ojp-XdYE7mFOUtEuQm9QJk_qDLDxG13kPsxA/edit?tab=t.0)
   
 </details>
+
+<details>
+  <summary>- ✅ Semana 16 </summary>
+
+  Implementação do novo interior das notícias, aba de curtidas, aba de salvos, área de publicações, configurações da conta e pop-up.
+
+  Link do relatório de Programação em par
+  [Relatório](https://docs.google.com/document/d/1XjHNZ55Ojp-XdYE7mFOUtEuQm9QJk_qDLDxG13kPsxA/edit?tab=t.0)
+  
+</details>
+
+<details>
+  <summary>- ✅ Semana 17 </summary>
+
+  Implementação do novo interior das notícias, aba de curtidas, aba de salvos, área de publicações, configurações da conta e pop-up.
+
+  Link do relatório de Programação em par
+  [Relatório](https://docs.google.com/document/d/1XjHNZ55Ojp-XdYE7mFOUtEuQm9QJk_qDLDxG13kPsxA/edit?tab=t.0)
+  
+</details>
