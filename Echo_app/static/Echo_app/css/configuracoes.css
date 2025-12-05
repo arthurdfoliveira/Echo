@@ -1,0 +1,131 @@
+.config-container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+}
+
+/* O título principal da página */
+h2 {
+    font-weight: 700;
+    color: #333;
+    font-size: 1.75rem;
+}
+
+/* O link de voltar */
+.btn-back {
+    color: #666;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-back:hover {
+    color: #c02e3e; /* Vermelho da marca */
+    transform: translateX(-4px); /* Move levemente para a esquerda */
+}
+
+.card {
+    border: none; /* Remove borda padrão feia */
+    border-radius: 12px; /* Cantos mais arredondados */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); /* Sombra muito suave e moderna */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+/* Efeito ao passar o mouse no card (opcional, dá vida à tela) */
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* O cabeçalho de cada cartão */
+.card-header {
+    background-color: #fff; /* Fundo branco para ficar limpo */
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-header h5 {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre ícone e texto */
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.form-label {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: #c02e3e; /* Foco na cor da marca */
+    box-shadow: 0 0 0 0.2rem rgba(192, 46, 62, 0.15);
+}
+
+/* Botão Principal */
+.btn-primary {
+    background-color: #c02e3e;
+    border-color: #c02e3e;
+    font-weight: 600;
+    padding: 0.6rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #a02633;
+    border-color: #a02633;
+}
+
+.form-switch .form-check-input {
+    width: 3em; /* Switch um pouco mais largo */
+    height: 1.5em;
+    cursor: pointer;
+}
+
+/* Cor do switch quando ativado */
+.form-check-input:checked {
+    background-color: #2ecc71; /* Verde sucesso */
+    border-color: #2ecc71;
+}
+
+.form-check-label {
+    margin-left: 10px;
+    font-weight: 500;
+    color: #444;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+.card.border-danger {
+    border: 1px solid #ffeeba !important; /* Borda amarelada/vermelha sutil */
+}
+
+.card-header.bg-danger {
+    background-color: #fff5f5 !important; /* Fundo vermelho bem claro, não sólido */
+    color: #dc3545 !important; /* Texto vermelho */
+    border-bottom: 1px solid #ffebeb;
+}
+
+.btn-outline-danger {
+    border-width: 1.5px;
+    font-weight: 600;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}

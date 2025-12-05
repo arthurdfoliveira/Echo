@@ -3,11 +3,15 @@
 
 {% block title %}Configurações da Conta{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'Echo_app/css/configuracoes.css' %}?v={% now 'U' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4" style="max-width: 800px;">
+<div class="container mt-4 config-container">
     
     <div class="d-flex align-items-center mb-4">
-        <a href="{% url 'Echo_app:perfil' %}" class="text-decoration-none text-secondary me-3 fs-4">
+        <a href="{% url 'Echo_app:perfil' %}" class="text-decoration-none me-3 fs-4 btn-back">
             <i class="bi bi-arrow-left"></i> &larr;
         </a>
         <h2 class="mb-0">Configurações da Conta</h2>
