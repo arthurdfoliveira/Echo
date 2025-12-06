@@ -93,13 +93,16 @@ p.text-muted {
     display: flex;
     align-items: center; /* Centraliza verticalmente */
     padding: 1.5rem 2rem; /* Mais espaçamento interno */
-    background-color: #fff;
+    background-color: #fff; /* Fundo branco padrão (LIDA) */
 }
 
-/* ESTADO: NÃO LIDO */
+/* ESTADO: NÃO LIDO (Tonalidade Azulada CORRIGIDA) */
 .notificacao-card.list-group-item-primary {
-    background-color: #eef3f8;
-    border-left: 6px solid #c02e3e; /* Destaque lateral para não lidos */
+    /* Cor de fundo azul muito clara para dar a 'tonalidade azulada' */
+    background-color: #e0f7ff; /* Azul claro */
+    
+    /* Detalhe lateral: usa um azul mais forte para contraste e destaque */
+    border-left: 6px solid #4a90e2; /* Azul puro */
 }
 
 .notificacao-card.list-group-item-primary .mb-1.fw-bold {
@@ -145,4 +148,105 @@ p.text-muted {
     padding: 3rem !important;
     font-size: 1.2rem;
     color: #999;
+}
+/* =========================================
+   ESTILO DA PAGINAÇÃO (Final e Centralizado)
+   ========================================= */
+
+.pagination {
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+    display: flex;
+    justify-content: center; /* Garante a centralização horizontal do Bootstrap */
+    list-style: none;
+    padding: 0;
+}
+
+.page-item {
+    margin: 0 5px; 
+    border-radius: 25px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+/* Estilo do link (Botão Pílula) */
+.page-link {
+    height: 48px;
+    padding: 0 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    color: #c02e3e; 
+    border: 2px solid #c02e3e;
+    background-color: transparent;
+    font-weight: 700;
+    
+    border-radius: 25px; 
+    
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+/* Efeito Hover: Preenchimento e Brilho Forte */
+.page-link:hover, .page-link:focus {
+    background-color: #c02e3e; 
+    color: white; 
+    border-color: #c02e3e;
+    box-shadow: 0 0 20px rgba(192, 46, 62, 0.7); 
+}
+
+/* =========================================
+   CRIAÇÃO DAS SETAS COM CSS
+   ========================================= */
+
+.icone-seta {
+    display: block;
+    width: 10px; 
+    height: 10px;
+    transition: border-color 0.3s; 
+}
+
+.icone-seta::after {
+    content: '';
+    position: absolute; 
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    transition: border-color 0.3s;
+}
+
+/* Seta para a Esquerda (Anterior) */
+.icone-seta.esq::after {
+    border-right: 8px solid #c02e3e; 
+    /* A CORREÇÃO DE ALINHAMENTO ESTÁ AQUI */
+    margin-left: 0px; 
+}
+
+/* Seta para a Direita (Próximo) */
+.icone-seta.dir::after {
+    border-left: 8px solid #c02e3e; 
+    margin-left: 5px; /* Mantido para centralizar o triângulo à direita do ponto de inserção */
+}
+
+/* Efeito Hover e Desabilitado mantidos */
+
+.page-link:hover .icone-seta.esq::after {
+    border-right-color: white;
+}
+.page-link:hover .icone-seta.dir::after {
+    border-left-color: white;
+}
+
+.page-item.disabled .icone-seta.esq::after {
+    border-right-color: #aaa;
+}
+.page-item.disabled .icone-seta.dir::after {
+    border-left-color: #aaa;
+}
+
+/* Padding do link ajustado */
+.page-link {
+    padding: 0 25px 0 20px; 
 }

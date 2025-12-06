@@ -27,9 +27,69 @@ class Noticia(models.Model):  # Modelo que representa uma notícia
     salvamentos_count = models.PositiveIntegerField(default=0, verbose_name="Total de Salvamentos")
     categoria = models.ForeignKey('Categoria', on_delete=models.SET_NULL, null=True, blank=True, related_name='noticias', verbose_name="Categoria")
     
-    # ================== CAMPO EM FALTA ADICIONADO AQUI ==================
-    urgente = models.BooleanField(default=False, verbose_name="É Urgente?")
-    # ==================================================================
+    # Campo para marcação de urgência (mantido, mas não usado para notificação)
+    urgente = models.BooleanField(
+        default=False, 
+        verbose_name="É Urgente?"
+    )
+    
+    # ================== NOVO CAMPO DE CONTROLE DE NOTIFICAÇÃO ==================
+    notificacao = models.BooleanField(
+        default=False, 
+        verbose_name="Enviar Notificação",
+        help_text="Marque para disparar a notificação para usuários interessados (aciona no salvamento)."
+    )
+    # =========================================================================
+
+    def save(self, *args, **kwargs):
+        
+        disparar_notificacao = False
+        
+        # 1. Pré-verificação do campo 'notificacao'
+        if self.pk:
+            # Objeto existente: verifica se o campo 'notificacao' mudou de False para True
+            try:
+                # Busca o objeto original do banco de dados para comparar
+                original = Noticia.objects.get(pk=self.pk)
+                
+                # Dispara se AGORA é True E ANTES era False
+                if self.notificacao and original.notificacao is False:
+                    disparar_notificacao = True
+                    
+            except Noticia.DoesNotExist:
+                pass
+        
+        else:
+            # Objeto novo: Dispara se o campo 'notificacao' já for True na criação
+            if self.notificacao:
+                disparar_notificacao = True
+
+        # 2. Salva o objeto Noticia no banco de dados
+        super().save(*args, **kwargs)
+
+        # 3. Dispara a lógica de notificação
+        if disparar_notificacao and self.categoria:
+            
+            try:
+                # Busca os usuários interessados. Assumindo que PerfilUsuario e Notificacao estão definidos.
+                perfis_interessados = PerfilUsuario.objects.filter(
+                    categorias_de_interesse=self.categoria
+                ).select_related('usuario')
+
+                # Cria as notificações
+                for perfil in perfis_interessados:
+                    if perfil.usuario:
+                        Notificacao.objects.create(
+                            usuario=perfil.usuario,
+                            noticia=self, 
+                            # O texto da manchete pode ser ajustado aqui
+                            manchete=f"🚨 NOVIDADE: {self.titulo[:250]}",
+                            lida=False
+                        )
+            except NameError as e:
+                 # Esta exceção pega a falta dos modelos se eles não estiverem importados
+                 print(f"AVISO: Modelos PerfilUsuario ou Notificacao não encontrados para criar a notificação. Erro: {e}")
+                 pass
 
     class Meta:
         verbose_name = "Notícia"
@@ -41,7 +101,7 @@ class Noticia(models.Model):  # Modelo que representa uma notícia
 
     @staticmethod
     def recomendar_para(usuario):
-        # ... (seu método recomendar_para continua igual) ...
+        # ... (Seu método estático inalterado) ...
         if not usuario.is_authenticated:
             return Noticia.objects.all()
 
@@ -63,8 +123,7 @@ class Noticia(models.Model):  # Modelo que representa uma notícia
             pass
 
         return Noticia.objects.all().order_by('-data_publicacao')[:10] # Retorna as 10 mais recentes
-
-
+    
 class InteracaoNoticia(models.Model):  # Modelo de interações (curtir/salvar)
 
     TIPO_INTERACAO_CHOICES = [
@@ -158,6 +217,11 @@ class Notificacao(models.Model):  # Notificação enviada ao usuário
         related_name='notificacoes',
         verbose_name="Notícia Relacionada"
     )  # Ligação com notícia (opcional)
+
+    notificar_usuarios = models.BooleanField(
+        default=False, 
+        help_text="Marque para enviar uma notificação aos usuários interessados nesta categoria."
+    )
 
     data_criacao = models.DateTimeField(
         auto_now_add=True,

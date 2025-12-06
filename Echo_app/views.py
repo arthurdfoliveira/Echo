@@ -9,6 +9,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
+from django.core.paginator import Paginator
 
 # --- IMPORTS PARA AVATARES E RECUPERAÇÃO DE SENHA ---
 import os
@@ -460,10 +461,36 @@ class NoticiaDetalheView(DetailView):
     model = Noticia
     template_name = 'Echo_app/noticia_detalhe.html'
     context_object_name = 'noticia'
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         noticia_atual = self.object
         user = self.request.user
+
+        # 1. 🚨 LÓGICA DE MARCAR NOTIFICAÇÃO COMO LIDA (NOVO) 🚨
+        if user.is_authenticated:
+            # Pega o notif_id da query string (ex: /noticia/123?notif_id=456)
+            notificacao_id = self.request.GET.get('notif_id')
+            
+            if notificacao_id:
+                try:
+                    # Busca a Notificacao específica que pertence ao usuário e está não lida
+                    notificacao = Notificacao.objects.get(
+                        pk=notificacao_id, 
+                        usuario=user,
+                        lida=False 
+                    )
+                    
+                    # Marca como lida
+                    notificacao.lida = True
+                    notificacao.save()
+                    
+                except Notificacao.DoesNotExist:
+                    # Se não encontrou (ID inválido, ou já estava lida), ignora.
+                    pass
+        # 2. --------------------------------------------------------
+
+        # Lógica de Notícias Relacionadas (Mantida)
         qs_base = Noticia.objects.none()
         if user.is_authenticated:
             try:
@@ -474,13 +501,17 @@ class NoticiaDetalheView(DetailView):
                 pass
         if not qs_base.exists():
             qs_base = Noticia.objects.filter(categoria=noticia_atual.categoria)
+        
         noticias_relacionadas = qs_base.exclude(id=noticia_atual.id).order_by('-data_publicacao')[:3]
         if len(noticias_relacionadas) < 3:
             ids_excluidos = [noticia_atual.id] + [n.id for n in noticias_relacionadas]
             quantidade_faltante = 3 - len(noticias_relacionadas)
             mais_recentes = Noticia.objects.exclude(id__in=ids_excluidos).order_by('-data_publicacao')[:quantidade_faltante]
             noticias_relacionadas = list(noticias_relacionadas) + list(mais_recentes)
+        
         context['noticias_relacionadas'] = noticias_relacionadas
+        
+        # Lógica de Interação (Mantida)
         context['usuario_curtiu'] = False
         context['usuario_salvou'] = False
         if self.request.user.is_authenticated:
@@ -490,6 +521,7 @@ class NoticiaDetalheView(DetailView):
             context['usuario_salvou'] = InteracaoNoticia.objects.filter(
                 usuario=user, noticia=noticia_atual, tipo='SALVAMENTO'
             ).exists()
+            
         return context
 
 @require_POST
@@ -535,25 +567,68 @@ def curtir_noticia(request, noticia_id):
 def salvar_noticia(request, noticia_id):
     return toggle_interacao(request, noticia_id, 'SALVAMENTO')
 
+ITEMS_PER_PAGE = 5
+
 @login_required
 def lista_notificacoes(request):
-    todas_notificacoes = Notificacao.objects.filter(usuario=request.user)
+    usuario = request.user
     categorias_preferidas = Categoria.objects.none()
+    
+    # Parâmetros de página para cada seção
+    page_reco = request.GET.get('page_reco', 1) 
+    page_lidas = request.GET.get('page_lidas', 1) 
+    
+    # 1. Obter Categorias de Interesse do Usuário
     try:
-        perfil = request.user.perfil 
+        perfil = usuario.perfil 
         categorias_preferidas = perfil.categorias_de_interesse.all()
     except PerfilUsuario.DoesNotExist:
+        PerfilUsuario.objects.get_or_create(usuario=usuario) 
         pass
-    recomendadas = todas_notificacoes.filter(
-        noticia__categoria__in=categorias_preferidas
-    ).order_by('lida', '-data_criacao')
-    outras = todas_notificacoes.exclude(
-        id__in=recomendadas.values_list('id', flat=True)
-    ).order_by('lida', '-data_criacao')
-    nao_lidas_count = todas_notificacoes.filter(lida=False).count()
+    
+    # --- SEÇÃO 1: RECOMENDADAS (Notificacoes NÃO Lidas) ---
+    
+    # Busca Notificações não lidas E que estão vinculadas a uma Notícia
+    todas_notificacoes_nao_lidas = Notificacao.objects.filter(
+        usuario=usuario, 
+        lida=False,
+        noticia__isnull=False # Garante que só notif. de notícias sejam incluídas
+    )
+
+    if categorias_preferidas.exists():
+        # Filtra as Notificações não lidas por categorias de interesse
+        recomendadas_base_qs = todas_notificacoes_nao_lidas.filter(
+            noticia__categoria__in=categorias_preferidas
+        ).order_by('-data_criacao')
+    else:
+        # Se não houver categorias, mostra todas as Notificações não lidas
+        recomendadas_base_qs = todas_notificacoes_nao_lidas.order_by('-data_criacao')
+
+    # Aplicando a paginação às RECOMENDADAS (modelo Notificacao)
+    paginator_reco = Paginator(recomendadas_base_qs, ITEMS_PER_PAGE)
+    notificacoes_recomendadas = paginator_reco.get_page(page_reco)
+    
+    
+    # --- SEÇÃO 2: NOTIFICAÇÕES LIDAS (Modelo Notificacao) ---
+    
+    # Busca TODAS as notificações do usuário que estão lidas E que estão vinculadas a uma Notícia.
+    lidas_base_qs = Notificacao.objects.filter(
+        usuario=usuario, 
+        lida=True,
+        noticia__isnull=False # Garante que só notif. de notícias sejam incluídas
+    ).order_by('-data_criacao')
+    
+    # Aplicando a paginação às LIDAS (modelo Notificacao)
+    paginator_lidas = Paginator(lidas_base_qs, ITEMS_PER_PAGE)
+    notificacoes_lidas = paginator_lidas.get_page(page_lidas)
+    
+    
+    # --- CONTAGEM DE NÃO LIDAS ---
+    nao_lidas_count = todas_notificacoes_nao_lidas.count()
+    
     context = {
-        'notificacoes_recomendadas': recomendadas,
-        'notificacoes_outras': outras,
+        'notificacoes_recomendadas': notificacoes_recomendadas, # Objeto Page (Notificacao)
+        'notificacoes_lidas': notificacoes_lidas,               # Objeto Page (Notificacao Lida)
         'nao_lidas_count': nao_lidas_count
     }
     return render(request, 'Echo_app/notificacao.html', context)

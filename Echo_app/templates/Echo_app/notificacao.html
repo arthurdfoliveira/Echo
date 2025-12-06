@@ -1,5 +1,6 @@
 {% extends 'Echo_app/base.html' %} 
 {% load static %} 
+{% load humanize %}
 
 {% block title %}Minhas Notificações{% endblock %}
 
@@ -21,21 +22,18 @@
         </form>
     </div>
 
-    <h4>Recomendadas para você</h4>
-    <p class="text-muted">Notícias baseadas nos seus interesses em Esportes, Tecnologia, etc.</p>
+    <h4>Recomendadas para você (Não Lidas)</h4>
+    <p class="text-muted">Notificações mais recentes baseadas nas suas categorias de interesse.</p>
     
     <div class="notificacao-list">
         
-        {% for notificacao in notificacoes_recomendadas %}
-             {% if notificacao.noticia %}
-                <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" class="notificacao-link">
-             {% else %}
-                <a href="#" class="notificacao-link" onclick="alert('Esta notícia não está mais disponível');">
-             {% endif %}
+        {% for notificacao in notificacoes_recomendadas.object_list %}
+            
+            <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}?notif_id={{ notificacao.pk }}" class="notificacao-link">
              
                 <div class="notificacao-card {% if not notificacao.lida %}list-group-item-primary{% endif %}">
                     
-                    {% if notificacao.noticia and notificacao.noticia.imagem %}
+                    {% if notificacao.noticia.imagem %}
                         <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
                     {% else %}
                         <img src="{% static 'Echo_app/images/placeholder.png' %}" alt="Sem Imagem" class="notificacao-imagem">
@@ -43,70 +41,10 @@
                     
                     <div class="notificacao-corpo">
                         <div class="d-flex w-100 justify-content-between align-items-start">
-                            <p class="mb-1 fw-bold">{{ notificacao.manchete }}</p>
-                            <small class="text-muted text-nowrap ms-2">{{ notificacao.data_criacao|timesince }} atrás</small>
+                            <p class="mb-1 fw-bold">{{ notificacao.noticia.titulo }}</p>
+                            <small class="text-muted text-nowrap ms-2">{{ notificacao.data_criacao|naturaltime }}</small>
                         </div>
-                        {% if notificacao.noticia and notificacao.noticia.categoria %}
-                            <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-        
-        {% empty %}
-            <a href="#" class="notificacao-link" onclick="alert('Exemplo de notícia de tecnologia.');">
-                <div class="notificacao-card list-group-item-primary">
-                    <img src="{% static 'Echo_app/images/exemplo_tech.png' %}" alt="Tecnologia" class="notificacao-imagem">
-                    <div class="notificacao-corpo">
-                        <div class="d-flex w-100 justify-content-between align-items-start">
-                            <p class="mb-1 fw-bold">Exemplo: Nova reportagem sobre Tecnologia!</p>
-                            <small class="text-muted">10 m</small>
-                        </div>
-                        <small class="text-muted">Tópico: Tecnologia</small>
-                    </div>
-                </div>
-            </a>
-            
-            <a href="#" class="notificacao-link" onclick="alert('Exemplo de notícia de esportes.');">
-                <div class="notificacao-card">
-                    <img src="{% static 'Echo_app/images/exemplo_esportes.png' %}" alt="Esportes" class="notificacao-imagem">
-                    <div class="notificacao-corpo">
-                        <div class="d-flex w-100 justify-content-between align-items-start">
-                            <p class="mb-1 fw-bold">Exemplo: Destaques da rodada de Esportes</p>
-                            <small class="text-muted">1 h</small>
-                        </div>
-                        <small class="text-muted">Tópico: Esportes</small>
-                    </div>
-                </div>
-            </a>
-        {% endfor %} 
-    </div> 
-
-    <h4>Outras Notificações</h4>
-    
-    <div class="notificacao-list">
-        
-        {% for notificacao in notificacoes_outras %}
-            {% if notificacao.noticia %}
-               <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" class="notificacao-link">
-            {% else %}
-               <a href="#" class="notificacao-link">
-            {% endif %}
-            
-                <div class="notificacao-card {% if not notificacao.lida %}list-group-item-primary{% endif %}">
-                    
-                    {% if notificacao.noticia and notificacao.noticia.imagem %}
-                        <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
-                    {% else %}
-                        <img src="{% static 'Echo_app/images/placeholder.png' %}" alt="Sem Imagem" class="notificacao-imagem">
-                    {% endif %}
-                    
-                    <div class="notificacao-corpo">
-                        <div class="d-flex w-100 justify-content-between align-items-start">
-                            <p class="mb-1 fw-bold">{{ notificacao.manchete }}</p>
-                            <small class="text-muted text-nowrap ms-2">{{ notificacao.data_criacao|timesince }} atrás</small>
-                        </div>
-                        {% if notificacao.noticia and notificacao.noticia.categoria %}
+                        {% if notificacao.noticia.categoria %}
                             <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
                         {% endif %}
                     </div>
@@ -115,10 +53,163 @@
         
         {% empty %}
              <div class="p-3 text-center text-muted">
-                <p class="mb-0">Você não tem outras notificações no momento.</p>
+                <p class="mb-0">Não encontramos notificações não lidas para você. <br> Tente adicionar mais categorias ao seu perfil!</p>
+            </div>
+        {% endfor %} 
+    </div> 
+    
+    {% if notificacoes_recomendadas.has_other_pages %}
+        <nav aria-label="Navegação de recomendações">
+            <ul class="pagination justify-content-center">
+                
+                {% if notificacoes_recomendadas.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_reco={{ notificacoes_recomendadas.previous_page_number }}&page_lidas={{ notificacoes_lidas.number }}" aria-label="Anterior">
+                            <span class="icone-seta esq"></span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Anterior">
+                            <span class="icone-seta esq"></span>
+                        </span>
+                    </li>
+                {% endif %}
+                
+                {% if notificacoes_recomendadas.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_reco={{ notificacoes_recomendadas.next_page_number }}&page_lidas={{ notificacoes_lidas.number }}" aria-label="Próximo">
+                            <span class="icone-seta dir"></span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Próximo">
+                            <span class="icone-seta dir"></span>
+                        </span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+    <h4>Notificações Lidas</h4> 
+    <p class="text-muted">Todas as notificações que você já visualizou ou marcou como lidas.</p>
+    
+    <div class="notificacao-list">
+        
+        {% for notificacao in notificacoes_lidas.object_list %}
+            
+            <a href="{% url 'Echo_app:noticia_detalhe' notificacao.noticia.pk %}" class="notificacao-link">
+            
+                <div class="notificacao-card">
+                    
+                    {% if notificacao.noticia.imagem %}
+                        <img src="{{ notificacao.noticia.imagem.url }}" alt="Capa" class="notificacao-imagem">
+                    {% else %}
+                        <img src="{% static 'Echo_app/images/icone_alerta.png' %}" alt="Alerta" class="notificacao-imagem">
+                    {% endif %}
+                    
+                    <div class="notificacao-corpo">
+                        <div class="d-flex w-100 justify-content-between align-items-start">
+                             <p class="mb-1 fw-bold">{{ notificacao.noticia.titulo }}</p>
+                            <small class="text-muted text-nowrap ms-2">{{ notificacao.data_criacao|naturaltime }}</small>
+                        </div>
+                        {% if notificacao.noticia.categoria %}
+                            <small class="text-muted">Tópico: {{ notificacao.noticia.categoria.nome }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        
+        {% empty %}
+             <div class="p-3 text-center text-muted">
+                <p class="mb-0">Você não tem notificações lidas no momento.</p>
             </div>
         {% endfor %} 
     </div>
+    
+    {% if notificacoes_lidas.has_other_pages %}
+        <nav aria-label="Navegação de notificações lidas">
+            <ul class="pagination justify-content-center">
+                
+                {% if notificacoes_lidas.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_lidas={{ notificacoes_lidas.previous_page_number }}&page_reco={{ notificacoes_recomendadas.number }}" aria-label="Anterior">
+                            <span class="icone-seta esq"></span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Anterior">
+                            <span class="icone-seta esq"></span>
+                        </span>
+                    </li>
+                {% endif %}
+                
+                {% if notificacoes_lidas.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page_lidas={{ notificacoes_lidas.next_page_number }}&page_reco={{ notificacoes_recomendadas.number }}" aria-label="Próximo">
+                            <span class="icone-seta dir"></span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link" aria-label="Próximo">
+                            <span class="icone-seta dir"></span>
+                        </span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificacaoLinks = document.querySelectorAll('.notificacao-link');
+        
+        notificacaoLinks.forEach(link => {
+            const card = link.querySelector('.notificacao-card');
+            
+            if (card) {
+                card.style.transition = 'transform 0.2s ease-out, box-shadow 0.2s ease-out';
+            }
+            
+            link.addEventListener('mouseenter', () => {
+                if (card) {
+                    card.style.transform = 'translateY(-2px) scale(1.005)';
+                    card.style.boxShadow = '0 8px 30px rgba(0,0,0,0.1)';
+                }
+            });
+
+            link.addEventListener('mouseleave', () => {
+                if (card) {
+                    card.style.transform = 'translateY(0) scale(1)';
+                    card.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)'; 
+                }
+            });
+        });
+    });
+
+    function marcarComoLida(notificacaoId) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `{% url 'Echo_app:marcar_notificacao_lida' 0 %}`.replace('0', notificacaoId);
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
+</script>
 {% endblock %}
