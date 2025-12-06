@@ -7,9 +7,9 @@
 <link rel="stylesheet" href="{% static 'Echo_app/css/dashboard.css' %}?v={% now 'U' %}">
 
 <style>
-    /* --- ESTRUTURA DA PÁGINA --- */
+    /* --- ESTRUTURA GERAL --- */
     body {
-        background-color: #f0f2f5; /* Fundo geral da página levemente cinza */
+        background-color: #f0f2f5; /* Fundo cinza claro da página */
     }
 
     .main-wrapper {
@@ -18,114 +18,112 @@
         justify-content: center;
     }
 
-    /* O "Container Branco" que simula a tela do app */
+    /* CONTAINER TRANSPARENTE (Ajuste Solicitado: Removemos o fundo branco e sombra) */
     .curtidas-container {
         width: 100%;
-        max-width: 600px; /* Limita a largura para parecer feed de mobile no desktop */
-        background-color: #ffffff;
-        border-radius: 15px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra suave */
-        padding: 25px;
+        max-width: 600px; /* Mantém a largura estilo mobile */
         margin: 0 auto;
+        padding: 0 15px; /* Espaçamento lateral para não colar na borda da tela */
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 0;
     }
 
     /* --- TÍTULO --- */
     .page-header {
         text-align: center;
-        margin-bottom: 25px;
-        border-bottom: 1px solid #eee; /* Linha sutil separando o título */
-        padding-bottom: 15px;
+        margin-bottom: 20px;
+        /* Removi a borda inferior pois sem a caixa branca ela fica estranha */
     }
 
     .page-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 800;
         color: #1a1a1a;
         margin: 0;
     }
 
-    /* --- BARRA DE PESQUISA (REFATORADA) --- */
+    /* --- BARRA DE PESQUISA (Ajuste Solicitado) --- */
     .search-form {
         position: relative;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         width: 100%;
     }
 
     .search-input {
         width: 100%;
-        height: 45px;
-        background-color: #eff3f4; /* Cinza bem visível, estilo Twitter/FB */
-        border: 1px solid transparent;
-        border-radius: 25px; /* Pílula completa */
-        padding: 0 50px 0 20px; /* Padding na direita p/ o ícone não cobrir texto */
-        font-size: 0.95rem;
-        color: #0f1419;
+        height: 50px; /* Um pouco mais alta para ficar robusta */
+        background-color: #ffffff; /* Branco para destacar no fundo cinza */
+        border: 1px solid #ddd; /* Borda bem sutil */
+        border-radius: 30px; /* Bem redonda */
+        padding: 0 55px 0 25px; /* Espaço na direita p/ o ícone */
+        font-size: 1rem;
+        color: #333;
         outline: none;
-        transition: background-color 0.2s, border-color 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra leve para dar profundidade */
+        transition: all 0.2s;
     }
 
     .search-input:focus {
-        background-color: #ffffff;
-        border-color: #ed1c24; /* Vermelho JC ao focar */
-        box-shadow: 0 0 0 1px #ed1c24;
+        border-color: #ed1c24;
+        box-shadow: 0 2px 8px rgba(237, 28, 36, 0.15);
     }
 
     .search-input::placeholder {
-        color: #536471;
+        color: #999;
     }
 
-    /* Ícone da Lupa */
+    /* Ícone da Lupa na Direita */
     .search-btn {
         position: absolute;
-        right: 5px;
+        right: 10px; /* Ajuste fino da posição */
         top: 50%;
         transform: translateY(-50%);
-        height: 35px;
-        width: 35px;
+        height: 40px;
+        width: 40px;
         border: none;
         background: transparent;
-        color: #536471;
+        color: #666;
         cursor: pointer;
-        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: color 0.2s;
+        font-size: 1.1rem;
     }
 
     .search-btn:hover {
         color: #ed1c24;
-        background-color: rgba(237, 28, 36, 0.1);
     }
 
     /* --- FILTROS (BOLHAS) --- */
     .category-scroll {
         display: flex;
         overflow-x: auto;
-        gap: 8px;
-        margin-bottom: 25px;
+        gap: 10px;
+        margin-bottom: 30px;
         padding-bottom: 5px;
         scrollbar-width: none;
+        justify-content: flex-start; /* Alinhado à esquerda como na foto */
     }
     
     .category-scroll::-webkit-scrollbar { display: none; }
 
     .bubble {
         white-space: nowrap;
-        padding: 6px 16px;
+        padding: 8px 18px;
         border-radius: 20px;
         font-size: 0.9rem;
         font-weight: 600;
         text-decoration: none;
-        border: 1px solid #cfd9de;
-        color: #536471;
-        background-color: #fff;
+        border: 1px solid #ccc; /* Borda cinza um pouco mais escura */
+        color: #555;
+        background-color: transparent; /* Fundo transparente */
         transition: all 0.2s ease;
     }
 
     .bubble:hover {
-        background-color: #f7f9f9;
-        border-color: #536471;
+        border-color: #333;
+        color: #333;
     }
 
     /* Ativo */
@@ -136,28 +134,27 @@
         box-shadow: 0 2px 5px rgba(237, 28, 36, 0.3);
     }
 
-    /* --- GRID DE NOTÍCIAS --- */
+    /* --- GRID DE NOTÍCIAS (Mantido Perfeito) --- */
     .news-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Cards menores estilo mobile */
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
     }
 
-    /* Card da Notícia */
     .news-card {
         position: relative;
-        border-radius: 12px;
+        border-radius: 15px;
         overflow: hidden;
-        aspect-ratio: 3/4; /* Formato retrato (estilo Stories/Discover) fica moderno */
+        aspect-ratio: 3/4; 
         background-color: #e1e8ed;
         text-decoration: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         transition: transform 0.2s;
     }
 
     .news-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 12px rgba(0,0,0,0.15);
     }
 
     .card-img {
@@ -171,48 +168,42 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.6) 50%, transparent 100%);
-        padding: 12px;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+        padding: 15px;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        height: 60%;
+        height: 70%;
     }
 
     .card-title {
         color: #fff;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: 700;
-        line-height: 1.3;
+        line-height: 1.35;
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     /* --- EMPTY STATE --- */
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
-        padding: 40px 20px;
-        background-color: #f8f9fa;
-        border-radius: 12px;
-        border: 1px dashed #ced4da;
+        padding: 50px 20px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .empty-icon {
-        font-size: 2rem;
-        color: #ced4da;
-        margin-bottom: 15px;
-    }
-
     .empty-btn-link {
         color: #ed1c24;
         font-weight: 700;
         text-decoration: none;
-        margin-top: 10px;
+        margin-top: 15px;
         display: inline-block;
     }
 </style>
@@ -224,11 +215,11 @@
     <div class="curtidas-container">
 
         <div class="page-header">
-            <h2 class="page-title">Minhas Curtidas</h2>
+            <h2 class="page-title">Curtidas</h2>
         </div>
 
         <form method="GET" action="{% url 'Echo_app:noticias_curtidas' %}" class="search-form">
-            <input type="text" name="q" placeholder="Pesquisar nas curtidas..." class="search-input" value="{{ request.GET.q|default:'' }}">
+            <input type="text" name="q" placeholder="Pesquisar" class="search-input" value="{{ request.GET.q|default:'' }}">
             
             {% if categoria_ativa %}
                 <input type="hidden" name="categoria" value="{{ categoria_ativa }}">
@@ -284,10 +275,8 @@
             
             {% else %}
                 <div class="empty-state">
-                    <div class="empty-icon"><i class="far fa-heart"></i></div>
-                    <h4 style="color:#666; margin:0;">Nenhuma notícia encontrada.</h4>
-                    <p style="font-size:0.9rem; color:#999;">Tente buscar por outro termo.</p>
-                    <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">Voltar ao Início</a>
+                    <h4 style="color:#666; margin:0 0 5px 0;">Nenhuma notícia encontrada.</h4>
+                    <a href="{% url 'Echo_app:dashboard' %}" class="empty-btn-link">Voltar ao início</a>
                 </div>
             {% endif %}
 
