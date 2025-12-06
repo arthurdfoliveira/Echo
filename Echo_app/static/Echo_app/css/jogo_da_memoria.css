@@ -72,19 +72,16 @@ h1 {
     transform: rotateY(180deg);
 }
 
-/* Mantém a carta virada e inativa */
+/* ========================================================= */
+/* ESTILO PARA CARTA ACERTADA (MATCHED)             */
+/* Objetivo: Manter virada (flipped) e reduzir opacidade.  */
+/* ========================================================= */
 .card.matched {
     cursor: default;
-    /* Fundo da carta virada (card-front) quando matched */
-    background-color: #ffffff; /* Cinza bem claro */
-    opacity: 0.9; /* Levemente esmaecida */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Garante que o conteúdo da frente da carta fique cinza/apagado */
-.card.matched .card-front {
-    color: #ffffff; /* Cinza escuro para o texto/emoji */
-    background-color: transparent; /* Usa o fundo cinza da .card.matched */
+    opacity: 0.4; /* Reduz a opacidade para parecer 'apagada' */
+    transition: opacity 0.6s ease-in-out; /* Adiciona transição suave para a opacidade */
+    box-shadow: none; /* Remove a sombra forte, se houver */
+    border-color: transparent; /* Remove borda, se desejar */
 }
 
 /* Face da frente e de trás da carta */
@@ -97,17 +94,18 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3em;
+    
+    /* ⚠️ REMOÇÃO DE FONT-SIZE: Removido font-size: 3em; que era para emojis. */
+    
     border: 2px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Verso da carta (invisível até ser virada) */
 .card-back {
-    background-color: #E10F26; /* Cor de fundo padrão (Azul UOL?) */
+    background-color: #E10F26; /* Cor de fundo padrão (Vermelho) */
     color: white;
-    font-size: 1.5em;
-    content: "?"; /* Adiciona um ponto de interrogação no verso */
+    font-size: 1.5em; /* Mantido apenas para o texto/ícone do verso, se houver */
 }
 .card-back::before {
     content: ""; /* Símbolo da memória */
@@ -117,6 +115,14 @@ h1 {
 .card-front {
     background-color: #fff;
     transform: rotateY(180deg);
+}
+
+/* Regra para garantir que a imagem preencha a frente da carta */
+.card-front img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transform: scale(4.5);
 }
 
 /* Quando o jogo trava (no setTimeout), o cursor muda */
