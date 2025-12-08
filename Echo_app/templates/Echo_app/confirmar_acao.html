@@ -12,56 +12,121 @@
         margin: 50px auto;
         padding: 30px;
         text-align: center;
-        /* Caixa Branca com Bordas Lisas (ajuste do .perfil-card) */
         background-color: #fff;
-        border-radius: 12px; /* Bordas lisas/arredondadas */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra suave */
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        /* melhora suavidade do aparecimento */
+        transform-origin: top center;
+        animation: fadeInCard .22s ease-out;
     }
+
+    @keyframes fadeInCard {
+        from { opacity: 0; transform: translateY(-6px) scale(.997); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .confirmacao-card h1 {
-        font-size: 1.8rem; /* Letra um pouco maior */
+        font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: 15px;
     }
     .confirmacao-card p {
-        font-size: 1.1rem; /* Letra um pouco maior */
-        color: #666; 
+        font-size: 1.1rem;
+        color: #666;
         margin-bottom: 30px;
         line-height: 1.5;
     }
-    
+
     /* Estilo para o botão Cancelar (cor por trás) */
     .btn-cancelar {
-        color: #333 !important; /* Cor do texto */
-        background-color: #f0f0f0; /* Fundo cinza suave */
+        color: #333 !important;
+        background-color: #f0f0f0;
         font-weight: 600 !important;
-        padding: 8px 18px; 
+        padding: 8px 18px;
         border: 1px solid #ccc;
-        border-radius: 5px; 
+        border-radius: 5px;
         text-decoration: none !important;
         display: inline-block;
-        transition: background-color 0.2s;
+        transition: background-color 0.18s, box-shadow 0.12s;
     }
-    .btn-cancelar:hover {
+    .btn-cancelar:hover,
+    .btn-cancelar:focus {
         background-color: #e0e0e0;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
+
+    /* Pequeno ajuste visual no botão principal quando desabilitado */
+    .edit-profile-btn[disabled] {
+        cursor: default;
+        opacity: 0.85;
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* Focus visible para acessibilidade (sem mudar cor) */
+    .edit-profile-btn:focus-visible,
+    .btn-cancelar:focus-visible,
+    a:focus-visible {
+        outline: 3px solid rgba(0,0,0,0.06);
+        outline-offset: 3px;
+        border-radius: 6px;
+    }
+
+    /* Spinner inline (mantém cores neutras) */
+    .btn-spinner {
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        border: 2px solid rgba(0,0,0,0.12);
+        border-top-color: rgba(0,0,0,0.28);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile adjustments (mais confortável em telas pequenas) */
+    @media (max-width: 520px) {
+        .confirmacao-card {
+            margin: 24px;
+            padding: 20px;
+        }
+        .confirmacao-card h1 { font-size: 1.4rem; }
+        .confirmacao-card p { font-size: 1rem; margin-bottom: 20px; }
+        .edit-profile-btn, .btn-cancelar {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0 0 10px 0;
+        }
+        .edit-profile-btn { margin-bottom: 12px; }
+    }
+
+    /* Pequena transição nos botões */
+    .edit-profile-btn, .btn-cancelar {
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .edit-profile-btn:hover { transform: translateY(-2px); }
 </style>
 
-<div class="confirmacao-card">
+<div class="confirmacao-card" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
     
     {# TÍTULO DINÂMICO #}
-    <h1 style="color: {% if perigo %}#cc0000{% else %}#333{% endif %};">
+    <h1 id="confirm-title" style="color: {% if perigo %}#cc0000{% else %}#333{% endif %};">
         {{ titulo }}
     </h1>
     
     {# MENSAGEM DINÂMICA #}
-    <p>{{ mensagem|safe }}</p>
+    <p id="confirm-message" aria-live="polite">{{ mensagem|safe }}</p>
     
     {# FORMULÁRIO DINÂMICO APONTANDO PARA A URL DE AÇÃO CORRETA #}
-    <form method="POST" action="{% url url_acao %}" style="margin-top: 20px;">
+    <form id="confirm-form" method="POST" action="{% url url_acao %}" style="margin-top: 20px;">
         {% csrf_token %}
         
         {# BOTÃO DE AÇÃO PRINCIPAL #}
-        <button type="submit" class="edit-profile-btn" 
+        <button id="confirm-submit" type="submit" class="edit-profile-btn"
                 style="
                     background-color: #cc0000; 
                     color: #fff; 
@@ -72,15 +137,70 @@
                     cursor: pointer; 
                     font-size: 0.9rem;
                     margin-right: 15px;
-                ">
+                "
+                aria-describedby="confirm-message">
             {{ texto_botao }}
         </button>
         
         {# LINK DE CANCELAMENTO (CORRIGIDO PARA VOLTAR AO PERFIL) #}
-        {# LINK DE CANCELAMENTO (APLICANDO CORREÇÃO DE CACHE) #}
-        <a href="{% url 'Echo_app:perfil' %}?cache={% now 'U' %}" class="btn-cancelar">
+        <a id="confirm-cancel" href="{% url 'Echo_app:perfil' %}?cache={% now 'U' %}" class="btn-cancelar">
             Cancelar e Voltar
         </a>
     </form>
 </div>
+
+{# Pequeno script para melhorar UX: foco, desabilitar botão ao enviar, spinner, Esc para cancelar #}
+<script>
+    (function() {
+        const form = document.getElementById('confirm-form');
+        const submitBtn = document.getElementById('confirm-submit');
+        const cancelLink = document.getElementById('confirm-cancel');
+        const titleEl = document.getElementById('confirm-title');
+
+        if (!form || !submitBtn) return;
+
+        // foco inicial no botão principal para facilitar confirmação via Enter
+        try { submitBtn.focus({ preventScroll: true }); } catch(e){}
+
+        // ao enviar: desabilita botão, mostra spinner e evita múltiplos envios
+        form.addEventListener('submit', function(e) {
+            // a desativação visual evita reenvios acidentais
+            submitBtn.disabled = true;
+
+            // adiciona spinner se não existir
+            if (!submitBtn.querySelector('.btn-spinner')) {
+                const spinner = document.createElement('span');
+                spinner.className = 'btn-spinner';
+                submitBtn.insertBefore(spinner, submitBtn.firstChild);
+            }
+
+            // acessibilidade: informa que ação está em andamento
+            const live = document.getElementById('confirm-message');
+            if (live) live.textContent = 'Processando...';
+
+            // deixa o envio prosseguir normalmente (não preventDefault)
+        });
+
+        // tecla Esc -> volta ao perfil (com mesma query cache)
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key === 'Escape' || ev.key === 'Esc') {
+                // Simula clique no link de cancelar para manter comportamento original
+                if (cancelLink) cancelLink.click();
+            }
+        });
+
+        // melhor foco quando usuário retorna via teclado para o container
+        titleEl && titleEl.setAttribute('tabindex', '-1');
+
+        // evitar perda de foco ao clicar fora: mantém foco no container principal
+        const card = document.querySelector('.confirmacao-card');
+        if (card) {
+            card.addEventListener('click', function() {
+                // quando clicar no card, o título ganha foco (melhora navegação por teclado)
+                try { titleEl.focus({ preventScroll: true }); } catch(e){}
+            });
+        }
+    })();
+</script>
+
 {% endblock %}
