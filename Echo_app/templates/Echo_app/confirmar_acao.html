@@ -120,6 +120,13 @@
     
     {# MENSAGEM DINÂMICA #}
     <p id="confirm-message" aria-live="polite">{{ mensagem|safe }}</p>
+    {# AVISO EXTRA AUTOMÁTICO QUANDO A AÇÃO É DE PERIGO #}
+    {% if perigo %}
+        <p style="font-size: 0.95rem; color: #a00; margin-top: -10px; margin-bottom: 25px;">
+            Esta ação não pode ser desfeita.
+        </p>
+    {% endif %}
+
     
     {# FORMULÁRIO DINÂMICO APONTANDO PARA A URL DE AÇÃO CORRETA #}
     <form id="confirm-form" method="POST" action="{% url url_acao %}" style="margin-top: 20px;">
