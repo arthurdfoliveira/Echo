@@ -257,6 +257,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================
     // 2. SLIDER DE URGENTES (MANTIDO)
     // =========================================
+        // =========================================
+    // 2. SLIDER DE URGENTES (MANTIDO + HOVER ADJACENTE)
+    // =========================================
     const navDots = document.querySelectorAll('.urgent-nav-dot');
     const newsCards = document.querySelectorAll('.urgent-news-card');
     const newsWrapper = document.querySelector('.urgent-news-wrapper');
@@ -267,7 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function getCardWidth() {
             if (newsCards.length === 0) return 0;
-            return newsCards[0].offsetWidth + 20; 
+            // inclui gap aproximado já usado no CSS (20px)
+            return newsCards[0].offsetWidth + 20;
         }
 
         function updateNewsView(index) {
@@ -287,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
             newsCards.forEach((card, i) => {
                 card.classList.remove('active', 'partial-view', 'full-view');
                 if (i === index) card.classList.add('active', 'full-view');
-                else if (i === index + 1) card.classList.add('partial-view');
+                else if (i === index + 1 || i === index - 1) card.classList.add('partial-view');
                 else card.classList.add('full-view');
             });
             currentIndex = index;
@@ -297,6 +301,16 @@ document.addEventListener('DOMContentLoaded', function() {
             dot.addEventListener('click', function() {
                 const index = parseInt(this.getAttribute('data-index'));
                 if (index < totalNews) updateNewsView(index);
+            });
+        });
+
+        // --- NOVO: hover na notícia adjacente (direita/esquerda) avança/volta ---
+        newsCards.forEach((card, i) => {
+            card.addEventListener('mouseenter', () => {
+                // só muda se for a notícia adjacente (próxima à direita ou à esquerda)
+                if (i === currentIndex + 1 || i === currentIndex - 1) {
+                    updateNewsView(i);
+                }
             });
         });
 
@@ -316,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateNewsView(0);
         window.addEventListener('resize', () => updateNewsView(currentIndex));
     }
-
+    
     // =========================================
     // 3. FILTRO DE CATEGORIAS (AJAX - MANTIDO)
     // =========================================
