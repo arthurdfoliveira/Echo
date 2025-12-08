@@ -43,5 +43,6 @@ urlpatterns = [
     # --- Jogos ---
     path('games/jogo-da-velha/', views.jogo_da_velha_view, name='jogo_da_velha'),
     path('games/memoria/', views.jogo_da_memoria, name='jogo_da_memoria'),
+    path('games/forca/', views.jogo_da_forca, name='jogo_da_forca'), # O caminho necessário
     path('games/', views.games, name='games'),
 ]

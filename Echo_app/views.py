@@ -883,3 +883,6 @@ def jogo_da_memoria(request):
     """Renderiza a página do Jogo da Memória."""
     # Como você usa subdiretórios, o nome do template é 'Echo_app/jogo_da_memoria.html'
     return render(request, 'Echo_app/jogo_da_memoria.html', {})
+
+def jogo_da_forca(request):
+    return render(request, 'Echo_app/jogo_da_forca.html')

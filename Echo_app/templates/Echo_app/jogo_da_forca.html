@@ -1,0 +1,61 @@
+{% extends "Echo_app/base.html" %}
+{% load static %}
+
+{% block title %}Echo Games - Jogo da Forca{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Echo_app/css/jogo_da_forca.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<div class="hangman-container">
+    <h1>Jogo da Forca</h1>
+    
+    <div class="game-area">
+        
+        <div class="hangman-drawing">
+            <div id="forca-gabarito">
+                </div>
+            <div class="game-messages">
+                <p id="tema-display">Tema: <span></span></p>
+                <p id="message-display"></p>
+            </div>
+        </div>
+
+        <div class="word-display" id="word-display">
+            </div>
+        
+        <div class="keyboard-container" id="keyboard-container">
+            </div>
+
+        <button id="restart-button" class="restart-button">Novo Jogo</button>
+    </div>
+
+    <hr>
+
+    <div class="history-section">
+        <h3>Tentativas Anteriores</h3>
+        <table id="guesses-table">
+            <thead>
+                <tr>
+                    <th>Letras Erradas</th>
+                    <th>Letras Corretas (Já na Palavra)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="incorrect-guesses"></td>
+                    <td id="correct-guesses-table"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="history-hint">* As letras corretas exibidas acima são as que já fazem parte da palavra, excluindo as que você ainda não acertou.</p>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }} 
+    <script src="{% static 'Echo_app/js/jogo_da_forca.js' %}?v={% now 'U' %}"></script>
+{% endblock %}

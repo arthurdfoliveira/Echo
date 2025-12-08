@@ -29,11 +29,17 @@
                 <p>Teste sua memória encontrando todos os pares de emojis.</p>
                 <span class="status-tag medium">Médio</span>
             </a>
-
-        </div>
+            
+            <a href="{% url 'Echo_app:jogo_da_forca' %}" class="game-card">
+                <div class="game-icon"></div>
+                <h2>Jogo da Forca</h2>
+                <p>Descubra a palavra secreta antes que o boneco seja enforcado.</p>
+                <span class="status-tag hard">Difícil</span>
+            </a>
+            </div>
     </div>
 {% endblock %}
 
 {% block extra_js %}
     {{ block.super }} 
-    {% endblock %}
+{% endblock %}
