@@ -50,14 +50,19 @@
             <span class="brand-name">Echo</span>
         </a>
         
-        <div class="top-nav-right">
+       <div class="top-nav-right">
             {% if user.is_authenticated %}
                 <a href="{% url 'Echo_app:lista_notificacoes' %}" class="nav-icon-bell-link" title="Notificações" style="margin-right: 20px; font-size: 1.3rem; color: #555; text-decoration: none;">
                     <i class="bi bi-bell-fill"></i> </a>
+            
+                <a href="{% url 'Echo_app:perfil' %}" class="nav-icon-profile-link">
+                    {% if user.perfil.foto_perfil %}
+                        <img src="{{ user.perfil.foto_perfil.url }}" alt="Foto de Perfil do Usuário" class="nav-icon-img">
+                    {% else %}
+                        <img src="{% static 'Echo_app/images/perfil.png' %}" alt="Foto de Perfil Padrão" class="nav-icon-img">
+                    {% endif %}
+                </a>
             {% endif %}
-            <a href="{% url 'Echo_app:perfil' %}" class="nav-icon-profile-link">
-                <img src="{% static 'Echo_app/images/perfil.png' %}" alt="Foto de Perfil" class="nav-icon-img">
-            </a>
         </div>
     </header>
 
