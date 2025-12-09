@@ -11,268 +11,135 @@
     /* --- ESTRUTURA GERAL --- */
     body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-    .main-wrapper {
-        padding: 30px 0;
-        display: flex;
-        justify-content: center;
-    }
+    .main-wrapper { padding: 30px 0; display: flex; justify-content: center; padding-bottom: 80px; /* Espaço para barra flutuante */ }
+    .salvos-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; }
 
-    .salvos-container {
-        width: 100%;
-        max-width: 1000px; /* Largura ideal desktop */
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
-    /* --- TÍTULO --- */
+    /* --- HEADER --- */
     .page-header { text-align: center; margin-bottom: 30px; }
     .page-title { font-size: 2rem; font-weight: 800; color: #1a1a1a; margin: 0; }
 
-    /* --- BARRA DE PESQUISA & AÇÕES --- */
-    .search-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 15px; 
-        margin-bottom: 30px;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .search-form {
-        flex-grow: 1;
-        position: relative;
-    }
-
-    .search-input {
-        width: 100%;
-        height: 50px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        padding: 0 50px 0 25px;
-        font-size: 1.1rem;
-        outline: none;
-        transition: all 0.2s;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    .search-input:focus { border-color: #ed1c24; box-shadow: 0 4px 10px rgba(237, 28, 36, 0.1); }
-
-    .search-btn {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        border: none;
-        background: transparent;
-        color: #666;
-        cursor: pointer;
-        font-size: 1.1rem;
-    }
-    .search-btn:hover { color: #ed1c24; }
-
-    /* Botão de Adicionar (+) */
-    .add-btn-circle {
-        width: 50px;
-        height: 50px;
-        min-width: 50px; /* Garante que não esmague */
-        border-radius: 50%;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        color: #333;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        position: relative; /* Para tooltip nativo funcionar bem */
-    }
-
-    .add-btn-circle:hover {
-        background-color: #ed1c24;
-        color: #fff;
-        border-color: #ed1c24;
-        transform: rotate(90deg); /* Efeito visual legal */
-    }
-
-    /* --- SEÇÃO DE COLEÇÕES (SCROLL HORIZONTAL) --- */
-    .section-label {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        margin-bottom: 15px;
-        padding: 0 5px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
+    /* --- BARRA DE PESQUISA --- */
+    .search-wrapper { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .search-form { flex-grow: 1; position: relative; }
+    .search-input { width: 100%; height: 50px; background-color: #fff; border: 1px solid #ddd; border-radius: 25px; padding: 0 50px 0 25px; font-size: 1.1rem; outline: none; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .search-input:focus { border-color: #ed1c24; }
+    .search-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #666; cursor: pointer; font-size: 1.1rem; }
     
+    .add-btn-circle { width: 50px; height: 50px; border-radius: 50%; background-color: #fff; border: 1px solid #ddd; color: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; position: relative; }
+    .add-btn-circle:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
+
+    /* --- COLEÇÕES --- */
+    .section-label { display: flex; justify-content: space-between; align-items: end; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .section-title { font-size: 1.3rem; font-weight: 700; color: #333; margin: 0; }
-    .section-link { font-size: 0.9rem; color: #666; text-decoration: none; cursor: pointer; }
-    .section-link:hover { color: #ed1c24; }
+    
+    /* Botão de Selecionar (Link azul) */
+    .action-link { font-size: 1rem; color: #007bff; font-weight: 600; cursor: pointer; text-decoration: none; padding: 5px 10px; border-radius: 5px; transition: background 0.2s; }
+    .action-link:hover { background-color: #eef5ff; }
+    .action-link.cancel-mode { color: #dc3545; }
+    .action-link.cancel-mode:hover { background-color: #fff0f0; }
 
-    .collections-scroll {
-        display: flex;
-        overflow-x: auto;
-        gap: 15px;
-        padding: 5px;
-        margin-bottom: 30px;
-        scrollbar-width: none; /* Firefox */
-    }
-    .collections-scroll::-webkit-scrollbar { display: none; /* Chrome */ }
+    .collections-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 5px; margin-bottom: 30px; scrollbar-width: none; }
+    .collections-scroll::-webkit-scrollbar { display: none; }
 
-    /* Card da Coleção */
-    .collection-card {
-        min-width: 140px;
-        width: 140px;
-        display: flex;
-        flex-direction: column;
-        text-decoration: none;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
+    .collection-card { min-width: 140px; width: 140px; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
     .collection-card:hover { transform: translateY(-3px); }
-
-    .collection-thumb-box {
-        width: 100%;
-        height: 100px;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 8px;
-        background-color: #e0e0e0;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-    }
-
+    .collection-thumb-box { width: 100%; height: 100px; border-radius: 12px; overflow: hidden; margin-bottom: 8px; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; position: relative; }
     .collection-thumb { width: 100%; height: 100%; object-fit: cover; }
-
-    /* Card "Nova Coleção" específico */
-    .create-collection-box {
-        background-color: #fff;
-        border: 2px dashed #ccc;
-        color: #ed1c24;
-        font-size: 1.8rem;
-        transition: all 0.2s;
-    }
-    .collection-card:hover .create-collection-box {
-        border-color: #ed1c24;
-        background-color: #fff5f5;
-    }
-
-    .collection-name { font-size: 0.9rem; font-weight: 600; color: #333; margin: 0; line-height: 1.2; text-align: center;}
+    .create-collection-box { background-color: #fff; border: 2px dashed #ccc; color: #ed1c24; font-size: 1.8rem; }
+    .collection-name { font-size: 0.9rem; font-weight: 600; color: #333; text-align: center; }
     .collection-count { font-size: 0.75rem; color: #888; text-align: center; }
 
-    /* --- FILTROS --- */
-    .category-scroll {
-        display: flex;
-        overflow-x: auto;
-        gap: 10px;
-        margin-bottom: 25px;
-        scrollbar-width: none;
-    }
-    .bubble {
-        padding: 8px 20px;
-        border-radius: 20px;
-        border: 1px solid #ccc;
-        color: #555;
-        text-decoration: none;
-        font-weight: 600;
-        white-space: nowrap;
-        background: #fff;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .bubble:hover { border-color: #333; color: #333; }
-    .bubble.active {
-        background-color: #ed1c24;
-        color: white;
-        border-color: #ed1c24;
-        box-shadow: 0 3px 8px rgba(237, 28, 36, 0.3);
-    }
-
-    /* --- GRID DE ITENS SALVOS --- */
-    .news-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-        gap: 20px;
-    }
-
-    .news-card {
-        position: relative;
-        border-radius: 16px;
-        overflow: hidden;
-        aspect-ratio: 3/4;
-        background-color: #ddd;
-        text-decoration: none;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        transition: transform 0.2s;
-        cursor: pointer;
-    }
-    .news-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-
-    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    /* --- GRID --- */
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
     
-    .card-overlay {
-        position: absolute; bottom: 0; left: 0; right: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-        padding: 15px;
-        display: flex; flex-direction: column; justify-content: flex-end; height: 60%;
-    }
+    .news-card { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 3/4; background-color: #ddd; cursor: pointer; transition: transform 0.2s; }
+    .news-card:hover { transform: translateY(-4px); }
+    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    .card-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; height: 60%; }
     .card-title { color: white; font-weight: 700; margin: 0; font-size: 1rem; line-height: 1.3; }
-    .saved-indicator { color: rgba(255,255,255,0.8); font-size: 0.8rem; margin-top: 5px; }
 
-    /* --- MODAL (POPUP) --- */
-    .modal-overlay {
+    /* --- ESTILOS DE SELEÇÃO (CHECKBOX) --- */
+    .selection-check {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 25px;
+        height: 25px;
+        background: rgba(255,255,255,0.8);
+        border: 2px solid #999;
+        border-radius: 50%;
         display: none; /* Escondido por padrão */
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        z-index: 9999;
         align-items: center;
         justify-content: center;
-        backdrop-filter: blur(3px); /* Efeito blur no fundo */
+        z-index: 10;
+        transition: all 0.2s;
     }
     
-    .modal-box {
-        background: #fff;
-        width: 90%;
-        max-width: 400px;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        text-align: center;
-        animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-title { margin-top: 0; color: #333; }
-    .modal-input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin: 15px 0;
-        font-size: 1rem;
-        outline: none;
-    }
-    .modal-input:focus { border-color: #ed1c24; }
+    /* Quando o modo de seleção está ativo no body */
+    body.selection-mode .selection-check { display: flex; }
     
+    /* Estado Selecionado */
+    .news-card.selected {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 3px #ed1c24; /* Borda vermelha */
+    }
+    .news-card.selected .selection-check {
+        background-color: #ed1c24;
+        border-color: #ed1c24;
+        color: white;
+    }
+    .news-card.selected .selection-check::after {
+        content: '\f00c'; /* FontAwesome Check */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 0.8rem;
+    }
+
+    /* --- BARRA FLUTUANTE INFERIOR --- */
+    .floating-action-bar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px); /* Escondido pra baixo */
+        background-color: #1a1a1a;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 9999;
+    }
+    
+    body.selection-mode .floating-action-bar {
+        transform: translateX(-50%) translateY(0); /* Aparece */
+    }
+
+    .selected-count { font-weight: 600; font-size: 1rem; border-right: 1px solid #444; padding-right: 20px; }
+    .btn-action-float {
+        background: #ed1c24;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-action-float:disabled { background: #555; cursor: not-allowed; }
+
+    /* --- MODAL --- */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+    .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 25px; border-radius: 15px; text-align: center; }
+    .modal-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin: 15px 0; font-size: 1rem; outline: none; }
     .modal-actions { display: flex; gap: 10px; justify-content: center; }
-    
-    .btn-modal {
-        padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
-    }
+    .btn-modal { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
     .btn-cancel { background: #f0f0f0; color: #333; }
     .btn-confirm { background: #ed1c24; color: #fff; }
-    .btn-confirm:hover { background: #c00000; }
 
 </style>
 {% endblock %}
@@ -291,53 +158,47 @@
                 <input type="text" name="q" placeholder="Pesquisar nos salvos..." class="search-input" value="{{ request.GET.q|default:'' }}">
                 <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
             </form>
-            
-            <button class="add-btn-circle" onclick="openModal()" title="Criar nova pasta">
+            <button class="add-btn-circle" onclick="openCreateModal(false)" title="Criar nova pasta vazia">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
 
         <div class="section-label">
             <h3 class="section-title">Minhas Coleções</h3>
-            <span class="section-link" onclick="alert('Vai para página de gerenciar todas as coleções')">Ver tudo</span>
+            <a href="#" style="font-size:0.9rem; color:#666; text-decoration:none;">Ver tudo</a>
         </div>
 
         <div class="collections-scroll" id="collections-container">
-            
-            <div class="collection-card" onclick="openModal()">
+            <div class="collection-card" onclick="openCreateModal(false)">
                 <div class="collection-thumb-box create-collection-box">
                     <i class="fas fa-plus"></i>
                 </div>
                 <h4 class="collection-name">Nova coleção</h4>
             </div>
-
+            
             <div class="collection-card">
                 <div class="collection-thumb-box">
-                    <img src="https://img.freepik.com/fotos-gratis/conceito-de-viagem-completo-com-pontos-de-referencia_23-2149153258.jpg" class="collection-thumb">
+                    <img src="https://via.placeholder.com/150/000000/FFFFFF" class="collection-thumb">
                 </div>
-                <h4 class="collection-name">Para ler tarde</h4>
-                <span class="collection-count">5 itens</span>
+                <h4 class="collection-name">Leitura Tarde</h4>
+                <span class="collection-count">3 itens</span>
             </div>
-
-            </div>
+        </div>
 
         <div class="section-label" style="margin-top: 20px;">
             <h3 class="section-title">Todos os Itens</h3>
-            <span class="section-link" onclick="alert('Opções de gerenciamento em massa')">Gerenciar</span>
-        </div>
-
-        <div class="category-scroll">
-            <button class="bubble active" onclick="filterCategory('Tudo', this)">Tudo</button>
-            <button class="bubble" onclick="filterCategory('Política', this)">Política</button>
-            <button class="bubble" onclick="filterCategory('Educação', this)">Educação</button>
-            <button class="bubble" onclick="filterCategory('Economia', this)">Economia</button>
-            <button class="bubble" onclick="filterCategory('Tecnologia', this)">Tecnologia</button>
+            <a href="javascript:void(0)" class="action-link" id="btn-toggle-select" onclick="toggleSelectionMode()">
+                Selecionar
+            </a>
         </div>
 
         <div class="news-grid">
             {% if noticias_salvas %}
                 {% for noticia in noticias_salvas %}
-                <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="news-card">
+                <div class="news-card js-card-item" data-id="{{ noticia.pk }}" onclick="handleCardClick(this, '{{ noticia.pk }}')">
+                    
+                    <div class="selection-check"></div>
+
                     {% if noticia.imagem %}
                         <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}" class="card-img">
                     {% else %}
@@ -345,129 +206,182 @@
                             <i class="fas fa-bookmark fa-2x"></i>
                         </div>
                     {% endif %}
+                    
                     <div class="card-overlay">
                         <h3 class="card-title">{{ noticia.titulo }}</h3>
-                        <div class="saved-indicator"><i class="fas fa-bookmark"></i> Salvo</div>
                     </div>
-                </a>
+                    
+                    <a href="{% url 'Echo_app:noticia_detalhe' pk=noticia.pk %}" class="real-link" style="display:none;"></a>
+                </div>
                 {% endfor %}
             {% else %}
-                <div style="grid-column: 1/-1; text-align:center; padding: 50px; background:#fff; border-radius:12px;">
-                    <i class="far fa-bookmark fa-3x" style="color:#ddd; margin-bottom:15px;"></i>
-                    <p style="color:#666;">Você ainda não salvou nenhuma notícia.</p>
-                </div>
+                <p>Nenhum item salvo.</p>
             {% endif %}
         </div>
 
     </div>
 </div>
 
+<div class="floating-action-bar">
+    <span class="selected-count" id="count-display">0 selecionados</span>
+    <button class="btn-action-float" id="btn-create-with-items" onclick="openCreateModal(true)" disabled>
+        <i class="fas fa-folder-plus"></i> Criar Coleção
+    </button>
+</div>
+
 <div id="modal-nova-colecao" class="modal-overlay">
     <div class="modal-box">
-        <h3 class="modal-title">Nova Coleção</h3>
-        <p style="font-size: 0.9rem; color: #666;">Dê um nome para sua nova pasta de notícias.</p>
+        <h3 class="modal-title" id="modal-title-text">Nova Coleção</h3>
+        <p style="font-size: 0.9rem; color: #666;" id="modal-desc-text">Dê um nome para sua nova pasta.</p>
         
-        <input type="text" id="input-nome-colecao" class="modal-input" placeholder="Ex: Receitas, Política BR..." autofocus>
+        <input type="text" id="input-nome-colecao" class="modal-input" placeholder="Ex: Receitas, Política..." autofocus>
         
         <div class="modal-actions">
             <button class="btn-modal btn-cancel" onclick="closeModal()">Cancelar</button>
-            <button class="btn-modal btn-confirm" onclick="createCollection()">Criar Pasta</button>
+            <button class="btn-modal btn-confirm" onclick="confirmCreateCollection()">Criar</button>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. Função para Abrir o Modal
-    function openModal() {
-        const modal = document.getElementById('modal-nova-colecao');
-        const input = document.getElementById('input-nome-colecao');
-        modal.style.display = 'flex';
-        input.value = ''; // Limpa o input
-        setTimeout(() => input.focus(), 100); // Foca no input
+    let isSelectionMode = false;
+    let selectedItems = new Set(); // Guarda os IDs selecionados
+    let creatingWithItems = false; // Flag para saber se estamos criando pasta com itens
+
+    // 1. Alternar Modo de Seleção
+    function toggleSelectionMode() {
+        isSelectionMode = !isSelectionMode;
+        document.body.classList.toggle('selection-mode');
+        
+        const btn = document.getElementById('btn-toggle-select');
+        if (isSelectionMode) {
+            btn.innerText = 'Cancelar';
+            btn.classList.add('cancel-mode');
+        } else {
+            btn.innerText = 'Selecionar';
+            btn.classList.remove('cancel-mode');
+            // Limpa seleção ao cancelar
+            selectedItems.clear();
+            updateSelectionUI();
+        }
     }
 
-    // 2. Função para Fechar o Modal
+    // 2. Clique no Card
+    function handleCardClick(cardElement, id) {
+        if (isSelectionMode) {
+            // Lógica de Seleção
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+                cardElement.classList.remove('selected');
+            } else {
+                selectedItems.add(id);
+                cardElement.classList.add('selected');
+            }
+            updateFloatingBar();
+        } else {
+            // Comportamento Normal (Ir para notícia)
+            // Simula clique no link real
+            window.location.href = cardElement.querySelector('.real-link').href;
+        }
+    }
+
+    // 3. Atualiza Barra Flutuante
+    function updateFloatingBar() {
+        const count = selectedItems.size;
+        document.getElementById('count-display').innerText = `${count} selecionado${count !== 1 ? 's' : ''}`;
+        
+        const btn = document.getElementById('btn-create-with-items');
+        if (count > 0) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        } else {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+        }
+    }
+    
+    // Limpa UI visualmente
+    function updateSelectionUI() {
+        document.querySelectorAll('.news-card').forEach(c => c.classList.remove('selected'));
+        updateFloatingBar();
+    }
+
+    // 4. Modal Logic
+    function openCreateModal(withItems) {
+        creatingWithItems = withItems;
+        const modal = document.getElementById('modal-nova-colecao');
+        const title = document.getElementById('modal-title-text');
+        const desc = document.getElementById('modal-desc-text');
+        
+        if (withItems) {
+            title.innerText = "Agrupar em Nova Coleção";
+            desc.innerText = `Criar uma pasta contendo os ${selectedItems.size} itens selecionados.`;
+        } else {
+            title.innerText = "Nova Coleção";
+            desc.innerText = "Dê um nome para sua nova pasta.";
+        }
+
+        modal.style.display = 'flex';
+        document.getElementById('input-nome-colecao').value = '';
+        setTimeout(() => document.getElementById('input-nome-colecao').focus(), 100);
+    }
+
     function closeModal() {
         document.getElementById('modal-nova-colecao').style.display = 'none';
     }
 
-    // Fecha modal se clicar fora da caixa branca
-    document.getElementById('modal-nova-colecao').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-    });
-
-    // 3. Função "CRIAR COLEÇÃO" (Simulação Front-end)
-    function createCollection() {
+    // 5. Confirmar Criação (A Mágica)
+    function confirmCreateCollection() {
         const nome = document.getElementById('input-nome-colecao').value;
-        
-        if (!nome.trim()) {
-            alert("Por favor, digite um nome para a coleção.");
-            return;
-        }
+        if (!nome.trim()) return alert("Digite um nome!");
 
-        // HTML do novo card
+        // 1. Cria o Card Visualmente na Lista Horizontal
         const container = document.getElementById('collections-container');
-        
-        // Cria o elemento visualmente
         const novoCard = document.createElement('div');
         novoCard.className = 'collection-card';
-        // Simula link para a pasta
-        novoCard.onclick = function() { alert('Abriria a pasta: ' + nome); };
         
+        // Conta quantos itens estamos colocando (se vier da seleção ou 0)
+        const qtd = creatingWithItems ? selectedItems.size : 0;
+        
+        // Pega a imagem do primeiro item selecionado para ser a capa (Frescura visual legal)
+        let capaUrl = 'https://via.placeholder.com/150/cccccc/ffffff?text=' + nome.charAt(0);
+        if (creatingWithItems && selectedItems.size > 0) {
+            // Tenta achar a imagem do primeiro card selecionado no DOM
+            const firstId = [...selectedItems][0];
+            const cardDom = document.querySelector(`.js-card-item[data-id="${firstId}"]`);
+            if (cardDom) {
+                const img = cardDom.querySelector('img');
+                if (img) capaUrl = img.src;
+            }
+        }
+
         novoCard.innerHTML = `
-            <div class="collection-thumb-box" style="background-color: #f0f0f0;">
-                <i class="fas fa-folder-open" style="font-size: 2rem; color: #ccc;"></i>
+            <div class="collection-thumb-box">
+                <img src="${capaUrl}" class="collection-thumb">
             </div>
             <h4 class="collection-name">${nome}</h4>
-            <span class="collection-count">0 itens</span>
+            <span class="collection-count">${qtd} itens</span>
         `;
-
-        // Insere LOGO APÓS o botão de "Nova Coleção" (que é o primeiro filho)
-        // insertBefore(novoElemento, elementoReferencia)
-        // O elemento referência é o segundo filho atual (índice 1), ou null se não tiver
-        if (container.children.length > 1) {
-            container.insertBefore(novoCard, container.children[1]); 
-        } else {
-            container.appendChild(novoCard);
-        }
-
-        // Feedback visual
-        // alert(`Coleção "${nome}" criada com sucesso!`);
         
-        /* IMPORTANTE PRO BACKEND:
-           Aqui você faria uma chamada fetch/AJAX para o Django:
-           
-           fetch('/api/criar-colecao/', {
-               method: 'POST',
-               body: JSON.stringify({ nome: nome }),
-               headers: { 'X-CSRFToken': '{{ csrf_token }}' }
-           }).then(...)
+        // Adiciona depois do botão "+"
+        if (container.children.length > 1) container.insertBefore(novoCard, container.children[1]);
+        else container.appendChild(novoCard);
+
+        /* BACKEND TODO:
+           Enviar POST para Django com:
+           { 
+             "nome": nome, 
+             "noticias_ids": Array.from(selectedItems) 
+           }
         */
 
+        // Reset
         closeModal();
-    }
-
-    // 4. Função Filtro (Visual apenas para demonstração)
-    function filterCategory(categoria, btnElement) {
-        // Remove active de todos
-        document.querySelectorAll('.bubble').forEach(b => b.classList.remove('active'));
-        // Adiciona ao clicado
-        btnElement.classList.add('active');
-
-        // Aqui você pode recarregar a página com ?categoria=X 
-        // ou filtrar os cards via JS.
-        // Exemplo recarregando página (comentado para teste visual):
-        // window.location.href = "?categoria=" + categoria;
-        
-        console.log("Filtrando por: " + categoria);
-    }
-
-    // Permite dar Enter no input do modal
-    document.getElementById('input-nome-colecao').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            createCollection();
+        if (creatingWithItems) {
+            toggleSelectionMode(); // Sai do modo seleção
+            alert(`Pasta "${nome}" criada com ${qtd} notícias!`);
         }
-    });
+    }
 </script>
 
 {% endblock %}
