@@ -9,137 +9,294 @@
 
 <style>
     /* --- ESTRUTURA GERAL --- */
-    body { background-color: #f0f2f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f8f9fa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-    .main-wrapper { padding: 30px 0; display: flex; justify-content: center; padding-bottom: 80px; /* Espaço para barra flutuante */ }
-    .salvos-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+    .main-wrapper { 
+        padding: 40px 0; 
+        display: flex; 
+        justify-content: center; 
+        padding-bottom: 100px; /* Espaço extra para barra flutuante */
+    }
+    
+    .salvos-container { 
+        width: 100%; 
+        max-width: 900px; /* Levemente reduzido para ficar mais compacto e elegante */
+        margin: 0 auto; 
+        padding: 0 20px; 
+    }
 
     /* --- HEADER --- */
-    .page-header { text-align: center; margin-bottom: 30px; }
-    .page-title { font-size: 2rem; font-weight: 800; color: #1a1a1a; margin: 0; }
+    .page-header { text-align: center; margin-bottom: 35px; }
+    .page-title { font-size: 2.2rem; font-weight: 800; color: #1a1a1a; margin: 0; letter-spacing: -0.5px; }
 
-    /* --- BARRA DE PESQUISA --- */
-    .search-wrapper { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
-    .search-form { flex-grow: 1; position: relative; }
-    .search-input { width: 100%; height: 50px; background-color: #fff; border: 1px solid #ddd; border-radius: 25px; padding: 0 50px 0 25px; font-size: 1.1rem; outline: none; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .search-input:focus { border-color: #ed1c24; }
-    .search-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: #666; cursor: pointer; font-size: 1.1rem; }
+    /* --- BARRA DE PESQUISA & BOTÃO DE AÇÃO --- */
+    .search-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        max-width: 100%;
+    }
+
+    .search-form { 
+        flex-grow: 1; 
+        position: relative; 
+    }
+
+    .search-input { 
+        width: 100%; 
+        height: 52px; /* Altura confortável */
+        background-color: #fff; 
+        border: 1px solid #e0e0e0; 
+        border-radius: 12px; /* Bordas levemente arredondadas, mais moderno que pílula total */
+        padding: 0 50px 0 20px; 
+        font-size: 1rem; 
+        outline: none; 
+        transition: all 0.2s; 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
+    }
     
-    .add-btn-circle { width: 50px; height: 50px; border-radius: 50%; background-color: #fff; border: 1px solid #ddd; color: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; position: relative; }
-    .add-btn-circle:hover { background-color: #ed1c24; color: #fff; border-color: #ed1c24; }
-
-    /* --- COLEÇÕES --- */
-    .section-label { display: flex; justify-content: space-between; align-items: end; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .section-title { font-size: 1.3rem; font-weight: 700; color: #333; margin: 0; }
+    .search-input:focus { border-color: #ed1c24; box-shadow: 0 4px 12px rgba(237, 28, 36, 0.1); }
     
-    /* Botão de Selecionar (Link azul) */
-    .action-link { font-size: 1rem; color: #007bff; font-weight: 600; cursor: pointer; text-decoration: none; padding: 5px 10px; border-radius: 5px; transition: background 0.2s; }
-    .action-link:hover { background-color: #eef5ff; }
-    .action-link.cancel-mode { color: #dc3545; }
-    .action-link.cancel-mode:hover { background-color: #fff0f0; }
-
-    .collections-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 5px; margin-bottom: 30px; scrollbar-width: none; }
-    .collections-scroll::-webkit-scrollbar { display: none; }
-
-    .collection-card { min-width: 140px; width: 140px; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
-    .collection-card:hover { transform: translateY(-3px); }
-    .collection-thumb-box { width: 100%; height: 100px; border-radius: 12px; overflow: hidden; margin-bottom: 8px; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; position: relative; }
-    .collection-thumb { width: 100%; height: 100%; object-fit: cover; }
-    .create-collection-box { background-color: #fff; border: 2px dashed #ccc; color: #ed1c24; font-size: 1.8rem; }
-    .collection-name { font-size: 0.9rem; font-weight: 600; color: #333; text-align: center; }
-    .collection-count { font-size: 0.75rem; color: #888; text-align: center; }
-
-    /* --- GRID --- */
-    .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .search-btn-icon { 
+        position: absolute; 
+        right: 15px; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        border: none; 
+        background: transparent; 
+        color: #999; 
+        cursor: pointer; 
+        font-size: 1.1rem; 
+        transition: color 0.2s;
+    }
+    .search-btn-icon:hover { color: #ed1c24; }
     
-    .news-card { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 3/4; background-color: #ddd; cursor: pointer; transition: transform 0.2s; }
-    .news-card:hover { transform: translateY(-4px); }
-    .card-img { width: 100%; height: 100%; object-fit: cover; }
-    .card-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 15px; display: flex; flex-direction: column; justify-content: flex-end; height: 60%; }
-    .card-title { color: white; font-weight: 700; margin: 0; font-size: 1rem; line-height: 1.3; }
-
-    /* --- ESTILOS DE SELEÇÃO (CHECKBOX) --- */
-    .selection-check {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 25px;
-        height: 25px;
-        background: rgba(255,255,255,0.8);
-        border: 2px solid #999;
-        border-radius: 50%;
-        display: none; /* Escondido por padrão */
+    /* Botão Quadrado/Arredondado de Criar (+) */
+    .btn-create-folder {
+        height: 52px;
+        width: 52px;
+        min-width: 52px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 10;
+        cursor: pointer;
+        color: #333;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .btn-create-folder:hover {
+        border-color: #ed1c24;
+        color: #ed1c24;
+        background-color: #fff5f5;
+        transform: translateY(-2px);
+    }
+
+    /* --- TÍTULOS DE SEÇÃO --- */
+    .section-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 20px; 
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .section-title { 
+        font-size: 1.2rem; 
+        font-weight: 700; 
+        color: #333; 
+        margin: 0; 
+    }
+    
+    /* Botão "Selecionar" discreto */
+    .btn-toggle-select {
+        font-size: 0.9rem;
+        color: #666;
+        font-weight: 600;
+        background: transparent;
+        border: 1px solid transparent;
+        padding: 6px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .btn-toggle-select:hover { background-color: #e9ecef; color: #333; }
+    
+    .btn-toggle-select.cancel-mode { color: #dc3545; background-color: #fff0f0; }
+    .btn-toggle-select.cancel-mode:hover { background-color: #ffe6e6; }
+
+
+    /* --- COLEÇÕES (SCROLL) --- */
+    .collections-scroll { 
+        display: flex; 
+        overflow-x: auto; 
+        gap: 16px; 
+        padding: 4px; 
+        margin-bottom: 40px; 
+        scrollbar-width: none; 
+    }
+    .collections-scroll::-webkit-scrollbar { display: none; }
+
+    .collection-card { 
+        min-width: 130px; 
+        width: 130px; 
+        display: flex; 
+        flex-direction: column; 
+        cursor: pointer; 
+        transition: transform 0.2s; 
+        text-decoration: none;
+    }
+    .collection-card:hover { transform: translateY(-3px); }
+
+    .collection-thumb-box { 
+        width: 100%; 
+        height: 100px; 
+        border-radius: 12px; 
+        overflow: hidden; 
+        margin-bottom: 10px; 
+        background-color: #f1f3f5; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        position: relative; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .collection-thumb { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* Card "Nova Coleção" */
+    .create-collection-box { 
+        background-color: #fff; 
+        border: 2px dashed #ccc; 
+        color: #999; 
+        font-size: 1.5rem; 
         transition: all 0.2s;
     }
+    .collection-card:hover .create-collection-box { 
+        border-color: #ed1c24; 
+        color: #ed1c24; 
+        background-color: #fff5f5; 
+    }
     
-    /* Quando o modo de seleção está ativo no body */
+    .collection-name { font-size: 0.9rem; font-weight: 600; color: #333; text-align: center; line-height: 1.2; margin: 0;}
+    .collection-count { font-size: 0.75rem; color: #999; text-align: center; margin-top: 2px;}
+
+
+    /* --- GRID DE NOTÍCIAS --- */
+    .news-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+        gap: 20px; 
+    }
+    
+    .news-card { 
+        position: relative; 
+        border-radius: 12px; 
+        overflow: hidden; 
+        aspect-ratio: 3/4; 
+        background-color: #e9ecef; 
+        cursor: pointer; 
+        transition: transform 0.2s, box-shadow 0.2s; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .news-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    
+    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .card-overlay { 
+        position: absolute; bottom: 0; left: 0; right: 0; 
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); 
+        padding: 15px; 
+        display: flex; flex-direction: column; justify-content: flex-end; height: 65%; 
+    }
+    .card-title { color: white; font-weight: 700; margin: 0; font-size: 0.95rem; line-height: 1.35; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+
+    /* --- SELEÇÃO (CHECKBOX) --- */
+    .selection-check {
+        position: absolute; top: 10px; right: 10px; width: 24px; height: 24px;
+        background: rgba(255,255,255,0.9); border: 2px solid #ccc; border-radius: 50%;
+        display: none; align-items: center; justify-content: center; z-index: 10;
+        transition: all 0.2s;
+    }
     body.selection-mode .selection-check { display: flex; }
     
-    /* Estado Selecionado */
-    .news-card.selected {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 3px #ed1c24; /* Borda vermelha */
+    .news-card.selected { transform: scale(0.96); box-shadow: 0 0 0 3px #ed1c24; }
+    .news-card.selected .selection-check { background-color: #ed1c24; border-color: #ed1c24; color: white; }
+    .news-card.selected .selection-check::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 0.7rem; }
+
+
+    /* --- EMPTY STATE (BONITO) --- */
+    .empty-state-container {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        background-color: #fff;
+        border-radius: 12px;
+        border: 1px dashed #e0e0e0;
+        text-align: center;
     }
-    .news-card.selected .selection-check {
-        background-color: #ed1c24;
-        border-color: #ed1c24;
-        color: white;
+    
+    .empty-icon-circle {
+        width: 70px; height: 70px;
+        background-color: #f8f9fa;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 15px;
+        color: #adb5bd;
+        font-size: 1.8rem;
     }
-    .news-card.selected .selection-check::after {
-        content: '\f00c'; /* FontAwesome Check */
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        font-size: 0.8rem;
+    
+    .empty-title { font-size: 1.1rem; font-weight: 600; color: #495057; margin: 0 0 5px 0; }
+    .empty-desc { font-size: 0.9rem; color: #868e96; margin-bottom: 20px; max-width: 300px; }
+    
+    .btn-empty-action {
+        color: #ed1c24; font-weight: 600; text-decoration: none; font-size: 0.95rem;
     }
+    .btn-empty-action:hover { text-decoration: underline; }
+
 
     /* --- BARRA FLUTUANTE INFERIOR --- */
     .floating-action-bar {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px); /* Escondido pra baixo */
-        background-color: #1a1a1a;
-        color: white;
-        padding: 15px 30px;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 9999;
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(150px);
+        background-color: #212529; color: white; padding: 12px 25px; border-radius: 50px;
+        display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
     }
+    body.selection-mode .floating-action-bar { transform: translateX(-50%) translateY(0); }
     
-    body.selection-mode .floating-action-bar {
-        transform: translateX(-50%) translateY(0); /* Aparece */
-    }
-
-    .selected-count { font-weight: 600; font-size: 1rem; border-right: 1px solid #444; padding-right: 20px; }
+    .selected-count { font-weight: 600; font-size: 0.95rem; border-right: 1px solid #495057; padding-right: 15px; }
+    
     .btn-action-float {
-        background: #ed1c24;
-        color: white;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 20px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        background: #ed1c24; color: white; border: none; padding: 8px 18px; border-radius: 20px;
+        font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        transition: background 0.2s;
     }
-    .btn-action-float:disabled { background: #555; cursor: not-allowed; }
+    .btn-action-float:hover { background: #c5161d; }
+    .btn-action-float:disabled { background: #495057; cursor: not-allowed; opacity: 0.7; }
+
 
     /* --- MODAL --- */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-    .modal-box { background: #fff; width: 90%; max-width: 400px; padding: 25px; border-radius: 15px; text-align: center; }
-    .modal-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin: 15px 0; font-size: 1rem; outline: none; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+    .modal-box { background: #fff; width: 90%; max-width: 380px; padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .modal-title { margin: 0 0 10px 0; color: #333; font-size: 1.3rem; }
+    .modal-input { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; margin: 20px 0; font-size: 1rem; outline: none; }
+    .modal-input:focus { border-color: #ed1c24; }
     .modal-actions { display: flex; gap: 10px; justify-content: center; }
-    .btn-modal { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    .btn-cancel { background: #f0f0f0; color: #333; }
+    .btn-modal { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: opacity 0.2s; }
+    .btn-cancel { background: #f1f3f5; color: #495057; }
+    .btn-cancel:hover { background: #e9ecef; }
     .btn-confirm { background: #ed1c24; color: #fff; }
+    .btn-confirm:hover { background: #c5161d; }
 
 </style>
 {% endblock %}
@@ -153,19 +310,19 @@
             <h2 class="page-title">Meus Salvos</h2>
         </div>
 
-        <div class="search-wrapper">
+        <div class="search-row">
             <form method="GET" action="{% url 'Echo_app:noticias_salvas' %}" class="search-form">
                 <input type="text" name="q" placeholder="Pesquisar nos salvos..." class="search-input" value="{{ request.GET.q|default:'' }}">
-                <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                <button type="submit" class="search-btn-icon"><i class="fas fa-search"></i></button>
             </form>
-            <button class="add-btn-circle" onclick="openCreateModal(false)" title="Criar nova pasta vazia">
+            
+            <button class="btn-create-folder" onclick="openCreateModal(false)" title="Criar nova coleção">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
 
-        <div class="section-label">
+        <div class="section-header">
             <h3 class="section-title">Minhas Coleções</h3>
-            <a href="#" style="font-size:0.9rem; color:#666; text-decoration:none;">Ver tudo</a>
         </div>
 
         <div class="collections-scroll" id="collections-container">
@@ -175,21 +332,16 @@
                 </div>
                 <h4 class="collection-name">Nova coleção</h4>
             </div>
-            
-            <div class="collection-card">
-                <div class="collection-thumb-box">
-                    <img src="https://via.placeholder.com/150/000000/FFFFFF" class="collection-thumb">
-                </div>
-                <h4 class="collection-name">Leitura Tarde</h4>
-                <span class="collection-count">3 itens</span>
-            </div>
-        </div>
 
-        <div class="section-label" style="margin-top: 20px;">
+            </div>
+
+        <div class="section-header">
             <h3 class="section-title">Todos os Itens</h3>
-            <a href="javascript:void(0)" class="action-link" id="btn-toggle-select" onclick="toggleSelectionMode()">
+            {% if noticias_salvas %}
+            <button class="btn-toggle-select" id="btn-toggle-select" onclick="toggleSelectionMode()">
                 Selecionar
-            </a>
+            </button>
+            {% endif %}
         </div>
 
         <div class="news-grid">
@@ -202,8 +354,8 @@
                     {% if noticia.imagem %}
                         <img src="{{ noticia.imagem.url }}" alt="{{ noticia.titulo }}" class="card-img">
                     {% else %}
-                        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:#ccc; color:#666;">
-                            <i class="fas fa-bookmark fa-2x"></i>
+                        <div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e0e0e0; color:#999;">
+                            <i class="fas fa-newspaper fa-2x"></i>
                         </div>
                     {% endif %}
                     
@@ -215,7 +367,14 @@
                 </div>
                 {% endfor %}
             {% else %}
-                <p>Nenhum item salvo.</p>
+                <div class="empty-state-container">
+                    <div class="empty-icon-circle">
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                    <h4 class="empty-title">Nenhum item salvo ainda</h4>
+                    <p class="empty-desc">Toque no ícone de salvar nas notícias que você gosta para vê-las aqui.</p>
+                    <a href="{% url 'Echo_app:dashboard' %}" class="btn-empty-action">Explorar notícias</a>
+                </div>
             {% endif %}
         </div>
 
@@ -232,23 +391,23 @@
 <div id="modal-nova-colecao" class="modal-overlay">
     <div class="modal-box">
         <h3 class="modal-title" id="modal-title-text">Nova Coleção</h3>
-        <p style="font-size: 0.9rem; color: #666;" id="modal-desc-text">Dê um nome para sua nova pasta.</p>
+        <p style="font-size: 0.9rem; color: #666; margin:0;" id="modal-desc-text">Nome da sua nova pasta</p>
         
-        <input type="text" id="input-nome-colecao" class="modal-input" placeholder="Ex: Receitas, Política..." autofocus>
+        <input type="text" id="input-nome-colecao" class="modal-input" placeholder="Ex: Política, Receitas..." autofocus autocomplete="off">
         
         <div class="modal-actions">
             <button class="btn-modal btn-cancel" onclick="closeModal()">Cancelar</button>
-            <button class="btn-modal btn-confirm" onclick="confirmCreateCollection()">Criar</button>
+            <button class="btn-modal btn-confirm" onclick="confirmCreateCollection()">Criar Pasta</button>
         </div>
     </div>
 </div>
 
 <script>
     let isSelectionMode = false;
-    let selectedItems = new Set(); // Guarda os IDs selecionados
-    let creatingWithItems = false; // Flag para saber se estamos criando pasta com itens
+    let selectedItems = new Set();
+    let creatingWithItems = false;
 
-    // 1. Alternar Modo de Seleção
+    // Alternar Modo Seleção
     function toggleSelectionMode() {
         isSelectionMode = !isSelectionMode;
         document.body.classList.toggle('selection-mode');
@@ -260,16 +419,14 @@
         } else {
             btn.innerText = 'Selecionar';
             btn.classList.remove('cancel-mode');
-            // Limpa seleção ao cancelar
             selectedItems.clear();
             updateSelectionUI();
         }
     }
 
-    // 2. Clique no Card
+    // Clique no Card
     function handleCardClick(cardElement, id) {
         if (isSelectionMode) {
-            // Lógica de Seleção
             if (selectedItems.has(id)) {
                 selectedItems.delete(id);
                 cardElement.classList.remove('selected');
@@ -279,13 +436,13 @@
             }
             updateFloatingBar();
         } else {
-            // Comportamento Normal (Ir para notícia)
-            // Simula clique no link real
-            window.location.href = cardElement.querySelector('.real-link').href;
+            // Navegação normal
+            const link = cardElement.querySelector('.real-link');
+            if(link) window.location.href = link.href;
         }
     }
 
-    // 3. Atualiza Barra Flutuante
+    // Atualiza Barra Flutuante
     function updateFloatingBar() {
         const count = selectedItems.size;
         document.getElementById('count-display').innerText = `${count} selecionado${count !== 1 ? 's' : ''}`;
@@ -293,60 +450,64 @@
         const btn = document.getElementById('btn-create-with-items');
         if (count > 0) {
             btn.disabled = false;
-            btn.style.opacity = '1';
         } else {
             btn.disabled = true;
-            btn.style.opacity = '0.5';
         }
     }
     
-    // Limpa UI visualmente
     function updateSelectionUI() {
         document.querySelectorAll('.news-card').forEach(c => c.classList.remove('selected'));
         updateFloatingBar();
     }
 
-    // 4. Modal Logic
+    // Modal
     function openCreateModal(withItems) {
         creatingWithItems = withItems;
         const modal = document.getElementById('modal-nova-colecao');
         const title = document.getElementById('modal-title-text');
-        const desc = document.getElementById('modal-desc-text');
         
         if (withItems) {
-            title.innerText = "Agrupar em Nova Coleção";
-            desc.innerText = `Criar uma pasta contendo os ${selectedItems.size} itens selecionados.`;
+            title.innerText = "Agrupar em Coleção";
         } else {
             title.innerText = "Nova Coleção";
-            desc.innerText = "Dê um nome para sua nova pasta.";
         }
 
         modal.style.display = 'flex';
-        document.getElementById('input-nome-colecao').value = '';
-        setTimeout(() => document.getElementById('input-nome-colecao').focus(), 100);
+        const input = document.getElementById('input-nome-colecao');
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
     }
 
     function closeModal() {
         document.getElementById('modal-nova-colecao').style.display = 'none';
     }
+    
+    // Fechar ao clicar fora
+    document.getElementById('modal-nova-colecao').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    
+    // Enter no input
+    document.getElementById('input-nome-colecao').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') confirmCreateCollection();
+    });
 
-    // 5. Confirmar Criação (A Mágica)
+    // Confirmar Criação (Visual)
     function confirmCreateCollection() {
         const nome = document.getElementById('input-nome-colecao').value;
-        if (!nome.trim()) return alert("Digite um nome!");
+        if (!nome.trim()) return;
 
-        // 1. Cria o Card Visualmente na Lista Horizontal
         const container = document.getElementById('collections-container');
         const novoCard = document.createElement('div');
         novoCard.className = 'collection-card';
         
-        // Conta quantos itens estamos colocando (se vier da seleção ou 0)
         const qtd = creatingWithItems ? selectedItems.size : 0;
         
-        // Pega a imagem do primeiro item selecionado para ser a capa (Frescura visual legal)
-        let capaUrl = 'https://via.placeholder.com/150/cccccc/ffffff?text=' + nome.charAt(0);
+        // Tenta pegar imagem do primeiro item selecionado
+        let capaUrl = ''; 
+        let contentInner = '';
+        
         if (creatingWithItems && selectedItems.size > 0) {
-            // Tenta achar a imagem do primeiro card selecionado no DOM
             const firstId = [...selectedItems][0];
             const cardDom = document.querySelector(`.js-card-item[data-id="${firstId}"]`);
             if (cardDom) {
@@ -354,32 +515,33 @@
                 if (img) capaUrl = img.src;
             }
         }
+        
+        if (capaUrl) {
+             contentInner = `<img src="${capaUrl}" class="collection-thumb">`;
+        } else {
+             // Placeholder colorido com a primeira letra
+             const cor = '#' + Math.floor(Math.random()*16777215).toString(16);
+             contentInner = `<div style="width:100%; height:100%; background:${cor}; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold; font-size:2rem;">${nome.charAt(0).toUpperCase()}</div>`;
+        }
 
         novoCard.innerHTML = `
             <div class="collection-thumb-box">
-                <img src="${capaUrl}" class="collection-thumb">
+                ${contentInner}
             </div>
             <h4 class="collection-name">${nome}</h4>
             <span class="collection-count">${qtd} itens</span>
         `;
         
-        // Adiciona depois do botão "+"
-        if (container.children.length > 1) container.insertBefore(novoCard, container.children[1]);
-        else container.appendChild(novoCard);
+        // Insere logo após o botão de criar
+        if (container.children.length > 0) {
+            container.insertBefore(novoCard, container.children[1]); 
+        } else {
+            container.appendChild(novoCard);
+        }
 
-        /* BACKEND TODO:
-           Enviar POST para Django com:
-           { 
-             "nome": nome, 
-             "noticias_ids": Array.from(selectedItems) 
-           }
-        */
-
-        // Reset
         closeModal();
         if (creatingWithItems) {
-            toggleSelectionMode(); // Sai do modo seleção
-            alert(`Pasta "${nome}" criada com ${qtd} notícias!`);
+            toggleSelectionMode();
         }
     }
 </script>
