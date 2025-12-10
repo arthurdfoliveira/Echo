@@ -10,6 +10,9 @@
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-top: 30px;
+    /* Garante que o container se ajuste ao conteúdo, evitando sobreposição */
+    width: fit-content; 
+    margin: 30px auto; 
 }
 
 h1 {
@@ -22,7 +25,8 @@ h1 {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 420px; /* Alinha com a largura do grid */
+    /* Alinha com a largura do grid (4 * 100px + 3 * 10px = 430px) */
+    max-width: 430px; 
     margin-bottom: 20px;
     padding: 0 10px;
 }
@@ -55,6 +59,9 @@ h1 {
     grid-template-rows: repeat(4, 100px);
     gap: 10px;
     perspective: 1000px; /* Para a animação 3D de virar a carta */
+    /* Garante que o grid não crie problemas de espaçamento */
+    box-sizing: content-box; 
+    max-width: 430px;
 }
 
 /* CARTA (CARD) */
@@ -65,6 +72,8 @@ h1 {
     cursor: pointer;
     transform-style: preserve-3d;
     transition: transform 0.6s ease-in-out; /* Velocidade da animação de virar */
+    /* Adiciona z-index para garantir que a ordem de sobreposição seja clara */
+    z-index: 1; 
 }
 
 /* Vira a carta quando a classe 'flipped' é adicionada */
@@ -74,14 +83,16 @@ h1 {
 
 /* ========================================================= */
 /* ESTILO PARA CARTA ACERTADA (MATCHED)             */
-/* Objetivo: Manter virada (flipped) e reduzir opacidade.  */
 /* ========================================================= */
 .card.matched {
     cursor: default;
-    opacity: 0.4; /* Reduz a opacidade para parecer 'apagada' */
-    transition: opacity 0.6s ease-in-out; /* Adiciona transição suave para a opacidade */
-    box-shadow: none; /* Remove a sombra forte, se houver */
-    border-color: transparent; /* Remove borda, se desejar */
+    opacity: 0.4; 
+    transition: opacity 0.6s ease-in-out; 
+    box-shadow: none; 
+}
+/* A carta correspondida deve permanecer virada */
+.card.matched .card-back {
+    visibility: hidden; 
 }
 
 /* Face da frente e de trás da carta */
@@ -89,13 +100,11 @@ h1 {
     position: absolute;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden; /* Garante que o verso não seja visível */
+    backface-visibility: hidden; 
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* ⚠️ REMOÇÃO DE FONT-SIZE: Removido font-size: 3em; que era para emojis. */
     
     border: 2px solid #ccc;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -105,23 +114,37 @@ h1 {
 .card-back {
     background-color: #E10F26; /* Cor de fundo padrão (Vermelho) */
     color: white;
-    font-size: 1.5em; /* Mantido apenas para o texto/ícone do verso, se houver */
+    font-size: 1.5em; 
 }
 .card-back::before {
-    content: ""; /* Símbolo da memória */
+    content: ""; /* Símbolo da memória (Emoji como exemplo) */
 }
 
 /* Frente da carta (virada em 180 graus inicialmente) */
 .card-front {
     background-color: #fff;
     transform: rotateY(180deg);
+    /* Tamanho de fonte para emojis/texto */
+    font-size: 3em; 
+    /* Garante que o conteúdo fique centrado */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* **CRUCIAL** para prevenir vazamento e sobreposição */
 }
 
 /* Regra para garantir que a imagem preencha a frente da carta */
 .card-front img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
+    /* Define o tamanho para preencher o card-front */
+    width: 100%;
+    height: 100%;
+    
+    /* Preenche o máximo possível sem cortar ou distorcer (mantendo proporção) */
+    object-fit: contain; 
+    
+    /* Garante que a imagem não saia do limite do elemento pai */
+    max-width: 100%;
+    max-height: 100%;
     transform: scale(4.5);
 }
 

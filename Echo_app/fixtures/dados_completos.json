@@ -508,5 +508,96 @@
     "urgente": false,
     "notificacao": true
   }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 1,
+  "fields": {
+    "nome": "Economia"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 2,
+  "fields": {
+    "nome": "Política"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 3,
+  "fields": {
+    "nome": "Esporte"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 4,
+  "fields": {
+    "nome": "Meio Ambiente"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 5,
+  "fields": {
+    "nome": "Saúde"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 6,
+  "fields": {
+    "nome": "Música"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 7,
+  "fields": {
+    "nome": "Mídia Social"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 8,
+  "fields": {
+    "nome": "Educação"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 9,
+  "fields": {
+    "nome": "Ciência"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 10,
+  "fields": {
+    "nome": "Inovação"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 11,
+  "fields": {
+    "nome": "Tecnologia"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 12,
+  "fields": {
+    "nome": "Cultura"
+  }
+},
+{
+  "model": "Echo_app.categoria",
+  "pk": 13,
+  "fields": {
+    "nome": "Turismo"
+  }
 }
 ]
