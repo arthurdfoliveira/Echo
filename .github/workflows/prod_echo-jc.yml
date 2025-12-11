@@ -84,7 +84,6 @@ jobs:
           rm .env
           cd ..
         
-
       - name: Zip artifact for deployment
         run: |
           cd ECHO/
