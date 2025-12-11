@@ -2,10 +2,35 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // =====================================
+    // FUNÇÃO DE NORMALIZAÇÃO CRÍTICA (CORREÇÃO)
+    // =====================================
+
+    /**
+     * Remove acentos e substitui Ç por C para fins de comparação no jogo.
+     * @param {string} str - A string a ser normalizada.
+     * @returns {string} A string normalizada em MAIÚSCULAS.
+     */
+    function normalizarString(str) {
+        if (!str) return '';
+        // 1. Garante que está em maiúsculas
+        str = str.toUpperCase();
+        
+        // 2. Remove acentos e diacríticos (caracteres especiais como ^, ~, `)
+        // Isso transforma Á em A, Ã em A, etc.
+        str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        // 3. Trata o Ç, pois o NFD não o transforma em C
+        str = str.replace(/Ç/g, "C");
+        
+        return str;
+    }
+
+    // =====================================
     // DADOS DO JOGO
     // =====================================
     const palavrasPorTema = {
         'Esportes': [
+            // Agora com acentos (VÔLEI) e cedilha (NATAÇÃO) para teste!
             { palavra: 'FUTEBOL', dica: 'O esporte mais popular do Brasil.' },
             { palavra: 'VÔLEI', dica: 'Jogado em quadra ou na areia, a bola não pode cair.' },
             { palavra: 'NATAÇÃO', dica: 'Modalidade de piscina.' },
@@ -37,11 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ELEMENTOS DO DOM E ESTADO
     // =====================================
     let palavraSecreta = '';
+    let palavraNormalizada = ''; // Novo: Versão normalizada para comparação rápida
     let temaAtual = '';
-    let dicaAtual = ''; // Variável para armazenar a dica
-    let letrasAdivinhadas = [];
+    let dicaAtual = '';
+    let letrasAdivinhadas = []; // Armazena as letras clicadas (sempre normais: A, C, O, etc.)
     let erros = 0;
-    const maxErros = 8; // MÁXIMO DE ERROS ajustado para 8
+    const maxErros = 8;
     let jogoAtivo = true;
 
     // Elementos DOM
@@ -80,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDisplay.textContent = '';
         messageDisplay.classList.remove('game-over', 'game-win');
 
-        // Resetar o desenho da forca para a primeira imagem (forca1.jpeg)
         hangmanImage.src = `${STATIC_IMAGE_PATH}forca1.jpeg`;
 
         // Seleciona tema e palavra aleatória
@@ -89,14 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const palavrasDoTema = palavrasPorTema[temaAtual];
         const palavraObj = palavrasDoTema[Math.floor(Math.random() * palavrasDoTema.length)];
 
-        palavraSecreta = palavraObj.palavra;
-        dicaAtual = palavraObj.dica; // Armazena a dica
+        palavraSecreta = palavraObj.palavra; // Ex: 'NATAÇÃO'
+        palavraNormalizada = normalizarString(palavraSecreta); // Ex: 'NATACAO'
+        dicaAtual = palavraObj.dica;
 
         // Atualiza UI
-        temaDisplayWord.textContent = temaAtual; // Exibe apenas o TEMA
-        temaDisplayHint.textContent = dicaAtual; // Armazena a dica
-        hintTextContainer.classList.remove('visible'); // Esconde a dica
-        showHintButton.disabled = false; // Habilita o botão de dica
+        temaDisplayWord.textContent = temaAtual;
+        temaDisplayHint.textContent = dicaAtual;
+        hintTextContainer.classList.remove('visible');
+        showHintButton.disabled = false;
         
         renderWordDisplay();
         renderKeyboard();
@@ -107,8 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
      * Renderiza a palavra oculta no DOM.
      */
     function renderWordDisplay() {
+        // Itera sobre a PALAVRA SECRETA ORIGINAL ('NATAÇÃO')
         wordDisplay.innerHTML = palavraSecreta.split('').map(letra => {
-            const displayLetra = letrasAdivinhadas.includes(letra) ? letra : '_';
+            // Verifica se a letra original, quando normalizada, já foi adivinhada
+            const letraNormalizada = normalizarString(letra);
+            
+            // Se a letra normalizada (A, C, O) estiver entre as adivinhadas (letrasAdivinhadas),
+            // exibe a letra original ('Ã', 'Ç', 'Õ').
+            const displayLetra = letrasAdivinhadas.includes(letraNormalizada) ? letra : '_';
+            
             return `<span>${displayLetra}</span>`;
         }).join('');
     }
@@ -124,7 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
             button.textContent = letra;
             button.setAttribute('data-letra', letra);
             button.addEventListener('click', () => handleGuess(letra, button));
+            
+            // O botão é desabilitado se a letra (normalizada) já foi clicada
             button.disabled = letrasAdivinhadas.includes(letra);
+            
             keyboardContainer.appendChild(button);
         });
     }
@@ -133,22 +169,24 @@ document.addEventListener('DOMContentLoaded', () => {
      * Lida com o palpite de uma letra.
      */
     function handleGuess(letra, button) {
+        // A letra é a tentativa (sempre A-Z), ex: 'C'
         if (!jogoAtivo || letrasAdivinhadas.includes(letra)) return;
 
-        letrasAdivinhadas.push(letra);
+        letrasAdivinhadas.push(letra); // Adiciona a letra normal (C) às adivinhadas
         button.disabled = true;
 
-        if (palavraSecreta.includes(letra)) {
+        // ✅ CORREÇÃO: Verifica se a PALAVRA NORMALIZADA contém a letra normal (C)
+        if (palavraNormalizada.includes(letra)) {
             // Acertou
             button.classList.add('correct');
-            renderWordDisplay();
+            renderWordDisplay(); // Redesenha a palavra
             updateHistoryTable();
             checkGameStatus();
         } else {
             // Errou
             button.classList.add('incorrect');
             erros++;
-            drawHangmanPart(); // Chama a função para mudar a imagem
+            drawHangmanPart();
             updateHistoryTable();
             checkGameStatus();
         }
@@ -171,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showHint() {
         if (!showHintButton.disabled) {
             hintTextContainer.classList.add('visible');
-            showHintButton.disabled = true; // Desabilita após o primeiro uso
+            showHintButton.disabled = true;
         }
     }
 
@@ -179,10 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * Atualiza a tabela de tentativas anteriores.
      */
     function updateHistoryTable() {
-        const letrasErradas = letrasAdivinhadas.filter(letra => !palavraSecreta.includes(letra));
+        // ✅ CORREÇÃO: Filtra as letras erradas e corretas com base na PALAVRA NORMALIZADA
+        const letrasErradas = letrasAdivinhadas.filter(letra => !palavraNormalizada.includes(letra));
         incorrectGuessesTable.textContent = letrasErradas.join(', ');
 
-        const letrasCorretas = letrasAdivinhadas.filter(letra => palavraSecreta.includes(letra));
+        const letrasCorretas = letrasAdivinhadas.filter(letra => palavraNormalizada.includes(letra));
         correctGuessesTable.textContent = letrasCorretas.join(', ');
         
         errosCountDisplay.textContent = `${erros}`; 
@@ -192,16 +231,19 @@ document.addEventListener('DOMContentLoaded', () => {
      * Verifica se o jogo terminou (vitória ou derrota).
      */
     function checkGameStatus() {
-        const palavraAtual = palavraSecreta.split('').map(letra => letrasAdivinhadas.includes(letra) ? letra : '_').join('');
+        // ✅ CORREÇÃO: Verifica a vitória comparando a PALAVRA NORMALIZADA
+        const palavraAdivinhadaNormalizada = palavraNormalizada.split('').map(letraNormal => {
+            return letrasAdivinhadas.includes(letraNormal) ? letraNormal : '_';
+        }).join('');
 
-        if (palavraAtual === palavraSecreta) {
+        if (palavraAdivinhadaNormalizada === palavraNormalizada) {
             jogoAtivo = false;
             messageDisplay.textContent = '🎉 Parabéns! Você salvou o boneco!';
             messageDisplay.classList.remove('game-over');
             messageDisplay.classList.add('game-win');
             disableKeyboard();
             showHintButton.disabled = true;
-            hintTextContainer.classList.add('visible'); // Mostra a dica na vitória
+            hintTextContainer.classList.add('visible');
         } else if (erros >= maxErros) {
             jogoAtivo = false;
             messageDisplay.innerHTML = `Fim de jogo! A palavra era: <strong>${palavraSecreta}</strong>`;
@@ -209,9 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDisplay.classList.add('game-over');
             disableKeyboard();
             showHintButton.disabled = true;
-            hintTextContainer.classList.add('visible'); // Mostra a dica na derrota
+            hintTextContainer.classList.add('visible');
 
-            // Garante que a imagem final (forca8.jpeg) seja exibida
             hangmanImage.src = `${STATIC_IMAGE_PATH}forca${maxErros}.jpeg`;
         }
     }
@@ -229,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // EVENT LISTENERS
     // =====================================
     restartButton.addEventListener('click', initializeGame);
-    showHintButton.addEventListener('click', showHint); // Listener para o botão de lâmpada
+    showHintButton.addEventListener('click', showHint);
 
     // Adiciona listener para teclado físico
     document.addEventListener('keydown', (event) => {
